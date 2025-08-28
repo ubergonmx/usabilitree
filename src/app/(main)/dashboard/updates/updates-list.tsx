@@ -122,13 +122,15 @@ const updates: Update[] = [
   },
   {
     id: "9",
-    date: "2025-09-15",
+    date: "2025-08-28",
     title: "Export Study Data to Excel",
-    description: "Added ability to export all study data to an Excel (.xlsx) file.",
+    description:
+      "Added ability to export study results data to an Excel (.xlsx) file and UI improvements",
     type: "feature",
     details: [
-      "Export includes participant info, task results, and performance metrics.",
       "Access export option in the 'Export' tab within study results.",
+      "Export includes participant's task results, and performance metrics.",
+      "Add Edit study button for live and completed studies.",
     ],
   },
 ];
