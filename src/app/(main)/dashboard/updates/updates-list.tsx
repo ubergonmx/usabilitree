@@ -116,9 +116,20 @@ const updates: Update[] = [
     date: "2025-08-22",
     title: "Development Message",
     description:
-      "Hello! To those who doesn't know, I'm building this website solo as of now, and it's free (up to 7 tree tests). I'd love your feedback to help me improve this and figure out fair pricing. This takes about 1 minute and will pop-up when you're on the dashboard page, or you can click 'Give Feedback' button on the navbar. Everyone who answers will get a special promo when paid plans launch.",
+      "Hello! To those who doesn't know, I'm building this website solo as of now, and it's free (up to 7 tree tests). I'd love your feedback to help me improve this tool and also figure out fair pricing (free tier is always available, no worries!). This takes about 1 minute and will pop-up when you're on the dashboard page, or you can click 'Give Feedback' button on the navbar. Everyone who answers will get a special promo when paid plans launch.",
     type: "message",
     details: [],
+  },
+  {
+    id: "9",
+    date: "2025-09-15",
+    title: "Export Study Data to Excel",
+    description: "Added ability to export all study data to an Excel (.xlsx) file.",
+    type: "feature",
+    details: [
+      "Export includes participant info, task results, and performance metrics.",
+      "Access export option in the 'Export' tab within study results.",
+    ],
   },
 ];
 
