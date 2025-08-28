@@ -43,6 +43,7 @@ import { StudyFormData } from "@/lib/types/tree-test";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import * as Sentry from "@sentry/react";
+import { TriangleAlertIcon } from "lucide-react";
 
 interface SetupTabsProps {
   params: {
@@ -200,13 +201,16 @@ export default function SetupTabs({ params }: SetupTabsProps) {
                   {hasUnsavedChanges ? (
                     <span className="mb-3 flex cursor-not-allowed items-center gap-2 text-sm text-muted-foreground opacity-60">
                       <ArrowLeftIcon className="h-5 w-5" /> back to dashboard
+                      <span className="text-xs text-muted-foreground sm:hidden">
+                        (unsaved changes)
+                      </span>
                     </span>
                   ) : (
                     <Link
                       href="/dashboard"
                       className="mb-3 flex items-center gap-2 text-sm text-muted-foreground hover:underline"
                     >
-                      <ArrowLeftIcon className="h-5 w-5" /> back to dashboard
+                      <ArrowLeftIcon className="h-5 w-5" /> back to dashboard{" "}
                     </Link>
                   )}
                 </div>
@@ -217,7 +221,28 @@ export default function SetupTabs({ params }: SetupTabsProps) {
           <h1 className="flex items-center gap-2 text-2xl font-bold">
             <WorkflowIcon /> {formData.general.title || "Set up your Tree Test"}
           </h1>
-          <p className="mt-2 text-muted-foreground">Configure your tree test study settings</p>
+          <div className="flex items-center gap-1">
+            <p className="mt-2 text-muted-foreground">Configure your tree test study settings</p>
+            {status !== "draft" && (
+              <TooltipProvider delayDuration={100}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <TriangleAlertIcon className="mr-2 hidden h-4 w-4 text-yellow-500 sm:block" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    This study is {status}. Editing will not affect past participants answers.
+                    Proceed with caution.
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
+          {status !== "draft" && (
+            <p className="mt-1 block text-sm text-yellow-600 sm:hidden">
+              Warning: This study is {status}. Editing will not affect past participants answers.
+              Proceed with caution.
+            </p>
+          )}
         </div>
 
         <div className="flex items-center gap-2">

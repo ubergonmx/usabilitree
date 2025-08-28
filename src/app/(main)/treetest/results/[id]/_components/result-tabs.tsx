@@ -37,6 +37,7 @@ import { SharingTab } from "./sharing-tab";
 import { ParticipantsTab } from "./participants-tab";
 import { ExportTab } from "./export-tab";
 import * as Sentry from "@sentry/react";
+import { PencilIcon } from "lucide-react";
 
 interface ResultTabsProps {
   params: {
@@ -155,7 +156,11 @@ export default function ResultTabs({ params, userEmail, isOwner }: ResultTabsPro
                 Study completed
               </div>
             )}
-
+            <Link href={`/treetest/setup/${params.id}`}>
+              <Button variant="outline" size="sm" className="gap-2">
+                <PencilIcon className="h-4 w-4" /> Edit
+              </Button>
+            </Link>
             <Button
               variant="outline"
               size="sm"
