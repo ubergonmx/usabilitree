@@ -11,6 +11,7 @@ import {
   TrashIcon,
   FlagIcon,
   EyeOpenIcon,
+  FileTextIcon,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,6 +35,7 @@ import { OverviewTab } from "./overview-tab";
 import { TasksTab } from "./tasks-tab";
 import { SharingTab } from "./sharing-tab";
 import { ParticipantsTab } from "./participants-tab";
+import { ExportTab } from "./export-tab";
 import * as Sentry from "@sentry/react";
 
 interface ResultTabsProps {
@@ -209,6 +211,9 @@ export default function ResultTabs({ params, userEmail, isOwner }: ResultTabsPro
           <TabsTrigger value="sharing" className="gap-2">
             <ShareIcon className="h-4 w-4" /> Sharing
           </TabsTrigger>
+          <TabsTrigger value="export" className="gap-2">
+            <FileTextIcon className="h-4 w-4" /> Export
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -225,6 +230,10 @@ export default function ResultTabs({ params, userEmail, isOwner }: ResultTabsPro
 
         <TabsContent value="sharing">
           <SharingTab studyId={params.id} userEmail={userEmail} isOwner={isOwner} />
+        </TabsContent>
+
+        <TabsContent value="export">
+          <ExportTab studyId={params.id} />
         </TabsContent>
       </Tabs>
     </main>
