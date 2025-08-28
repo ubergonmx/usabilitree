@@ -22,13 +22,13 @@ export function FeedbackButton({ className, variant = "nav" }: FeedbackButtonPro
       <Button
         onClick={handleFeedbackClick}
         className={cn(
-          "items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground md:hidden",
+          "items-center justify-center rounded-md p-2 hover:bg-accent hover:text-accent-foreground md:hidden",
           className
         )}
         variant={"outline"}
       >
         <MessageSquareCodeIcon className="h-4 w-4" />
-        Give Feedback
+        Feedback
       </Button>
     );
   }
