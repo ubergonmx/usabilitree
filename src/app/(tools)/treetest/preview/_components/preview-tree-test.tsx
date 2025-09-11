@@ -29,6 +29,7 @@ const TestPreviewPage = ({ params }: { params: { id: string } }) => {
   const [welcomeMessage, setWelcomeMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [canStart, setCanStart] = useState(false);
+  const [progress, setProgress] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -43,10 +44,22 @@ const TestPreviewPage = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     if (showInstructions) {
       setCanStart(false);
-      const timer = setTimeout(() => {
-        setCanStart(true);
-      }, INSTRUCTION_DELAY_MS);
-      return () => clearTimeout(timer);
+      setProgress(0);
+
+      const startTime = Date.now();
+      const interval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const progressPercent = Math.min(100, (elapsed / INSTRUCTION_DELAY_MS) * 100);
+
+        setProgress(progressPercent);
+
+        if (elapsed >= INSTRUCTION_DELAY_MS) {
+          setCanStart(true);
+          clearInterval(interval);
+        }
+      }, 50);
+
+      return () => clearInterval(interval);
     }
   }, [showInstructions]);
 
@@ -96,13 +109,26 @@ const TestPreviewPage = ({ params }: { params: { id: string } }) => {
           ) : (
             <div className="space-y-6">
               <MarkdownPreview content={instructions} />
-              <div className="flex items-center justify-end gap-4">
-                {!canStart && (
-                  <p className="text-sm text-muted-foreground">
-                    Please read the instructions carefully...
-                  </p>
-                )}
+              <div className="flex justify-end">
                 <Button onClick={handleNextClick} disabled={!canStart}>
+                  {!canStart && (
+                    <svg className="mr-1 h-4 w-4" viewBox="0 0 36 36" aria-hidden="true">
+                      <path
+                        className="stroke-current/20"
+                        fill="none"
+                        strokeWidth="5"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                      <path
+                        className="stroke-current transition-all duration-75 ease-out"
+                        fill="none"
+                        strokeWidth="5"
+                        strokeLinecap="round"
+                        strokeDasharray={`${progress}, 100`}
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                    </svg>
+                  )}
                   Start Test
                 </Button>
               </div>
