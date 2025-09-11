@@ -317,6 +317,15 @@ export default function SetupTabs({ params }: SetupTabsProps) {
             </AlertDialog>
           )}
 
+          {status === "active" && (
+            <Link href={`/treetest/results/${params.id}`}>
+              <Button variant="outline" size="sm" className="gap-2">
+                <ChecklistIcon className="h-4 w-4" />
+                Results
+              </Button>
+            </Link>
+          )}
+
           <TooltipProvider delayDuration={100}>
             <Tooltip>
               <TooltipTrigger asChild>
