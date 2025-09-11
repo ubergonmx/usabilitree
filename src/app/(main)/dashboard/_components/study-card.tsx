@@ -22,69 +22,76 @@ interface StudyCardProps {
 }
 
 export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
-  const renderActionButton = () => {
+  const getMainActionUrl = () => {
     if (study.status === "draft") {
-      return (
-        <Button variant="secondary" size="sm" asChild>
-          <Link href={`/treetest/setup/${study.id}`}>
-            <Pencil2Icon className="mr-1 h-4 w-4" />
-            <span>Edit</span>
-          </Link>
-        </Button>
-      );
+      return `/treetest/setup/${study.id}`;
     }
+    return `/treetest/results/${study.id}`;
+  };
 
-    return (
-      <Button variant="secondary" size="sm" asChild>
-        <Link href={`/treetest/results/${study.id}`}>
-          <BarChartIcon className="mr-1 h-4 w-4" />
-          <span>Results</span>
-        </Link>
-      </Button>
-    );
+  const handleLinkClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.open(`/treetest/${study.id}`, "_blank");
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between text-base">
-          <div className="line-clamp-2 flex items-center gap-2">
-            {study.title}
-            {!isOwner && <UsersIcon className="h-4 w-4 text-muted-foreground" />}
+    <Link href={getMainActionUrl()} className="block h-full">
+      <Card className="flex h-full cursor-pointer flex-col transition-all duration-200 hover:-translate-y-1 hover:bg-accent/20 hover:shadow-lg">
+        <CardHeader className="flex-shrink-0">
+          <CardTitle className="flex items-center justify-between text-base">
+            <div className="line-clamp-2 flex items-center gap-2">
+              {study.title}
+              {!isOwner && <UsersIcon className="h-4 w-4 text-muted-foreground" />}
+            </div>
+            {study.status === "active" && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="z-10 h-6 p-0 text-muted-foreground hover:text-foreground"
+                onClick={handleLinkClick}
+              >
+                <LinkIcon className="h-4 w-4" />
+              </Button>
+            )}
+          </CardTitle>
+          <CardDescription className="flex flex-col space-y-1 text-sm">
+            {userName && <span>Shared by {userName}</span>}
+            <span>
+              {new Date(Number(study.createdAt) / 1000).toLocaleString(undefined, {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </span>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex-grow">
+          <p className="line-clamp-3 text-sm text-muted-foreground">{study.description}</p>
+        </CardContent>
+        <CardFooter className="mt-auto flex-shrink-0 flex-row-reverse gap-2">
+          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+            {study.status === "draft" ? (
+              <>
+                <Pencil2Icon className="h-4 w-4" />
+                <span>Edit</span>
+              </>
+            ) : (
+              <>
+                <BarChartIcon className="h-4 w-4" />
+                <span>Results</span>
+              </>
+            )}
           </div>
-          {study.status === "active" && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-6 p-0 text-muted-foreground hover:text-foreground"
-              onClick={() => window.open(`/treetest/${study.id}`, "_blank")}
-            >
-              <LinkIcon className="h-4 w-4" />
-            </Button>
-          )}
-        </CardTitle>
-        <CardDescription className="flex flex-col space-y-1 text-sm">
-          {userName && <span>Shared by {userName}</span>}
-          <span>
-            {new Date(Number(study.createdAt) / 1000).toLocaleString(undefined, {
-              dateStyle: "medium",
-              timeStyle: "short",
-            })}
-          </span>
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="line-clamp-3 text-sm">{study.description}</CardContent>
-      <CardFooter className="flex-row-reverse gap-2">
-        {renderActionButton()}
-        <Badge
-          variant="outline"
-          className={`mr-auto rounded-lg capitalize ${
-            study.status === "active" ? "bg-green-50 text-green-700" : ""
-          }`}
-        >
-          {study.status}
-        </Badge>
-      </CardFooter>
-    </Card>
+          <Badge
+            variant="outline"
+            className={`mr-auto rounded-lg capitalize ${
+              study.status === "active" ? "bg-green-50 text-green-700" : ""
+            }`}
+          >
+            {study.status}
+          </Badge>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 };
