@@ -113,15 +113,6 @@ const updates: Update[] = [
   },
   {
     id: "8",
-    date: "2025-08-22",
-    title: "Development Message",
-    description:
-      "Hello! To those who doesn't know, I'm building this website solo as of now, and it's free (up to 7 tree tests). I'd love your feedback to help me improve this tool and also figure out fair pricing (free tier is always available, no worries!). This takes about 1 minute and will pop-up when you're on the dashboard page, or you can click 'Give Feedback' button on the navbar. Everyone who answers will get a special promo when paid plans launch.",
-    type: "message",
-    details: [],
-  },
-  {
-    id: "9",
     date: "2025-08-28",
     title: "Export Study Data to Excel",
     description:
@@ -132,6 +123,27 @@ const updates: Update[] = [
       "Export includes participant's task results, and performance metrics.",
       "Add Edit study button for live and completed studies.",
     ],
+  },
+  {
+    id: "9",
+    date: "2025-09-12",
+    title: "New Demo and UI Improvements",
+    description: "Added new demo and UI improvements",
+    type: "improvement",
+    details: [
+      "Added new sample tree test study template for users to quickly create and explore the platform.",
+      "Improved button loading UI in instruction page of tree test.",
+      "Added 'Result' button in the setup page for active studies to quickly access results.",
+    ],
+  },
+  {
+    id: "10",
+    date: "2025-09-12",
+    title: "Development Message",
+    description:
+      "Hi! I'm building this open-source website solo, and it's free (up to 7 tree tests). I'd love your feedback to help me improve this tool! Just click 'Give Feedback' button on the navbar. Thank you for again for trying out Usabilitree! 😊",
+    type: "message",
+    details: [],
   },
 ];
 
