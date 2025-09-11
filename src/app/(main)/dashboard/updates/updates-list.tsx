@@ -133,6 +133,7 @@ const updates: Update[] = [
     details: [
       "Added new sample tree test study template for users to quickly create and explore the platform.",
       "Improved button loading UI in instruction page of tree test.",
+      "Improved study card UI in dashboard.",
       "Added 'Result' button in the setup page for active studies to quickly access results.",
     ],
   },
@@ -141,7 +142,7 @@ const updates: Update[] = [
     date: "2025-09-12",
     title: "Development Message",
     description:
-      "Hi! I'm building this open-source website solo, and it's free (up to 7 tree tests). I'd love your feedback to help me improve this tool! Just click 'Give Feedback' button on the navbar. Thank you for again for trying out Usabilitree! 😊",
+      "Hi! I'm building this open-source website solo, and it's free (up to 7 tree tests). I'd love your feedback to help me improve this tool! Just click 'Give Feedback' button on the navbar. Thank you for using Usabilitree! 😊",
     type: "message",
     details: [],
   },
