@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import { toast } from "sonner";
 import { createStudy } from "@/lib/treetest/actions";
+import { createSampleTreeTestStudy } from "@/lib/treetest/sample-actions";
 import * as Sentry from "@sentry/react";
 
 interface NewPostProps {
@@ -28,7 +29,7 @@ export const NewStudy = ({ isEligible }: NewPostProps) => {
   const [isCreatePending, startCreateTransaction] = React.useTransition();
   const [showDialog, setShowDialog] = React.useState(false);
 
-  const createPost = (type: "tree_test" | "card_sort") => {
+  const createPost = (type: "tree_test" | "card_sort" | "sample_tree_test") => {
     if (!isEligible) {
       toast.message("You've reached the limit of posts for your current plan", {
         description: "Upgrade to create more posts",
@@ -38,12 +39,18 @@ export const NewStudy = ({ isEligible }: NewPostProps) => {
 
     startCreateTransaction(async () => {
       try {
-        const { id } = await createStudy(type);
-        toast.success("Study created successfully");
+        let result;
+        if (type === "sample_tree_test") {
+          result = await createSampleTreeTestStudy();
+          toast.success("Sample study created successfully");
+        } else {
+          result = await createStudy(type);
+          toast.success("Study created successfully");
+        }
 
         // Navigate to the setup page for tree tests
-        if (type === "tree_test") {
-          router.push(`/treetest/setup/${id}`);
+        if (type === "tree_test" || type === "sample_tree_test") {
+          router.push(`/treetest/setup/${result.id}`);
         } else {
           // For future card sort implementation
           router.push("/dashboard");
@@ -83,11 +90,13 @@ export const NewStudy = ({ isEligible }: NewPostProps) => {
 interface StudyTypeDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSelect: (type: "tree_test" | "card_sort") => void;
+  onSelect: (type: "tree_test" | "card_sort" | "sample_tree_test") => void;
 }
 
 function StudyTypeDialog({ open, onOpenChange, onSelect }: StudyTypeDialogProps) {
-  const [selectedType, setSelectedType] = React.useState<"tree_test" | "card_sort">("tree_test");
+  const [selectedType, setSelectedType] = React.useState<
+    "tree_test" | "card_sort" | "sample_tree_test"
+  >("tree_test");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -98,13 +107,19 @@ function StudyTypeDialog({ open, onOpenChange, onSelect }: StudyTypeDialogProps)
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <RadioGroup
-            className="flex justify-between"
+            className="space-y-2"
             defaultValue="tree_test"
-            onValueChange={(value) => setSelectedType(value as "tree_test" | "card_sort")}
+            onValueChange={(value) =>
+              setSelectedType(value as "tree_test" | "card_sort" | "sample_tree_test")
+            }
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="tree_test" id="tree_test" />
               <Label htmlFor="tree_test">Tree Test</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="sample_tree_test" id="sample_tree_test" />
+              <Label htmlFor="sample_tree_test">Sample Tree Test (demo)</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="card_sort" id="card_sort" disabled />
