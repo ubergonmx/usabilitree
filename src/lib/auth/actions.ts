@@ -22,6 +22,7 @@ import { generateId, invalidateSession, invalidateUserSessions } from "@/lib/aut
 import { deleteSessionTokenCookie, getCurrentUser, setSession } from "./session";
 import { notifyNewUser } from "../discord";
 import * as Sentry from "@sentry/react";
+import { createSampleTreeTestStudy } from "../treetest/sample-actions";
 
 export interface ActionResponse<T> {
   fieldError?: Partial<Record<keyof T, string | undefined>>;
@@ -71,7 +72,7 @@ export async function login(_: unknown, formData: FormData): Promise<ActionRespo
   }
 
   await setSession(existingUser.id);
-  return redirect(Paths.Dashboard);
+  return redirect(Paths.Dashboard + "?onboarding=1");
 }
 
 export async function signup(_: unknown, formData: FormData): Promise<ActionResponse<SignupInput>> {
@@ -182,7 +183,8 @@ export async function verifyEmail(
 
   await invalidateUserSessions(user.id);
   await setSession(user.id);
-  redirect(Paths.Dashboard);
+  await createSampleTreeTestStudy(user.id);
+  redirect(Paths.Dashboard + "?onboarding=1");
 }
 
 export async function sendPasswordResetLink(

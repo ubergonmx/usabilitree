@@ -230,7 +230,7 @@ export default function SetupTabs({ params }: SetupTabsProps) {
                     <TriangleAlertIcon className="mr-2 hidden h-4 w-4 text-yellow-500 sm:block" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    This study is {status}. Editing will not affect past participants answers.
+                    This study is {status}. Editing will not affect past participants&apos; answers.
                     Proceed with caution.
                   </TooltipContent>
                 </Tooltip>
@@ -239,8 +239,8 @@ export default function SetupTabs({ params }: SetupTabsProps) {
           </div>
           {status !== "draft" && (
             <p className="mt-1 block text-sm text-yellow-600 sm:hidden">
-              Warning: This study is {status}. Editing will not affect past participants answers.
-              Proceed with caution.
+              Warning: This study is {status}. Editing will not affect past participants&apos;
+              answers. Proceed with caution.
             </p>
           )}
         </div>
@@ -317,7 +317,7 @@ export default function SetupTabs({ params }: SetupTabsProps) {
             </AlertDialog>
           )}
 
-          {status === "active" && (
+          {status !== "draft" && (
             <Link href={`/treetest/results/${params.id}`}>
               <Button variant="outline" size="sm" className="gap-2">
                 <ChecklistIcon className="h-4 w-4" />

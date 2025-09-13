@@ -8,6 +8,7 @@ import { eq, or } from "drizzle-orm";
 import { users } from "@/db/schema";
 import { notifyNewUser } from "@/lib/discord";
 import * as Sentry from "@sentry/react";
+import { createSampleTreeTestStudy } from "@/lib/treetest/sample-actions";
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
@@ -55,10 +56,11 @@ export async function GET(request: Request): Promise<Response> {
         avatar
       );
       await setSession(userId);
+      await createSampleTreeTestStudy(userId);
       return new Response(null, {
         status: 302,
         headers: {
-          Location: Paths.Dashboard,
+          Location: Paths.Dashboard + "?onboarding=1",
         },
       });
     }
