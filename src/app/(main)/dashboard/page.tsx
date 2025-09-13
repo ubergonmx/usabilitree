@@ -7,6 +7,7 @@ import { StudiesSkeleton } from "./_components/studies-skeleton";
 import { DashboardTracker } from "./_components/dashboard-tracker";
 import { Paths } from "@/lib/constants";
 import { getCurrentUser } from "@/lib/auth/session";
+import Tour from "./_components/tour";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
@@ -14,7 +15,13 @@ export const metadata: Metadata = {
   description: "Manage your studies here",
 };
 
-export default async function DashboardPage() {
+// get onboarding=1 query param to show the tour
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: { onboarding?: string };
+}) {
+  const showTour = searchParams.onboarding === "1";
   const user = await getCurrentUser();
   if (!user) redirect(Paths.Login);
 
@@ -28,6 +35,7 @@ export default async function DashboardPage() {
       <React.Suspense fallback={<StudiesSkeleton />}>
         <Studies />
       </React.Suspense>
+      {showTour && <Tour />}
     </div>
   );
 }
