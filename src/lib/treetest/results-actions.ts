@@ -48,7 +48,7 @@ export async function getStudyOverviewStats(studyId: string): Promise<TreeTestOv
       .sort((a, b) => a - b);
     const medianIndex = Math.floor(times.length / 2);
 
-    console.log("Completion times:", times);
+    // console.log("Completion times:", times);
 
     // Get task success and directness rates
     const [taskStats] = await db

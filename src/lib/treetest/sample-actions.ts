@@ -7,11 +7,9 @@ import { studies, treeConfigs, treeTasks, participants, treeTaskResults } from "
 import { getCurrentUser } from "@/lib/auth/session";
 import { sampleParticipants } from "./sample-data";
 
-export async function createSampleTreeTestStudy() {
-  const user = await getCurrentUser();
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
+export async function createSampleTreeTestStudy(userIdLocal?: string) {
+  const userId = userIdLocal ?? (await getCurrentUser())?.id;
+  if (!userId) throw new Error("Unauthorized");
 
   const studyId = nanoid();
 
@@ -222,7 +220,6 @@ export async function createSampleTreeTestStudy() {
   ];
 
   const welcomeMessage = `Welcome to this Tree Test sample study!
-
 This is a demonstration study to help you familiarize yourself with UsabiliTree's interface and functionality.
 
 The activity should take about **5-10 minutes** to complete.
@@ -230,7 +227,6 @@ The activity should take about **5-10 minutes** to complete.
 This sample is based on a real study conducted for the City Government of Parañaque website organization. Try navigating through the tree structure to find information as you would on a government website.`;
 
   const completionMessage = `# Great job!
-
 You've completed the sample Tree Test study! 
 
 This was a demonstration to help you understand how UsabiliTree works. You can now create your own studies and invite participants to help organize your website content.
@@ -276,9 +272,9 @@ Feel free to explore more features or start creating your own study.`;
   try {
     await db.insert(studies).values({
       id: studyId,
-      userId: user.id,
+      userId: userId,
       title: "Sample tree test",
-      description: "Government website study",
+      description: "Government website example",
       status: "active", // Make it active as requested
       type: "tree_test",
     });

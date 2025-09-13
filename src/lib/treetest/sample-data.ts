@@ -1,14 +1,16 @@
+import { nanoid } from "nanoid";
+
 // Sample participant data extracted from the PARANAQUE Govt (Final) study
 export const sampleParticipants = [
   {
-    id: "sample_participant_001",
-    sessionId: "session_001",
+    id: nanoid(),
+    sessionId: nanoid(),
     startedAt: new Date("2024-11-30T10:00:00Z"),
     completedAt: new Date("2024-11-30T10:07:20Z"),
     durationSeconds: 440,
     taskResults: [
       {
-        id: "sample_result_001_01",
+        id: nanoid(),
         taskIndex: 0,
         successful: true,
         directPathTaken: true,
@@ -18,7 +20,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_001_02",
+        id: nanoid(),
         taskIndex: 1,
         successful: true,
         directPathTaken: true,
@@ -28,7 +30,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_001_03",
+        id: nanoid(),
         taskIndex: 2,
         successful: true,
         directPathTaken: true,
@@ -38,7 +40,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_001_04",
+        id: nanoid(),
         taskIndex: 3,
         successful: true,
         directPathTaken: true,
@@ -48,7 +50,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_001_05",
+        id: nanoid(),
         taskIndex: 4,
         successful: true,
         directPathTaken: true,
@@ -58,7 +60,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_001_06",
+        id: nanoid(),
         taskIndex: 5,
         successful: true,
         directPathTaken: true,
@@ -68,7 +70,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_001_07",
+        id: nanoid(),
         taskIndex: 6,
         successful: true,
         directPathTaken: true,
@@ -78,7 +80,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_001_08",
+        id: nanoid(),
         taskIndex: 7,
         successful: true,
         directPathTaken: true,
@@ -90,14 +92,14 @@ export const sampleParticipants = [
     ],
   },
   {
-    id: "sample_participant_002",
-    sessionId: "session_002",
+    id: nanoid(),
+    sessionId: nanoid(),
     startedAt: new Date("2024-11-30T11:30:00Z"),
     completedAt: new Date("2024-11-30T11:35:15Z"),
     durationSeconds: 315,
     taskResults: [
       {
-        id: "sample_result_002_01",
+        id: nanoid(),
         taskIndex: 0,
         successful: true,
         directPathTaken: true,
@@ -107,7 +109,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_002_02",
+        id: nanoid(),
         taskIndex: 1,
         successful: true,
         directPathTaken: true,
@@ -117,7 +119,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_002_03",
+        id: nanoid(),
         taskIndex: 2,
         successful: true,
         directPathTaken: true,
@@ -127,7 +129,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_002_04",
+        id: nanoid(),
         taskIndex: 3,
         successful: true,
         directPathTaken: false,
@@ -137,7 +139,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_002_05",
+        id: nanoid(),
         taskIndex: 4,
         successful: true,
         directPathTaken: true,
@@ -147,7 +149,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_002_06",
+        id: nanoid(),
         taskIndex: 5,
         successful: true,
         directPathTaken: true,
@@ -157,7 +159,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_002_07",
+        id: nanoid(),
         taskIndex: 6,
         successful: true,
         directPathTaken: true,
@@ -167,7 +169,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_002_08",
+        id: nanoid(),
         taskIndex: 7,
         successful: true,
         directPathTaken: true,
@@ -179,14 +181,14 @@ export const sampleParticipants = [
     ],
   },
   {
-    id: "sample_participant_003",
-    sessionId: "session_003",
+    id: nanoid(),
+    sessionId: nanoid(),
     startedAt: new Date("2024-11-30T14:15:00Z"),
     completedAt: new Date("2024-11-30T14:20:45Z"),
     durationSeconds: 345,
     taskResults: [
       {
-        id: "sample_result_003_01",
+        id: nanoid(),
         taskIndex: 0,
         successful: true,
         directPathTaken: true,
@@ -196,7 +198,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_003_02",
+        id: nanoid(),
         taskIndex: 1,
         successful: true,
         directPathTaken: true,
@@ -206,7 +208,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_003_03",
+        id: nanoid(),
         taskIndex: 2,
         successful: true,
         directPathTaken: true,
@@ -216,7 +218,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_003_04",
+        id: nanoid(),
         taskIndex: 3,
         successful: true,
         directPathTaken: true,
@@ -226,7 +228,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_003_05",
+        id: nanoid(),
         taskIndex: 4,
         successful: true,
         directPathTaken: true,
@@ -236,7 +238,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_003_06",
+        id: nanoid(),
         taskIndex: 5,
         successful: true,
         directPathTaken: true,
@@ -246,7 +248,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_003_07",
+        id: nanoid(),
         taskIndex: 6,
         successful: true,
         directPathTaken: true,
@@ -256,7 +258,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_003_08",
+        id: nanoid(),
         taskIndex: 7,
         successful: true,
         directPathTaken: true,
@@ -268,14 +270,14 @@ export const sampleParticipants = [
     ],
   },
   {
-    id: "sample_participant_004",
-    sessionId: "session_004",
+    id: nanoid(),
+    sessionId: nanoid(),
     startedAt: new Date("2024-11-30T16:45:00Z"),
     completedAt: new Date("2024-11-30T16:52:30Z"),
     durationSeconds: 450,
     taskResults: [
       {
-        id: "sample_result_004_01",
+        id: nanoid(),
         taskIndex: 0,
         successful: false,
         directPathTaken: false,
@@ -285,7 +287,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_004_02",
+        id: nanoid(),
         taskIndex: 1,
         successful: true,
         directPathTaken: false,
@@ -295,7 +297,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_004_03",
+        id: nanoid(),
         taskIndex: 2,
         successful: true,
         directPathTaken: false,
@@ -306,7 +308,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_004_04",
+        id: nanoid(),
         taskIndex: 3,
         successful: true,
         directPathTaken: false,
@@ -316,7 +318,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_004_05",
+        id: nanoid(),
         taskIndex: 4,
         successful: false,
         directPathTaken: false,
@@ -326,7 +328,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_004_06",
+        id: nanoid(),
         taskIndex: 5,
         successful: true,
         directPathTaken: true,
@@ -336,7 +338,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_004_07",
+        id: nanoid(),
         taskIndex: 6,
         successful: true,
         directPathTaken: false,
@@ -346,7 +348,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_004_08",
+        id: nanoid(),
         taskIndex: 7,
         successful: true,
         directPathTaken: false,
@@ -358,14 +360,14 @@ export const sampleParticipants = [
     ],
   },
   {
-    id: "sample_participant_005",
-    sessionId: "session_005",
+    id: nanoid(),
+    sessionId: nanoid(),
     startedAt: new Date("2024-12-01T09:20:00Z"),
     completedAt: new Date("2024-12-01T09:25:30Z"),
     durationSeconds: 330,
     taskResults: [
       {
-        id: "sample_result_005_01",
+        id: nanoid(),
         taskIndex: 0,
         successful: true,
         directPathTaken: true,
@@ -375,7 +377,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_005_02",
+        id: nanoid(),
         taskIndex: 1,
         successful: true,
         directPathTaken: true,
@@ -385,7 +387,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_005_03",
+        id: nanoid(),
         taskIndex: 2,
         successful: true,
         directPathTaken: true,
@@ -395,7 +397,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_005_04",
+        id: nanoid(),
         taskIndex: 3,
         successful: false,
         directPathTaken: false,
@@ -405,7 +407,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_005_05",
+        id: nanoid(),
         taskIndex: 4,
         successful: true,
         directPathTaken: true,
@@ -415,7 +417,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_005_06",
+        id: nanoid(),
         taskIndex: 5,
         successful: false,
         directPathTaken: true,
@@ -425,7 +427,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_005_07",
+        id: nanoid(),
         taskIndex: 6,
         successful: true,
         directPathTaken: true,
@@ -435,7 +437,7 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: "sample_result_005_08",
+        id: nanoid(),
         taskIndex: 7,
         successful: true,
         directPathTaken: false,

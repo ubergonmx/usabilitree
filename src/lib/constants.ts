@@ -10,3 +10,10 @@ export enum Paths {
   VerifyEmail = "/verify-email",
   ResetPassword = "/reset-password",
 }
+
+export const TOUR_STEP_IDS = {
+  SAMPLE_STUDY: "sample-study",
+  UPDATES: "updates",
+  FEEDBACK: "feedback",
+  SUPPORT: "support",
+};
