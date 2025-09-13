@@ -42,7 +42,7 @@ export const NewStudy = ({ isEligible }: NewPostProps) => {
         let result;
         if (type === "sample_tree_test") {
           result = await createSampleTreeTestStudy();
-          toast.success("Sample study created successfully");
+          toast.success("Sample study created successfully. Please wait for setup to load.");
         } else {
           result = await createStudy(type);
           toast.success("Study created successfully");

@@ -7,10 +7,11 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { FeedbackButton } from "@/components/feedback-button";
 import { CoffeeButton } from "@/components/coffee-button";
+import { TOUR_STEP_IDS } from "@/lib/constants";
 
 // Store the latest update date in a constant at the top of the file
 // This makes it easier to update in one place when new content is added
-const LATEST_UPDATE_DATE = "2025-09-12"; // Update this when new content is added
+const LATEST_UPDATE_DATE = "2025-09-13"; // Update this when new content is added
 
 const items = [
   {
@@ -24,6 +25,7 @@ const items = [
   //   icon: CreditCard,
   // },
   {
+    id: TOUR_STEP_IDS.UPDATES,
     title: "Updates",
     href: "/dashboard/updates",
     icon: BellIcon,
@@ -61,7 +63,7 @@ export function DashboardNav({ className }: Props) {
   return (
     <nav className={cn(className)}>
       {items.map((item) => (
-        <Link href={item.href} key={item.href}>
+        <Link id={item.id} href={item.href} key={item.href}>
           <span
             className={cn(
               "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",

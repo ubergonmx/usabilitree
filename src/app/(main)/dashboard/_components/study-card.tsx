@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Studies } from "@/db/schema";
+import { TOUR_STEP_IDS } from "@/lib/constants";
 import Link from "next/link";
 import * as React from "react";
 
@@ -35,8 +36,18 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
     window.open(`/treetest/${study.id}`, "_blank");
   };
 
+  const isSampleStudy =
+    study.title === "Sample tree test" &&
+    study.description === "Government website example" &&
+    study.status === "active" &&
+    isOwner;
+
   return (
-    <Link href={getMainActionUrl()} className="block h-full">
+    <Link
+      href={getMainActionUrl()}
+      className="block h-full"
+      id={isSampleStudy ? TOUR_STEP_IDS.SAMPLE_STUDY : undefined}
+    >
       <Card className="flex h-full cursor-pointer flex-col transition-all duration-200 hover:-translate-y-1 hover:bg-accent/20 hover:shadow-lg">
         <CardHeader className="flex-shrink-0">
           <CardTitle className="flex items-center justify-between text-base">

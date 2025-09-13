@@ -9,6 +9,7 @@ import { users } from "@/db/schema";
 import { setSession } from "@/lib/auth/session";
 import { notifyNewUser } from "@/lib/discord";
 import * as Sentry from "@sentry/react";
+import { createSampleTreeTestStudy } from "@/lib/treetest/sample-actions";
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
@@ -66,9 +67,10 @@ export async function GET(request: Request): Promise<Response> {
         avatar
       );
       await setSession(userId);
+      await createSampleTreeTestStudy(userId);
       return new Response(null, {
         status: 302,
-        headers: { Location: Paths.Dashboard },
+        headers: { Location: Paths.Dashboard + "?onboarding=1" },
       });
     }
 
