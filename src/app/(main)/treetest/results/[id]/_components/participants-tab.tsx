@@ -19,22 +19,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  MoreHorizontalIcon,
-  CheckCircledIcon,
-  CrossCircledIcon,
-  SearchIcon,
-  XIcon,
-} from "@/components/icons";
+import { CheckCircledIcon, CrossCircledIcon, SearchIcon, XIcon } from "@/components/icons";
 import { formatDistanceToNow } from "date-fns";
 import {
   getParticipants,
@@ -45,23 +32,16 @@ import {
 import { toast } from "sonner";
 import { ParticipantDetailsModal } from "./participant-details-modal";
 import * as Sentry from "@sentry/react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 
 // Extract Note component to reuse
 const ParticipantsNote = () => (
   <div className="rounded-md bg-muted px-4 py-3 text-sm text-muted-foreground">
     <p>
-      Note: Participant numbers (e.g., &quot;Participant 1&quot;) are generated based on the order
-      of creation time in the database. These numbers are for display purposes only and may change
-      if earlier entries are deleted.
-    </p>
-    <p className="mt-2">
       If you see duplicate responses (e.g., &quot;A1&quot; meaning Attempt 1), you can delete the
       subsequent attempts. This may occur due to participants experiencing connectivity issues
       during the study.
-    </p>
-    <p className="mt-2 font-medium">
-      It is advisable to only delete participant results after you&apos;ve set the study to
-      Completed status.
     </p>
   </div>
 );
@@ -115,6 +95,48 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
     }
   };
 
+  const handleCloseModal = () => {
+    setSelectedParticipant(null);
+  };
+
+  const handleRowClick = (participant: Participant) => {
+    setSelectedParticipant(participant);
+  };
+
+  const handleNavigate = (direction: "prev" | "next") => {
+    if (!selectedParticipant) return;
+
+    const sortedParticipants = filteredParticipants.sort(
+      (a, b) => a.startedAt.getTime() - b.startedAt.getTime()
+    );
+    const currentIndex = sortedParticipants.findIndex((p) => p.id === selectedParticipant.id);
+
+    let newIndex;
+    if (direction === "prev") {
+      newIndex = currentIndex - 1;
+    } else {
+      newIndex = currentIndex + 1;
+    }
+
+    if (newIndex >= 0 && newIndex < sortedParticipants.length) {
+      setSelectedParticipant(sortedParticipants[newIndex]);
+    }
+  };
+
+  const getNavigationState = () => {
+    if (!selectedParticipant) return { canNavigatePrev: false, canNavigateNext: false };
+
+    const sortedParticipants = filteredParticipants.sort(
+      (a, b) => a.startedAt.getTime() - b.startedAt.getTime()
+    );
+    const currentIndex = sortedParticipants.findIndex((p) => p.id === selectedParticipant.id);
+
+    return {
+      canNavigatePrev: currentIndex > 0,
+      canNavigateNext: currentIndex < sortedParticipants.length - 1,
+    };
+  };
+
   const filteredParticipants = participants.filter((p) => {
     const searchLower = search.toLowerCase();
 
@@ -161,7 +183,6 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
                 <TableHead>
                   <Skeleton className="h-4 w-16" />
                 </TableHead>
-                <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -184,9 +205,6 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
                   </TableCell>
                   <TableCell>
                     <Skeleton className="h-4 w-16" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-8 w-8" />
                   </TableCell>
                 </TableRow>
               ))}
@@ -219,7 +237,7 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
             <SearchIcon className="h-4 w-4 text-muted-foreground" />
           </div>
           <Input
-            placeholder="Search by Participant ID, Session ID, or Participant Number..."
+            placeholder="Search by Participant ID or Number..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9 pr-9"
@@ -238,13 +256,40 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Participant</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger className="flex items-center gap-1 text-left font-medium">
+                      Participant <QuestionMarkCircledIcon />
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-xs">
+                      <p>
+                        Numbers are assigned based on creation order. If a participant is deleted,
+                        the remaining numbers will be updated on refresh.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </TableHead>
+              <TableHead>
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger className="flex items-center gap-1 text-left font-medium">
+                      Status <QuestionMarkCircledIcon />
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-xs">
+                      <p>
+                        It is advisable to only delete participant results after you&apos;ve set the
+                        study to Completed status.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </TableHead>
               <TableHead>Started</TableHead>
               <TableHead>Duration</TableHead>
               <TableHead>Success Rate</TableHead>
               <TableHead>Directness</TableHead>
-              <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -267,7 +312,11 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
                 const directnessRate = Math.round((taskStats.direct / taskStats.total) * 100);
 
                 return (
-                  <TableRow key={participant.id}>
+                  <TableRow
+                    key={participant.id}
+                    className="cursor-pointer transition-colors hover:bg-muted/50"
+                    onClick={() => handleRowClick(participant)}
+                  >
                     <TableCell className="font-medium">
                       <div>Participant {participant.participantNumber}</div>
                       {participant.hasDuplicates && (
@@ -305,28 +354,6 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
                     </TableCell>
                     <TableCell>{successRate}%</TableCell>
                     <TableCell>{directnessRate}%</TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontalIcon className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => setSelectedParticipant(participant)}>
-                            View Details
-                          </DropdownMenuItem>
-                          {isOwner && (
-                            <DropdownMenuItem
-                              className="text-destructive"
-                              onClick={() => setDeleteParticipantId(participant.id)}
-                            >
-                              Delete Results
-                            </DropdownMenuItem>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -337,8 +364,12 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
         <ParticipantDetailsModal
           participant={selectedParticipant}
           isOpen={!!selectedParticipant}
-          onClose={() => setSelectedParticipant(null)}
+          onClose={handleCloseModal}
           onDeleteResult={handleDeleteResult}
+          onDeleteParticipant={handleDeleteParticipant}
+          onNavigate={handleNavigate}
+          canNavigatePrev={getNavigationState().canNavigatePrev}
+          canNavigateNext={getNavigationState().canNavigateNext}
           isOwner={isOwner}
         />
       )}

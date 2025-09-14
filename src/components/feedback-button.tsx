@@ -4,7 +4,7 @@ import { MessageSquareCodeIcon } from "@/components/icons";
 import { useSurveyTriggers } from "@/lib/hooks/use-survey-triggers";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { TOUR_STEP_IDS } from "@/lib/constants";
+import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
 
 interface FeedbackButtonProps {
   className?: string;
@@ -21,7 +21,7 @@ export function FeedbackButton({ className, variant = "nav" }: FeedbackButtonPro
   if (variant === "header") {
     return (
       <Button
-        id={TOUR_STEP_IDS.FEEDBACK + "-mob"}
+        id={DASHBOARD_TOUR_STEP_IDS.FEEDBACK + "-mob"}
         onClick={handleFeedbackClick}
         className={cn(
           "items-center justify-center rounded-md p-2 hover:bg-accent hover:text-accent-foreground md:hidden",
@@ -37,7 +37,7 @@ export function FeedbackButton({ className, variant = "nav" }: FeedbackButtonPro
 
   return (
     <button
-      id={TOUR_STEP_IDS.FEEDBACK}
+      id={DASHBOARD_TOUR_STEP_IDS.FEEDBACK}
       onClick={handleFeedbackClick}
       className={cn(
         "group hidden items-center whitespace-nowrap rounded-md px-3 py-2 text-left text-sm font-medium hover:bg-accent hover:text-accent-foreground md:flex",

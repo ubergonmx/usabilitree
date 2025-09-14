@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import type React from "react";
+import React from "react";
 import Image from "next/image";
 import LogoIcon from "@/assets/icons/icon-transparent.svg";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
@@ -329,12 +329,30 @@ export function useTour() {
   return context;
 }
 
+export function TourTitle({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
+
+export function TourDescription({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
+
+export function TourMainAction({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
+
+export function TourSecondaryAction({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
+
 export function TourAlertDialog({
   isOpen,
   setIsOpen,
+  children,
 }: {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  children?: React.ReactNode;
 }) {
   const { startTour, steps, isTourCompleted, currentStep } = useTour();
 
@@ -344,6 +362,16 @@ export function TourAlertDialog({
   const handleSkip = async () => {
     setIsOpen(false);
   };
+
+  const getChildOfType = (type: unknown) =>
+    React.Children.toArray(children).find(
+      (child: unknown) => React.isValidElement(child) && child.type === type
+    );
+
+  const title = getChildOfType(TourTitle);
+  const description = getChildOfType(TourDescription);
+  const mainAction = getChildOfType(TourMainAction);
+  const secondaryAction = getChildOfType(TourSecondaryAction);
 
   return (
     <AlertDialog open={isOpen}>
@@ -377,18 +405,18 @@ export function TourAlertDialog({
             </motion.div>
           </div>
           <AlertDialogTitle className="text-center text-xl font-medium">
-            Welcome to UsabiliTree!
+            {title || "Welcome to UsabiliTree!"}
           </AlertDialogTitle>
           <AlertDialogDescription className="mt-2 text-center text-sm text-muted-foreground">
-            Take a quick tour to learn about what to do next.
+            {description || "Take a quick tour to learn about what to do next."}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="mt-6 space-y-3">
           <Button onClick={startTour} className="w-full">
-            Ok, show me around!
+            {mainAction || "Yes, show me around!"}
           </Button>
           <Button onClick={handleSkip} variant="ghost" className="w-full">
-            No, I&apos;ll explore myself
+            {secondaryAction || "No, I'll explore myself"}
           </Button>
         </div>
       </AlertDialogContent>

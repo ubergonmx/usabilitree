@@ -1,14 +1,9 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { TOUR_STEP_IDS } from "@/lib/constants";
+import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
 import { TourAlertDialog, TourStep, useTour } from "@/components/tour";
-
-// Utility function to check if device is mobile
-const isMobileDevice = () => {
-  if (typeof window === "undefined") return false;
-  return window.innerWidth < 768; // Tailwind's md breakpoint
-};
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 
 function TourContent({ title, description }: { title: string; description: string }) {
   return (
@@ -19,22 +14,10 @@ function TourContent({ title, description }: { title: string; description: strin
   );
 }
 
-export default function Tour() {
+export default function TourDashboard() {
   const [openTour, setOpenTour] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 767px)"); // Tailwind's md breakpoint
   const { setSteps } = useTour();
-
-  // Check mobile status on mount and resize
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(isMobileDevice());
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   const steps: TourStep[] = useMemo(
     () => [
@@ -45,7 +28,7 @@ export default function Tour() {
             description="Take a look at this sample active study and familiarize yourself with the interface."
           />
         ),
-        selectorId: TOUR_STEP_IDS.SAMPLE_STUDY,
+        selectorId: DASHBOARD_TOUR_STEP_IDS.SAMPLE_STUDY,
         position: isMobile ? "top" : "bottom",
         onClickWithinArea: () => {},
       },
@@ -56,7 +39,7 @@ export default function Tour() {
             description="Check recent updates and development messages here."
           />
         ),
-        selectorId: TOUR_STEP_IDS.UPDATES,
+        selectorId: DASHBOARD_TOUR_STEP_IDS.UPDATES,
         position: isMobile ? "bottom" : "right", // Change to bottom on mobile
         onClickWithinArea: () => {},
       },
@@ -67,7 +50,7 @@ export default function Tour() {
             description="Send your complaints, feedback, or feature requests here. This will help me improve this tool!"
           />
         ),
-        selectorId: TOUR_STEP_IDS.FEEDBACK + (isMobile ? "-mob" : ""),
+        selectorId: DASHBOARD_TOUR_STEP_IDS.FEEDBACK + (isMobile ? "-mob" : ""),
         position: isMobile ? "bottom" : "right", // Change to bottom on mobile
         onClickWithinArea: () => {},
       },
@@ -78,7 +61,7 @@ export default function Tour() {
             description="If this tool helped you, consider buying me a coffee to support the development!"
           />
         ),
-        selectorId: TOUR_STEP_IDS.SUPPORT + (isMobile ? "-mob" : ""),
+        selectorId: DASHBOARD_TOUR_STEP_IDS.SUPPORT + (isMobile ? "-mob" : ""),
         position: isMobile ? "bottom" : "right", // Change to bottom on mobile
         onClickWithinArea: () => {},
       },

@@ -277,6 +277,8 @@ Feel free to explore more features or start creating your own study.`;
       description: "Government website example",
       status: "active", // Make it active as requested
       type: "tree_test",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     await db.insert(treeConfigs).values({

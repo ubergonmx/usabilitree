@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Studies } from "@/db/schema";
-import { TOUR_STEP_IDS } from "@/lib/constants";
+import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
 import Link from "next/link";
 import * as React from "react";
 
@@ -46,7 +46,7 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
     <Link
       href={getMainActionUrl()}
       className="block h-full"
-      id={isSampleStudy ? TOUR_STEP_IDS.SAMPLE_STUDY : undefined}
+      id={isSampleStudy ? DASHBOARD_TOUR_STEP_IDS.SAMPLE_STUDY : undefined}
     >
       <Card className="flex h-full cursor-pointer flex-col transition-all duration-200 hover:-translate-y-1 hover:bg-accent/20 hover:shadow-lg">
         <CardHeader className="flex-shrink-0">
