@@ -507,6 +507,7 @@ export interface Participant {
     taskIndex: number;
     description: string;
     skipped: boolean;
+    confidenceRating: number | null;
     createdAt: Date;
   }[];
   hasDuplicates: boolean;
@@ -538,6 +539,7 @@ export async function getParticipants(studyId: string): Promise<Participant[]> {
             completionTimeSeconds: treeTaskResults.completionTimeSeconds,
             pathTaken: treeTaskResults.pathTaken,
             skipped: treeTaskResults.skipped,
+            confidenceRating: treeTaskResults.confidenceRating,
             taskIndex: treeTasks.taskIndex,
             description: treeTasks.description,
             createdAt: treeTaskResults.createdAt,

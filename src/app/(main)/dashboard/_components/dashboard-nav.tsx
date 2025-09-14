@@ -7,11 +7,11 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { FeedbackButton } from "@/components/feedback-button";
 import { CoffeeButton } from "@/components/coffee-button";
-import { TOUR_STEP_IDS } from "@/lib/constants";
+import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
 
 // Store the latest update date in a constant at the top of the file
 // This makes it easier to update in one place when new content is added
-const LATEST_UPDATE_DATE = "2025-09-13"; // Update this when new content is added
+const LATEST_UPDATE_DATE = "2025-09-15"; // Update this when new content is added
 
 const items = [
   {
@@ -25,7 +25,7 @@ const items = [
   //   icon: CreditCard,
   // },
   {
-    id: TOUR_STEP_IDS.UPDATES,
+    id: DASHBOARD_TOUR_STEP_IDS.UPDATES,
     title: "Updates",
     href: "/dashboard/updates",
     icon: BellIcon,
