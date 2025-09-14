@@ -1,6 +1,6 @@
 "use client";
 
-import { TOUR_STEP_IDS } from "@/lib/constants";
+import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 // Buy me a coffee SVG icon component
@@ -79,7 +79,7 @@ export function CoffeeButton({ className, variant = "nav" }: CoffeeButtonProps) 
   if (variant === "header") {
     return (
       <button
-        id={TOUR_STEP_IDS.SUPPORT + "-mob"}
+        id={DASHBOARD_TOUR_STEP_IDS.SUPPORT + "-mob"}
         onClick={handleCoffeeClick}
         className={cn(
           "flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground md:hidden",
@@ -94,7 +94,7 @@ export function CoffeeButton({ className, variant = "nav" }: CoffeeButtonProps) 
 
   return (
     <button
-      id={TOUR_STEP_IDS.SUPPORT}
+      id={DASHBOARD_TOUR_STEP_IDS.SUPPORT}
       onClick={handleCoffeeClick}
       className={cn(
         "group hidden items-center whitespace-nowrap rounded-md px-3 py-2 text-left text-sm font-medium hover:bg-accent hover:text-accent-foreground md:flex",
