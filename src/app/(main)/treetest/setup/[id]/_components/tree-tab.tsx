@@ -9,6 +9,7 @@ import { TreeNode, StudyFormData } from "@/lib/types/tree-test";
 import { sanitizeTreeTestLink } from "@/lib/utils";
 import { InfoCircledIcon } from "@/components/icons";
 import * as Sentry from "@sentry/react";
+import { SETUP_TOUR_STEP_IDS } from "@/lib/constants";
 
 interface TreeTabProps {
   data: StudyFormData;
@@ -148,7 +149,7 @@ export function TreeTab({ data, onChange }: TreeTabProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div id={SETUP_TOUR_STEP_IDS.TREE} className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="tree-structure">Tree Structure</Label>
         <Alert>

@@ -16,6 +16,7 @@ import { TreeTestOverviewStats } from "@/lib/types/tree-test";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { getTasksStats } from "@/lib/treetest/results-actions";
 import * as Sentry from "@sentry/react";
+import { RESULTS_TOUR_STEP_IDS } from "@/lib/constants";
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
@@ -186,7 +187,7 @@ export function OverviewTab({ studyId }: { studyId: string }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div id={RESULTS_TOUR_STEP_IDS.OVERVIEW} className="space-y-6">
       <h2 className="text-lg font-semibold">Study Overview</h2>
 
       <div className="grid gap-6 md:grid-cols-2">

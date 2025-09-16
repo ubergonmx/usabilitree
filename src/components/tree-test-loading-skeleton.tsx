@@ -17,8 +17,8 @@ export function LoadingSkeleton() {
             <Skeleton className="h-6 w-20" /> {/* Skip task button */}
           </div>
         </div>
-        <div className="mt-4 h-1 w-full bg-theme"></div>
       </div>
+      <div className="h-1 w-full bg-theme"></div>
 
       {/* Content area */}
       <div className="mx-auto w-full max-w-3xl px-4 pt-6 sm:px-6">

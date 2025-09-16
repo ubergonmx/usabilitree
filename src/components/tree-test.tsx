@@ -1,24 +1,25 @@
 "use client";
 
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { Banner, BannerIcon, BannerTitle } from "@/components/ui/banner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { storeTreeTaskResult } from "@/lib/treetest/actions";
-import { useRouter } from "next/navigation";
-import { sanitizeTreeTestLink } from "@/lib/utils";
 import { Item, ItemWithExpanded, TreeTestConfig } from "@/lib/types/tree-test";
+import { sanitizeTreeTestLink } from "@/lib/utils";
+import * as Sentry from "@sentry/react";
+import { ChevronDown, ChevronRight, CircleAlert } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ExclamationTriangleIcon } from "./icons";
-import * as Sentry from "@sentry/react";
 
 const confidenceLevels = [
   { value: 1, label: "Strongly Disagree" },
@@ -204,6 +205,8 @@ export function TreeTestComponent({ config, initialTaskIndex = 0, onTaskChange }
   const [confidenceLevel, setConfidenceLevel] = useState<string>();
   const [pathTaken, setPathTaken] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bannerHeight, setBannerHeight] = useState(0);
+  const bannerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const scrollToTop = () => {
@@ -221,6 +224,14 @@ export function TreeTestComponent({ config, initialTaskIndex = 0, onTaskChange }
     // Scroll to top once the page is loaded
     scrollToTop();
   }, []);
+
+  useEffect(() => {
+    // Measure banner height when in preview mode
+    if (config.preview && bannerRef.current) {
+      const height = bannerRef.current.offsetHeight;
+      setBannerHeight(height);
+    }
+  }, [config.preview]);
 
   const startTest = () => {
     setStarted(true);
@@ -333,12 +344,22 @@ export function TreeTestComponent({ config, initialTaskIndex = 0, onTaskChange }
         </>
       ) : (
         <>
-          <div className="sticky left-0 right-0 top-0 z-10 w-full bg-white pt-3 shadow-sm sm:pt-4">
+          {config.preview && (
+            <div ref={bannerRef}>
+              <Banner center className="sticky top-0 z-20 bg-orange-100 py-1 text-orange-800">
+                <BannerIcon icon={CircleAlert} />
+                <BannerTitle>Preview mode - answers are not saved</BannerTitle>
+              </Banner>
+            </div>
+          )}
+          <div
+            className="sticky left-0 right-0 z-10 w-full bg-white pt-3 shadow-sm sm:pt-4"
+            style={{ top: config.preview ? `${bannerHeight}px` : "0" }}
+          >
             <div className="mx-auto w-full max-w-3xl items-start justify-between px-4 sm:px-6 md:flex">
               <div className="pr-2">
                 <h2 className="text-base font-semibold sm:text-lg">
                   Task {currentTask + 1} of {config.tasks.length}{" "}
-                  {config.preview ? "(Preview)" : ""}
                 </h2>
                 <div className="text-mt-2 max-h-[30vh] overflow-y-auto pr-2 text-sm sm:text-base">
                   <p>

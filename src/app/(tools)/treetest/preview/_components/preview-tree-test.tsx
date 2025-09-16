@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { MarkdownPreview } from "@/components/markdown-preview";
 import { Card } from "@/components/ui/card";
+import { Banner, BannerIcon, BannerTitle } from "@/components/ui/banner";
+import { CircleAlert } from "lucide-react";
 import { loadWelcomeMessage } from "@/lib/treetest/actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import * as Sentry from "@sentry/react";
@@ -86,6 +88,10 @@ const TestPreviewPage = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
+      <Banner center className="bg-orange-100 py-1 text-orange-800">
+        <BannerIcon icon={CircleAlert} />
+        <BannerTitle>Preview mode - answers are not saved</BannerTitle>
+      </Banner>
       <div className="h-1 bg-theme"></div>
       <div className="container mx-auto max-w-2xl py-8">
         <Card className="p-6">

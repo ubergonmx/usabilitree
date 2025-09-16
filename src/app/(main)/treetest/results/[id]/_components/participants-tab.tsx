@@ -34,17 +34,7 @@ import { ParticipantDetailsModal } from "./participant-details-modal";
 import * as Sentry from "@sentry/react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
-
-// Extract Note component to reuse
-const ParticipantsNote = () => (
-  <div className="rounded-md bg-muted px-4 py-3 text-sm text-muted-foreground">
-    <p>
-      If you see duplicate responses (e.g., &quot;A1&quot; meaning Attempt 1), you can delete the
-      subsequent attempts. This may occur due to participants experiencing connectivity issues
-      during the study.
-    </p>
-  </div>
-);
+import { RESULTS_TOUR_STEP_IDS } from "@/lib/constants";
 
 interface ParticipantsTabProps {
   studyId: string;
@@ -156,7 +146,6 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
   if (loading) {
     return (
       <div className="space-y-4">
-        <ParticipantsNote />
         <div className="relative max-w-sm">
           <Skeleton className="h-10 w-full" />
         </div>
@@ -231,7 +220,6 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
   return (
     <>
       <div className="mb-4 space-y-4">
-        <ParticipantsNote />
         <div className="relative max-w-sm">
           <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
             <SearchIcon className="h-4 w-4 text-muted-foreground" />
@@ -252,7 +240,7 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
           )}
         </div>
       </div>
-      <div className="rounded-md border">
+      <div id={RESULTS_TOUR_STEP_IDS.PARTICIPANTS} className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>

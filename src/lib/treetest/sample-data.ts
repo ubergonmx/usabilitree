@@ -5,8 +5,8 @@ export const sampleParticipants = [
   {
     id: nanoid(),
     sessionId: nanoid(),
-    startedAt: new Date("2024-11-30T10:00:00Z"),
-    completedAt: new Date("2024-11-30T10:07:20Z"),
+    startedAt: new Date("2025-08-30T10:00:00Z"),
+    completedAt: new Date("2025-08-30T10:07:20Z"),
     durationSeconds: 440,
     taskResults: [
       {
@@ -94,8 +94,8 @@ export const sampleParticipants = [
   {
     id: nanoid(),
     sessionId: nanoid(),
-    startedAt: new Date("2024-11-30T11:30:00Z"),
-    completedAt: new Date("2024-11-30T11:35:15Z"),
+    startedAt: new Date("2025-08-30T11:30:00Z"),
+    completedAt: new Date("2025-08-30T11:35:15Z"),
     durationSeconds: 315,
     taskResults: [
       {
@@ -183,8 +183,8 @@ export const sampleParticipants = [
   {
     id: nanoid(),
     sessionId: nanoid(),
-    startedAt: new Date("2024-11-30T14:15:00Z"),
-    completedAt: new Date("2024-11-30T14:20:45Z"),
+    startedAt: new Date("2025-08-30T14:15:00Z"),
+    completedAt: new Date("2025-08-30T14:20:45Z"),
     durationSeconds: 345,
     taskResults: [
       {
@@ -272,8 +272,8 @@ export const sampleParticipants = [
   {
     id: nanoid(),
     sessionId: nanoid(),
-    startedAt: new Date("2024-11-30T16:45:00Z"),
-    completedAt: new Date("2024-11-30T16:52:30Z"),
+    startedAt: new Date("2025-08-30T16:45:00Z"),
+    completedAt: new Date("2025-08-30T16:52:30Z"),
     durationSeconds: 450,
     taskResults: [
       {
@@ -362,8 +362,8 @@ export const sampleParticipants = [
   {
     id: nanoid(),
     sessionId: nanoid(),
-    startedAt: new Date("2024-12-01T09:20:00Z"),
-    completedAt: new Date("2024-12-01T09:25:30Z"),
+    startedAt: new Date("2025-08-01T09:20:00Z"),
+    completedAt: new Date("2025-08-01T09:25:30Z"),
     durationSeconds: 330,
     taskResults: [
       {

@@ -277,8 +277,7 @@ Feel free to explore more features or start creating your own study.`;
       description: "Government website example",
       status: "active", // Make it active as requested
       type: "tree_test",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      // Let database handle timestamps automatically
     });
 
     await db.insert(treeConfigs).values({
@@ -297,8 +296,7 @@ Feel free to explore more features or start creating your own study.`;
       taskIndex: index,
       description: task.description,
       expectedAnswer: task.expectedAnswer,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      // Let database handle timestamps automatically
     }));
 
     if (tasksToInsert.length > 0) {
@@ -309,10 +307,14 @@ Feel free to explore more features or start creating your own study.`;
     for (const participant of sampleParticipants) {
       const { taskResults, ...participantData } = participant;
 
-      // Insert participant
+      // Insert participant with explicit field mapping to avoid any spread operator issues
       await db.insert(participants).values({
-        ...participantData,
+        id: participantData.id,
         studyId,
+        sessionId: participantData.sessionId,
+        startedAt: participantData.startedAt, // This should be a Date object that Drizzle converts to timestamp
+        completedAt: participantData.completedAt, // This should be a Date object that Drizzle converts to timestamp
+        durationSeconds: participantData.durationSeconds, // This should be an integer (seconds)
       });
 
       // Insert task results for this participant
@@ -327,7 +329,7 @@ Feel free to explore more features or start creating your own study.`;
         confidenceRating: result.confidenceRating,
         pathTaken: result.pathTaken,
         skipped: result.skipped,
-        createdAt: new Date(),
+        // Let database handle timestamps automatically
       }));
 
       await db.insert(treeTaskResults).values(taskResultsWithIds);

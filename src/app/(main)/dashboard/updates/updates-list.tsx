@@ -151,18 +151,21 @@ const updates: Update[] = [
   },
   {
     id: "11",
-    date: "2025-09-15",
+    date: "2025-09-16",
     title: "Fixes and Improvements",
     description: "Fixes and improvements to existing features",
     type: "improvement",
     details: [
       "Fixed bug in participants tab in study results where closing the details modal caused UI issues.",
       "Improved participants tab UI in study results.",
+      "Added guided tour to sample tree test setup and result pages.",
+      "Added banner with a note for tree test preview.",
+      "Added study link to sharing tab in study results.",
     ],
   },
   {
     id: "12",
-    date: "2025-09-15",
+    date: "2025-09-16",
     title: "Development Message",
     description:
       "Hi! I'm building this open-source website solo, and it's free (up to 7 tree tests). I'd love your feedback to help me improve this tool! Just click 'Give Feedback' button on the navbar. Thank you for using Usabilitree! 😊",

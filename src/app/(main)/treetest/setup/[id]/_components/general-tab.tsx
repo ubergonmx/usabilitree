@@ -5,6 +5,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { StudyFormData } from "@/lib/types/tree-test";
 import { CopyStudyDialog } from "./copy-study-dialog";
 import { InfoCircledIcon } from "@/components/icons";
+import { SETUP_TOUR_STEP_IDS } from "@/lib/constants";
 
 interface GeneralTabProps {
   data: StudyFormData;
@@ -15,7 +16,7 @@ interface GeneralTabProps {
 
 export function GeneralTab({ data, studyId, status, onChange }: GeneralTabProps) {
   return (
-    <div className="space-y-6">
+    <div id={SETUP_TOUR_STEP_IDS.GENERAL} className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="title">Study Title</Label>
         <Input

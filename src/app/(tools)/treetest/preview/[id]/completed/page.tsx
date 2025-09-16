@@ -8,6 +8,8 @@ import { Card } from "@/components/ui/card";
 import { loadCompletionMessage } from "@/lib/treetest/actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import * as Sentry from "@sentry/react";
+import { Banner, BannerIcon, BannerTitle } from "@/components/ui/banner";
+import { CircleAlert } from "lucide-react";
 
 const CompletedPage = ({ params }: { params: { id: string } }) => {
   const [completionMessage, setCompletionMessage] = useState<string | null>(null);
@@ -38,6 +40,10 @@ const CompletedPage = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
+      <Banner center className="bg-orange-100 py-1 text-orange-800">
+        <BannerIcon icon={CircleAlert} />
+        <BannerTitle>Preview mode - answers are not saved</BannerTitle>
+      </Banner>
       <div className="h-1 bg-theme"></div>
       <div className="container mx-auto max-w-2xl py-8">
         <Card className="p-6">
