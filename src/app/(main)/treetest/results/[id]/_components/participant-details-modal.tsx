@@ -161,7 +161,23 @@ export function ParticipantDetailsModal({
                 <Table>
                   <TableHeader className="sticky top-0 bg-background">
                     <TableRow>
-                      <TableHead>Task #</TableHead>
+                      <TableHead>
+                        <TooltipProvider delayDuration={300}>
+                          <Tooltip>
+                            <TooltipTrigger className="flex items-center gap-1 text-left font-medium">
+                              Task <QuestionMarkCircledIcon />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-xs">
+                              <p>
+                                T = Task number, A = Attempt number (if multiple attempts for the
+                                same task). If you see duplicate responses, you can delete the
+                                subsequent attempts. This may occur due to participants experiencing
+                                connectivity issues during the study.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </TableHead>
                       <TableHead>Result</TableHead>
                       <TableHead>Path Taken</TableHead>
                       <TableHead>
