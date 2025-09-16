@@ -4,6 +4,7 @@ import { StudyFormData } from "@/lib/types/tree-test";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MarkdownPreview } from "@/components/markdown-preview";
 import { Card } from "@/components/ui/card";
+import { SETUP_TOUR_STEP_IDS } from "@/lib/constants";
 
 interface MessagesTabProps {
   data: StudyFormData;
@@ -12,7 +13,7 @@ interface MessagesTabProps {
 
 export function MessagesTab({ data, onChange }: MessagesTabProps) {
   return (
-    <div className="space-y-6">
+    <div id={SETUP_TOUR_STEP_IDS.MESSAGES} className="space-y-6">
       <div className="space-y-4">
         <Label>Welcome Message</Label>
         <Tabs defaultValue="edit" className="w-full">

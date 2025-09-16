@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Item } from "@/lib/types/tree-test";
 import { Input } from "@/components/ui/input";
 import * as Sentry from "@sentry/react";
+import { RESULTS_TOUR_STEP_IDS } from "@/lib/constants";
 
 const confidenceLevels = [
   { value: 1, label: "Strongly Disagree" },
@@ -446,16 +447,30 @@ function ConfidenceRatingsTable({ ratings }: { ratings: TaskStats["stats"]["conf
   );
 }
 
-export function TasksTab({ studyId }: { studyId: string }) {
+export function TasksTab({
+  studyId,
+  onSetOpener,
+}: {
+  studyId: string;
+  onSetOpener?: (opener: () => void) => void;
+}) {
   const [tasks, setTasks] = useState<TaskStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [openItem, setOpenItem] = useState<string | null>(null);
 
   useEffect(() => {
     const loadTasks = async () => {
       try {
         const data = await getTasksStats(studyId);
         setTasks(data);
+
+        // Set up the opener function for the tour
+        if (onSetOpener && data.length > 0) {
+          onSetOpener(() => {
+            setOpenItem(data[0]?.id || null);
+          });
+        }
       } catch (error) {
         Sentry.captureException(error);
       } finally {
@@ -464,7 +479,7 @@ export function TasksTab({ studyId }: { studyId: string }) {
     };
 
     loadTasks();
-  }, [studyId]);
+  }, [studyId, onSetOpener]);
 
   const filteredTasks = tasks.filter((task) => {
     if (!search) return true;
@@ -540,9 +555,21 @@ export function TasksTab({ studyId }: { studyId: string }) {
           </button>
         )}
       </div>
-      <Accordion type="single" collapsible className="space-y-4">
-        {filteredTasks.map((task) => (
-          <AccordionItem key={task.id} value={task.id} className="rounded-lg border px-6">
+      <Accordion
+        id={RESULTS_TOUR_STEP_IDS.TASKS}
+        type="single"
+        collapsible
+        className="space-y-4"
+        value={openItem || ""}
+        onValueChange={(value) => setOpenItem(value || null)}
+      >
+        {filteredTasks.map((task, index) => (
+          <AccordionItem
+            {...(index === 0 ? { id: RESULTS_TOUR_STEP_IDS.TASKS_EXPAND } : {})}
+            key={task.id}
+            value={task.id}
+            className="rounded-lg border px-6"
+          >
             <AccordionTrigger className="hover:no-underline">
               <div className="flex flex-col items-start gap-4">
                 <div className="flex items-center gap-4">

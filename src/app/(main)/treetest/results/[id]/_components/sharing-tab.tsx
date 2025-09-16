@@ -3,7 +3,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { X, Copy, ExternalLink } from "lucide-react";
 import { useState, useEffect, KeyboardEvent } from "react";
 import { toast } from "sonner";
 import {
@@ -14,6 +15,7 @@ import {
 } from "@/lib/treetest/results-actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import * as Sentry from "@sentry/react";
+import { RESULTS_TOUR_STEP_IDS } from "@/lib/constants";
 
 interface SharingTabProps {
   studyId: string;
@@ -88,10 +90,31 @@ export function SharingTab({ studyId, userEmail, isOwner }: SharingTabProps) {
     }
   };
 
+  const handleCopyStudyLink = () => {
+    const link = `${window.location.origin}/treetest/${studyId}`;
+    navigator.clipboard.writeText(link);
+    toast.success("Study link copied to clipboard");
+  };
+
   if (loading) {
     return (
       <div className="space-y-6">
         <Skeleton className="h-7 w-32" /> {/* Title */}
+        {/* Study Link Card Skeleton */}
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-24" /> {/* Card Title */}
+            <Skeleton className="mt-2 h-4 w-full" /> {/* Description line 1 */}
+            <Skeleton className="mt-1 h-4 w-3/4" /> {/* Description line 2 */}
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-2">
+              <Skeleton className="h-10 flex-1" /> {/* Input field */}
+              <Skeleton className="h-10 w-16" /> {/* Copy button */}
+              <Skeleton className="h-10 w-16" /> {/* Open button */}
+            </div>
+          </CardContent>
+        </Card>
         <Card>
           <CardHeader>
             <Skeleton className="h-6 w-24" /> {/* Card Title */}
@@ -119,8 +142,45 @@ export function SharingTab({ studyId, userEmail, isOwner }: SharingTabProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-lg font-semibold">Share Results</h2>
+    <div id={RESULTS_TOUR_STEP_IDS.SHARING} className="space-y-6">
+      <h2 className="text-lg font-semibold">Public Link and Sharing Results</h2>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Study Link</CardTitle>
+          <CardDescription>
+            Share this link with participants to let them take your tree test. You can also use the
+            buttons in the header above to quickly copy or open this link.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0">
+            <Input
+              value={`${typeof window !== "undefined" ? window.location.origin : ""}/treetest/${studyId}`}
+              readOnly
+              className="flex-1"
+            />
+            <div className="flex justify-between space-x-2">
+              <Button
+                variant="outline"
+                className="h-9 shrink-0 gap-2"
+                onClick={handleCopyStudyLink}
+              >
+                <Copy className="h-4 w-4" />
+                Copy
+              </Button>
+              <Button
+                variant="outline"
+                className="h-9 shrink-0 gap-2"
+                onClick={() => window.open(`/treetest/${studyId}`, "_blank")}
+              >
+                <ExternalLink className="h-4 w-4" />
+                Open
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

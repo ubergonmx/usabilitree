@@ -7,8 +7,15 @@ import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import ResultTabs from "./_components/result-tabs";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const user = await getCurrentUser();
+
   if (!user) {
     return redirect(Paths.Login);
   }
@@ -28,11 +35,14 @@ export default async function Page({ params }: { params: { id: string } }) {
       and(eq(studyCollaborators.studyId, params.id), eq(studyCollaborators.email, user.email))
     );
 
-  const hasAccess = isOwner || collaborator;
+  const hasAccess = isOwner || !!collaborator; //|| user.id === "UI9uuzgSHHs0Xa46KZCHB";
+  const showTour = searchParams.onboarding === "1" && hasAccess;
 
   if (!hasAccess) {
     notFound();
   }
 
-  return <ResultTabs params={params} userEmail={user.email} isOwner={isOwner} />;
+  return (
+    <ResultTabs params={params} userEmail={user.email} isOwner={isOwner} showTour={showTour} />
+  );
 }

@@ -6,6 +6,7 @@ import { FileTextIcon } from "@/components/icons";
 import { useState } from "react";
 import { toast } from "sonner";
 import * as Sentry from "@sentry/react";
+import { RESULTS_TOUR_STEP_IDS } from "@/lib/constants";
 
 interface ExportTabProps {
   studyId: string;
@@ -57,7 +58,7 @@ export function ExportTab({ studyId }: ExportTabProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div id={RESULTS_TOUR_STEP_IDS.EXPORT} className="space-y-6">
       <h2 className="text-lg font-semibold">Export Study Data</h2>
 
       <Card>

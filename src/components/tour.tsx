@@ -22,6 +22,8 @@ export interface TourStep {
   width?: number;
   height?: number;
   onClickWithinArea?: () => void;
+  onBeforeStep?: () => void | Promise<void>; // Called before navigating to this step
+  onAfterStep?: () => void | Promise<void>; // Called after navigating to this step
   position?: "top" | "bottom" | "left" | "right";
 }
 
@@ -37,6 +39,7 @@ interface TourContextType {
   steps: TourStep[];
   isTourCompleted: boolean;
   setIsTourCompleted: (completed: boolean) => void;
+  updateElementPosition: () => void;
 }
 
 interface TourProviderProps {
@@ -44,6 +47,7 @@ interface TourProviderProps {
   onComplete?: () => void;
   className?: string;
   isTourCompleted?: boolean;
+  autoStart?: boolean; // Auto-start the tour without showing the dialog
 }
 
 const TourContext = createContext<TourContextType | null>(null);
@@ -106,6 +110,7 @@ export function TourProvider({
   onComplete,
   className,
   isTourCompleted = false,
+  autoStart = false, // eslint-disable-line @typescript-eslint/no-unused-vars
 }: TourProviderProps) {
   const [steps, setSteps] = useState<TourStep[]>([]);
   const [currentStep, setCurrentStep] = useState(-1);
@@ -116,6 +121,7 @@ export function TourProvider({
     height: number;
   } | null>(null);
   const [isCompleted, setIsCompleted] = useState(isTourCompleted);
+  const [documentHeight, setDocumentHeight] = useState<number>(0);
 
   const updateElementPosition = useCallback(() => {
     if (currentStep >= 0 && currentStep < steps.length) {
@@ -124,6 +130,7 @@ export function TourProvider({
         setElementPosition(position);
       }
     }
+    setDocumentHeight(document.body.scrollHeight);
   }, [currentStep, steps]);
 
   useEffect(() => {
@@ -138,22 +145,46 @@ export function TourProvider({
   }, [updateElementPosition]);
 
   const nextStep = useCallback(async () => {
-    setCurrentStep((prev) => {
-      if (prev >= steps.length - 1) {
-        return -1;
-      }
-      return prev + 1;
-    });
+    const currentStepIndex = currentStep;
+    const nextStepIndex = currentStepIndex + 1;
 
-    if (currentStep === steps.length - 1) {
-      setIsTourCompleted(true);
+    // If we're finishing the tour
+    if (currentStepIndex === steps.length - 1) {
+      setCurrentStep(-1);
+      setIsCompleted(true);
       onComplete?.();
+      return;
     }
-  }, [steps.length, onComplete, currentStep]);
+
+    // If there's a next step
+    if (nextStepIndex < steps.length) {
+      const nextStep = steps[nextStepIndex];
+
+      // Call onBeforeStep callback if it exists
+      if (nextStep.onBeforeStep) {
+        await nextStep.onBeforeStep();
+      }
+
+      // Move to next step
+      setCurrentStep(nextStepIndex);
+
+      // Wait a bit for DOM to update, then call onAfterStep
+      setTimeout(async () => {
+        if (nextStep.onAfterStep) {
+          await nextStep.onAfterStep();
+        }
+      }, 100);
+    }
+  }, [steps, currentStep, onComplete, setIsCompleted]);
 
   const previousStep = useCallback(() => {
+    // Call onBeforeStep of the previous step if it exists
+    const prevStep = currentStep > 0 ? steps[currentStep - 1] : null;
+    if (prevStep?.onBeforeStep) {
+      prevStep.onBeforeStep();
+    }
     setCurrentStep((prev) => (prev > 0 ? prev - 1 : prev));
-  }, []);
+  }, [currentStep, steps]);
 
   const endTour = useCallback(() => {
     setCurrentStep(-1);
@@ -168,7 +199,7 @@ export function TourProvider({
 
   const handleClick = useCallback(
     (e: MouseEvent) => {
-      if (currentStep >= 0 && elementPosition && steps[currentStep]?.onClickWithinArea) {
+      if (currentStep >= 0 && elementPosition) {
         const clickX = e.clientX + window.scrollX;
         const clickY = e.clientY + window.scrollY;
 
@@ -179,7 +210,10 @@ export function TourProvider({
           clickY <= elementPosition.top + (steps[currentStep]?.height || elementPosition.height);
 
         if (isWithinBounds) {
-          steps[currentStep].onClickWithinArea?.();
+          // Execute the tour step's onClickWithinArea if it exists
+          if (steps[currentStep]?.onClickWithinArea) {
+            steps[currentStep].onClickWithinArea?.();
+          }
         }
       }
     },
@@ -211,6 +245,7 @@ export function TourProvider({
         steps,
         isTourCompleted: isCompleted,
         setIsTourCompleted,
+        updateElementPosition,
       }}
     >
       {children}
@@ -221,8 +256,9 @@ export function TourProvider({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 z-50 overflow-hidden bg-black/50"
+              className="pointer-events-none absolute inset-0 z-50 overflow-hidden bg-black/50"
               style={{
+                height: `${documentHeight}px`,
                 clipPath: `polygon(
                   0% 0%,                                                                          /* top-left */
                   0% 100%,                                                                        /* bottom-left */
@@ -237,6 +273,72 @@ export function TourProvider({
                   ${elementPosition.left}px ${elementPosition.top + (steps[currentStep]?.height || elementPosition.height)}px,  /* hole bottom-left */
                   ${elementPosition.left}px 0%                                                    /* back to top edge */
                 )`,
+              }}
+            />
+            {/* Blocking rectangles - covers areas outside the highlighted element */}
+            {/* Top rectangle */}
+            <div
+              className="absolute z-[49]"
+              style={{
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: elementPosition.top,
+                pointerEvents: "all",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            />
+
+            {/* Bottom rectangle */}
+            <div
+              className="absolute z-[49]"
+              style={{
+                top: elementPosition.top + (steps[currentStep]?.height || elementPosition.height),
+                left: 0,
+                width: "100%",
+                height:
+                  documentHeight -
+                  (elementPosition.top + (steps[currentStep]?.height || elementPosition.height)),
+                pointerEvents: "all",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            />
+
+            {/* Left rectangle */}
+            <div
+              className="absolute z-[49]"
+              style={{
+                top: elementPosition.top,
+                left: 0,
+                width: elementPosition.left,
+                height: steps[currentStep]?.height || elementPosition.height,
+                pointerEvents: "all",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            />
+
+            {/* Right rectangle */}
+            <div
+              className="absolute z-[49]"
+              style={{
+                top: elementPosition.top,
+                left: elementPosition.left + (steps[currentStep]?.width || elementPosition.width),
+                width: `calc(100% - ${elementPosition.left + (steps[currentStep]?.width || elementPosition.width)}px)`,
+                height: steps[currentStep]?.height || elementPosition.height,
+                pointerEvents: "all",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
               }}
             />
             <motion.div
@@ -349,14 +451,42 @@ export function TourAlertDialog({
   isOpen,
   setIsOpen,
   children,
+  autoStart = false,
+  onComplete,
 }: {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   children?: React.ReactNode;
+  autoStart?: boolean;
+  onComplete?: () => void;
 }) {
   const { startTour, steps, isTourCompleted, currentStep } = useTour();
 
+  // Auto-start effect
+  React.useEffect(() => {
+    if (autoStart && !isTourCompleted && steps.length > 0 && currentStep === -1) {
+      // Use a small timeout to ensure DOM is ready
+      const timer = setTimeout(() => {
+        startTour();
+        setIsOpen(false);
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [autoStart, isTourCompleted, steps.length, currentStep, startTour, setIsOpen]);
+
+  // Handle tour completion from TourProvider
+  React.useEffect(() => {
+    if (isTourCompleted && onComplete) {
+      onComplete();
+    }
+  }, [isTourCompleted, onComplete]);
+
   if (isTourCompleted || steps.length === 0 || currentStep > -1) {
+    return null;
+  }
+
+  // If autoStart is enabled, don't show the dialog - just start the tour
+  if (autoStart) {
     return null;
   }
   const handleSkip = async () => {

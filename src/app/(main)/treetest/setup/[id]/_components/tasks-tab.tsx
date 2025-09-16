@@ -18,6 +18,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { CopyTasksDialog } from "./copy-tasks-dialog";
+import { SETUP_TOUR_STEP_IDS } from "@/lib/constants";
 
 interface TasksTabProps {
   data: StudyFormData;
@@ -124,7 +125,7 @@ export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div id={SETUP_TOUR_STEP_IDS.TASKS} className="space-y-6">
       {data.tasks.items.map((task, index) => (
         <div key={index} className="relative space-y-4 rounded-lg border p-4">
           <div className="flex items-center justify-between">

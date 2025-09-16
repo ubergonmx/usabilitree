@@ -1,18 +1,19 @@
-import { db } from "@/db";
-import { studies } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth/session";
 import { Paths } from "@/lib/constants";
-import { eq } from "drizzle-orm";
 import { notFound, redirect } from "next/navigation";
 import SetupTabs from "./_components/setup-tabs";
+import { db } from "@/db";
+import { studies } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 interface SetupPageProps {
   params: {
     id: string;
   };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default async function SetupPage({ params }: SetupPageProps) {
+export default async function SetupPage({ params, searchParams }: SetupPageProps) {
   const user = await getCurrentUser();
   if (!user) {
     redirect(Paths.Login);
@@ -24,5 +25,7 @@ export default async function SetupPage({ params }: SetupPageProps) {
     notFound();
   }
 
-  return <SetupTabs params={params} />;
+  const showTour = searchParams.onboarding === "1";
+
+  return <SetupTabs params={params} showTour={showTour} />;
 }
