@@ -27,6 +27,7 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
     if (study.status === "draft") {
       return `/treetest/setup/${study.id}`;
     }
+    if (isSampleStudy) return `/treetest/results/${study.id}?onboarding=1`;
     return `/treetest/results/${study.id}`;
   };
 

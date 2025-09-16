@@ -40,18 +40,21 @@ import { TreeTab } from "./tree-tab";
 import { TasksTab } from "./tasks-tab";
 import { MessagesTab } from "./messages-tab";
 import { StudyFormData } from "@/lib/types/tree-test";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import * as Sentry from "@sentry/react";
 import { TriangleAlertIcon } from "lucide-react";
+import TourSetup from "./setup-tour";
+import { SETUP_TOUR_STEP_IDS } from "@/lib/constants";
 
 interface SetupTabsProps {
   params: {
     id: string;
   };
+  showTour?: boolean;
 }
 
-export default function SetupTabs({ params }: SetupTabsProps) {
+export default function SetupTabs({ params, showTour = false }: SetupTabsProps) {
   const router = useRouter();
   const [formData, setFormData] = useState<StudyFormData>({
     general: {
@@ -74,6 +77,8 @@ export default function SetupTabs({ params }: SetupTabsProps) {
   const [isLaunching, setIsLaunching] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [status, setStatus] = useState("draft");
+  const [activeTab, setActiveTab] = useState("general");
+  const [isTourCompletedInStorage, setIsTourCompletedInStorage] = useState(false);
 
   // Load initial data
   useEffect(() => {
@@ -109,6 +114,37 @@ export default function SetupTabs({ params }: SetupTabsProps) {
   useEffect(() => {
     setHasUnsavedChanges(true);
   }, [formData]);
+
+  // Check localStorage for tour completion status
+  useEffect(() => {
+    const tourCompleted = localStorage.getItem("setup-tour-completed");
+    setIsTourCompletedInStorage(tourCompleted === "true");
+  }, []);
+
+  // Handle tour completion
+  const handleTourComplete = () => {
+    localStorage.setItem("setup-tour-completed", "true");
+    setIsTourCompletedInStorage(true);
+  };
+
+  // Only show tour if explicitly requested and not completed
+  const shouldShowTour = showTour && !isTourCompletedInStorage;
+
+  // Memoize the tour actions to prevent infinite update loops
+  const tourActions = useMemo(
+    () => ({
+      [SETUP_TOUR_STEP_IDS.GENERAL]: () => setActiveTab("general"),
+      [SETUP_TOUR_STEP_IDS.TREE]: () => setActiveTab("tree"),
+      [SETUP_TOUR_STEP_IDS.TASKS]: () => setActiveTab("tasks"),
+      [SETUP_TOUR_STEP_IDS.MESSAGES]: () => setActiveTab("messages"),
+      // For buttons, these don't change tabs but are used for highlighting
+      [SETUP_TOUR_STEP_IDS.SAVE]: () => {},
+      [SETUP_TOUR_STEP_IDS.PREVIEW]: () => {},
+      [SETUP_TOUR_STEP_IDS.RESULTS]: () => {},
+      [SETUP_TOUR_STEP_IDS.DELETE]: () => {},
+    }),
+    []
+  );
 
   const canLaunchOrPreview = () => {
     return (
@@ -192,6 +228,7 @@ export default function SetupTabs({ params }: SetupTabsProps) {
 
   return (
     <main className="container min-h-[calc(100vh-160px)] pt-3 md:max-w-screen-md">
+      {shouldShowTour && <TourSetup actions={tourActions} onComplete={handleTourComplete} />}
       <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <TooltipProvider delayDuration={100}>
@@ -247,6 +284,7 @@ export default function SetupTabs({ params }: SetupTabsProps) {
 
         <div className="flex items-center gap-2">
           <Button
+            id={SETUP_TOUR_STEP_IDS.SAVE}
             variant="outline"
             size="sm"
             className="gap-2"
@@ -319,7 +357,12 @@ export default function SetupTabs({ params }: SetupTabsProps) {
 
           {status !== "draft" && (
             <Link href={`/treetest/results/${params.id}`}>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button
+                id={SETUP_TOUR_STEP_IDS.RESULTS}
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
                 <ChecklistIcon className="h-4 w-4" />
                 Results
               </Button>
@@ -331,6 +374,7 @@ export default function SetupTabs({ params }: SetupTabsProps) {
               <TooltipTrigger asChild>
                 <span>
                   <Button
+                    id={SETUP_TOUR_STEP_IDS.PREVIEW}
                     variant="outline"
                     size="sm"
                     className="gap-2"
@@ -349,7 +393,13 @@ export default function SetupTabs({ params }: SetupTabsProps) {
           </TooltipProvider>
 
           <AlertDialog>
-            <Button variant="ghost" size="sm" className="text-destructive" asChild>
+            <Button
+              id={SETUP_TOUR_STEP_IDS.DELETE}
+              variant="ghost"
+              size="sm"
+              className="text-destructive"
+              asChild
+            >
               <AlertDialogTrigger>
                 <TrashIcon className="h-4 w-4" />
               </AlertDialogTrigger>
@@ -379,7 +429,7 @@ export default function SetupTabs({ params }: SetupTabsProps) {
         </div>
       </div>
 
-      <Tabs defaultValue="general" className="mt-6 w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6 w-full">
         <TabsList className="flex h-auto w-full flex-wrap items-center justify-start">
           <TabsTrigger value="general" className="gap-2">
             <GearIcon className="h-4 w-4" />
