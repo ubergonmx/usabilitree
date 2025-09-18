@@ -345,8 +345,8 @@ export function TreeTestComponent({ config, initialTaskIndex = 0, onTaskChange }
       ) : (
         <>
           {config.preview && (
-            <div ref={bannerRef}>
-              <Banner center className="sticky top-0 z-20 bg-orange-100 py-1 text-orange-800">
+            <div ref={bannerRef} className="sticky top-0 z-20">
+              <Banner center className="bg-orange-100 py-1 text-orange-800">
                 <BannerIcon icon={CircleAlert} />
                 <BannerTitle>Preview mode - answers are not saved</BannerTitle>
               </Banner>

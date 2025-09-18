@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import DOMPurify from "dompurify";
+import { useMemo } from "react";
 
 interface MarkdownPreviewProps {
   content: string;
@@ -54,10 +55,15 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
     });
   };
 
+  // Memoize the parsed content to prevent unnecessary re-renders
+  const parsedContent = useMemo(() => parseMarkdown(content), [content]);
+
   return (
     <div
       className={cn("prose prose-sm max-w-none", className)}
-      dangerouslySetInnerHTML={{ __html: parseMarkdown(content) }}
+      dangerouslySetInnerHTML={{ __html: parsedContent }}
+      // Allow translation but add data attribute for debugging
+      data-markdown-content="true"
     />
   );
 }
