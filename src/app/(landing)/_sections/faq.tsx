@@ -14,8 +14,8 @@ export default function FAQ() {
       answer: (
         <span>
           I made this website as a free alternative to UXTweak and Optimal Workshop (which can be
-          costly) to help students, UX designers, and researchers create tree tests. Card sorting
-          will be added soon.
+          costly) to help students, UX designers, and researchers create tree tests. Card sorting is
+          planned to be added in the future.
         </span>
       ),
     },
@@ -33,8 +33,23 @@ export default function FAQ() {
       question: "Is this tool free?",
       answer: (
         <span>
-          Yes, everything is free. I will soon add limitations for free users, but I will always
-          offer a free plan.
+          Yes, everything is free. You can create up to 7 tree tests with unlimited participants.
+        </span>
+      ),
+    },
+    {
+      question: "Where is the demo?",
+      answer: (
+        <span>
+          There is no demo. However, when you sign up, you will see a sample active study in your
+          dashboard that will get you onboarded about tree testing. If you do not like something,
+          please let me know through Feedback button on the dashboard (once logged in) or DM me on{" "}
+          <Button variant="linkHover1" className="p-0 after:w-12">
+            <a href="https://discord.com/users/263841596213035009" target="_blank">
+              Discord
+            </a>
+          </Button>
+          .
         </span>
       ),
     },
@@ -43,7 +58,14 @@ export default function FAQ() {
       answer: (
         <span>
           I&apos;ll try to update it as often as possible, but I can&apos;t make any promises. If
-          you have any suggestions or requests, please let me know through GitHub issues.
+          you have any suggestions or requests, please let me know through Feedback button on the
+          dashboard (once logged in) or DM me on{" "}
+          <Button variant="linkHover1" className="p-0 after:w-12">
+            <a href="https://discord.com/users/263841596213035009" target="_blank">
+              Discord
+            </a>
+          </Button>
+          .
         </span>
       ),
     },
