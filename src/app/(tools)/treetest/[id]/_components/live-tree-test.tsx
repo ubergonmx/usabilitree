@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { MarkdownPreview } from "@/components/markdown-preview";
@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { loadWelcomeMessage, checkStudyCompletion } from "@/lib/treetest/actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import * as Sentry from "@sentry/react";
+import { toast } from "sonner";
 
 const instructions = `# Instructions
 **Here's how it works:**
@@ -73,13 +74,18 @@ const TestLivePage = ({ params }: { params: { id: string } }) => {
     }
   }, [showInstructions]);
 
-  const handleNextClick = () => {
-    if (showInstructions) {
-      router.push(`/treetest/${params.id}/tasks`);
-    } else {
-      setShowInstructions(true);
+  const handleNextClick = useCallback(() => {
+    try {
+      if (showInstructions) {
+        router.push(`/treetest/${params.id}/tasks`);
+      } else {
+        setShowInstructions(true);
+      }
+    } catch (error) {
+      Sentry.captureException(error);
+      toast.error("An error occurred. Please reload the page and try again.");
     }
-  };
+  }, [showInstructions, router, params.id]);
 
   if (isCompleted) {
     return (

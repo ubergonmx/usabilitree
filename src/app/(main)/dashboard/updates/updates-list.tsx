@@ -151,7 +151,7 @@ const updates: Update[] = [
   },
   {
     id: "11",
-    date: "2025-09-16",
+    date: "2025-09-17",
     title: "Fixes and Improvements",
     description: "Fixes and improvements to existing features",
     type: "improvement",
@@ -165,7 +165,14 @@ const updates: Update[] = [
   },
   {
     id: "12",
-    date: "2025-09-16",
+    date: "2025-09-18",
+    title: "UI Fix",
+    description: "Fixed preview mode banner UI issue and improved markdown rendering",
+    type: "fix",
+  },
+  {
+    id: "13",
+    date: "2025-09-18",
     title: "Development Message",
     description:
       "Hi! I'm building this open-source website solo, and it's free (up to 7 tree tests). I'd love your feedback to help me improve this tool! Just click 'Give Feedback' button on the navbar. Thank you for using Usabilitree! 😊",
