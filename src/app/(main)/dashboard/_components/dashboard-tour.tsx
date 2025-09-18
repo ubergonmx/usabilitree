@@ -25,7 +25,7 @@ export default function TourDashboard() {
         content: (
           <TourContent
             title="Sample Study"
-            description="Take a look at this sample active study and familiarize yourself with the interface."
+            description="Take a look at this sample active study and get onboarded on how tree testing works in this platform."
           />
         ),
         selectorId: DASHBOARD_TOUR_STEP_IDS.SAMPLE_STUDY,
