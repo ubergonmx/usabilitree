@@ -226,35 +226,40 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
     window.open(`/treetest/preview/${params.id}`, "_blank");
   };
 
+  const handleBackToDashboard = async () => {
+    if (hasUnsavedChanges) {
+      setIsSaving(true);
+      try {
+        await saveStudyData(params.id, formData);
+        toast.success("Study saved successfully");
+      } catch (error) {
+        toast.error("Failed to save study");
+        Sentry.captureException(error);
+        return; // Don't navigate if save failed
+      } finally {
+        setIsSaving(false);
+        setHasUnsavedChanges(false);
+      }
+    }
+    router.push("/dashboard");
+  };
+
   return (
     <main className="container min-h-[calc(100vh-160px)] pt-3 md:max-w-screen-md">
       {shouldShowTour && <TourSetup actions={tourActions} onComplete={handleTourComplete} />}
       <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <TooltipProvider delayDuration={100}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div>
-                  {hasUnsavedChanges ? (
-                    <span className="mb-3 flex cursor-not-allowed items-center gap-2 text-sm text-muted-foreground opacity-60">
-                      <ArrowLeftIcon className="h-5 w-5" /> back to dashboard
-                      <span className="text-xs text-muted-foreground sm:hidden">
-                        (unsaved changes)
-                      </span>
-                    </span>
-                  ) : (
-                    <Link
-                      href="/dashboard"
-                      className="mb-3 flex items-center gap-2 text-sm text-muted-foreground hover:underline"
-                    >
-                      <ArrowLeftIcon className="h-5 w-5" /> back to dashboard{" "}
-                    </Link>
-                  )}
-                </div>
-              </TooltipTrigger>
-              {hasUnsavedChanges && <TooltipContent>Save your changes first!</TooltipContent>}
-            </Tooltip>
-          </TooltipProvider>
+          <button
+            onClick={handleBackToDashboard}
+            disabled={isSaving}
+            className="mb-3 flex items-center gap-2 text-sm text-muted-foreground hover:underline disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <ArrowLeftIcon className="h-5 w-5" />
+            {isSaving ? "Saving..." : "back to dashboard"}
+            {hasUnsavedChanges && !isSaving && (
+              <span className="text-xs text-muted-foreground sm:hidden">(will save changes)</span>
+            )}
+          </button>
           <h1 className="flex items-center gap-2 text-2xl font-bold">
             <WorkflowIcon /> {formData.general.title || "Set up your Tree Test"}
           </h1>
