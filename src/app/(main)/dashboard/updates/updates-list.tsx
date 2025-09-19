@@ -172,7 +172,15 @@ const updates: Update[] = [
   },
   {
     id: "13",
-    date: "2025-09-18",
+    date: "2025-09-19",
+    title: "UI Improvement",
+    description: "Improved navigation experience in tree test setup",
+    type: "improvement",
+    details: ["Back to dashboard now auto-saves changes instead of showing a blocking tooltip"],
+  },
+  {
+    id: "14",
+    date: "2025-09-19",
     title: "Development Message",
     description:
       "Hi! I'm building this open-source website solo, and it's free (up to 7 tree tests). I'd love your feedback to help me improve this tool! Just click 'Give Feedback' button on the navbar. Thank you for using Usabilitree! 😊",
