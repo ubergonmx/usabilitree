@@ -18,6 +18,7 @@ function TourContent({ title, description }: { title: string; description: strin
 export default function TourDashboard() {
   const router = useRouter();
   const [openTour, setOpenTour] = useState(false);
+  const [hasShownTour, setHasShownTour] = useState(false);
   const [isTourCompletedInStorage, setIsTourCompletedInStorage] = useState(false);
   const isMobile = useMediaQuery("(max-width: 767px)"); // Tailwind's md breakpoint
   const { setSteps } = useTour();
@@ -105,6 +106,7 @@ export default function TourDashboard() {
     if (!isTourCompletedInStorage) {
       const timer = setTimeout(() => {
         setOpenTour(true);
+        setHasShownTour(true);
       }, 100);
 
       return () => clearTimeout(timer);
@@ -113,14 +115,14 @@ export default function TourDashboard() {
 
   // Handle when tour dialog is closed (either by skip or start)
   useEffect(() => {
-    if (!openTour && !isTourCompletedInStorage) {
-      // This means the dialog was closed, so we should handle the skip case
+    if (!openTour && hasShownTour && !isTourCompletedInStorage) {
+      // This means the dialog was closed after being shown, so we should handle the skip case
       const timer = setTimeout(() => {
         handleTourSkip();
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [openTour, isTourCompletedInStorage, handleTourSkip]);
+  }, [openTour, hasShownTour, isTourCompletedInStorage, handleTourSkip]);
 
   // Don't render tour if it's been completed
   if (isTourCompletedInStorage) {
