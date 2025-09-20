@@ -72,7 +72,7 @@ export async function login(_: unknown, formData: FormData): Promise<ActionRespo
   }
 
   await setSession(existingUser.id);
-  return redirect(Paths.Dashboard + "?onboarding=1");
+  return redirect(Paths.Dashboard);
 }
 
 export async function signup(_: unknown, formData: FormData): Promise<ActionResponse<SignupInput>> {

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
 import { TourAlertDialog, TourStep, useTour } from "@/components/tour";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
@@ -15,9 +16,17 @@ function TourContent({ title, description }: { title: string; description: strin
 }
 
 export default function TourDashboard() {
+  const router = useRouter();
   const [openTour, setOpenTour] = useState(false);
+  const [isTourCompletedInStorage, setIsTourCompletedInStorage] = useState(false);
   const isMobile = useMediaQuery("(max-width: 767px)"); // Tailwind's md breakpoint
   const { setSteps } = useTour();
+
+  // Check localStorage for tour completion status
+  useEffect(() => {
+    const tourCompleted = localStorage.getItem("dashboard-tour-completed");
+    setIsTourCompletedInStorage(tourCompleted === "true");
+  }, []);
 
   const steps: TourStep[] = useMemo(
     () => [
@@ -69,13 +78,56 @@ export default function TourDashboard() {
     [isMobile]
   );
 
+  // Remove onboarding parameter from URL
+  const removeOnboardingParam = useCallback(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("onboarding");
+    router.replace(url.pathname + url.search, { scroll: false });
+  }, [router]);
+
+  // Handle tour completion
+  const handleTourComplete = useCallback(() => {
+    localStorage.setItem("dashboard-tour-completed", "true");
+    setIsTourCompletedInStorage(true);
+    removeOnboardingParam();
+  }, [removeOnboardingParam]);
+
+  // Handle tour skip
+  const handleTourSkip = useCallback(() => {
+    localStorage.setItem("dashboard-tour-completed", "true");
+    setIsTourCompletedInStorage(true);
+    removeOnboardingParam();
+  }, [removeOnboardingParam]);
+
   useEffect(() => {
     setSteps(steps);
-    const timer = setTimeout(() => {
-      setOpenTour(true);
-    }, 100);
+    // Only show tour if not completed in localStorage
+    if (!isTourCompletedInStorage) {
+      const timer = setTimeout(() => {
+        setOpenTour(true);
+      }, 100);
 
-    return () => clearTimeout(timer);
-  }, [setSteps, steps]);
-  return <TourAlertDialog isOpen={openTour} setIsOpen={setOpenTour} />;
+      return () => clearTimeout(timer);
+    }
+  }, [setSteps, steps, isTourCompletedInStorage]);
+
+  // Handle when tour dialog is closed (either by skip or start)
+  useEffect(() => {
+    if (!openTour && !isTourCompletedInStorage) {
+      // This means the dialog was closed, so we should handle the skip case
+      const timer = setTimeout(() => {
+        handleTourSkip();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [openTour, isTourCompletedInStorage, handleTourSkip]);
+
+  // Don't render tour if it's been completed
+  if (isTourCompletedInStorage) {
+    return null;
+  }
+
+  return (
+    <TourAlertDialog isOpen={openTour} setIsOpen={setOpenTour} onComplete={handleTourComplete} />
+  );
 }
