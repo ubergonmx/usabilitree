@@ -359,6 +359,11 @@ export function ParticipantDetailsModal({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Participant</AlertDialogTitle>
             <AlertDialogDescription>
+              It is advisable to delete participant data <b>only if</b> they were test participants
+              or if the study is completed. The participant may come back to complete the study
+              later.
+              <br />
+              <br />
               Are you sure you want to delete all results for Participant{" "}
               {participant.participantNumber}? This action cannot be undone.
             </AlertDialogDescription>
