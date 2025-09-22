@@ -1,16 +1,11 @@
-import { nanoid } from "nanoid";
-
 // Sample participant data extracted from the PARANAQUE Govt (Final) study
 export const sampleParticipants = [
   {
-    id: nanoid(),
-    sessionId: nanoid(),
     startedAt: new Date("2025-08-30T10:00:00Z"),
     completedAt: new Date("2025-08-30T10:07:20Z"),
     durationSeconds: 440,
     taskResults: [
       {
-        id: nanoid(),
         taskIndex: 0,
         successful: true,
         directPathTaken: true,
@@ -20,7 +15,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 1,
         successful: true,
         directPathTaken: true,
@@ -30,7 +24,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 2,
         successful: true,
         directPathTaken: true,
@@ -40,7 +33,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 3,
         successful: true,
         directPathTaken: true,
@@ -50,7 +42,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 4,
         successful: true,
         directPathTaken: true,
@@ -60,7 +51,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 5,
         successful: true,
         directPathTaken: true,
@@ -70,7 +60,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 6,
         successful: true,
         directPathTaken: true,
@@ -80,7 +69,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 7,
         successful: true,
         directPathTaken: true,
@@ -92,14 +80,11 @@ export const sampleParticipants = [
     ],
   },
   {
-    id: nanoid(),
-    sessionId: nanoid(),
     startedAt: new Date("2025-08-30T11:30:00Z"),
     completedAt: new Date("2025-08-30T11:35:15Z"),
     durationSeconds: 315,
     taskResults: [
       {
-        id: nanoid(),
         taskIndex: 0,
         successful: true,
         directPathTaken: true,
@@ -109,7 +94,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 1,
         successful: true,
         directPathTaken: true,
@@ -119,7 +103,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 2,
         successful: true,
         directPathTaken: true,
@@ -129,7 +112,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 3,
         successful: true,
         directPathTaken: false,
@@ -139,7 +121,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 4,
         successful: true,
         directPathTaken: true,
@@ -149,7 +130,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 5,
         successful: true,
         directPathTaken: true,
@@ -159,7 +139,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 6,
         successful: true,
         directPathTaken: true,
@@ -169,7 +148,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 7,
         successful: true,
         directPathTaken: true,
@@ -181,14 +159,11 @@ export const sampleParticipants = [
     ],
   },
   {
-    id: nanoid(),
-    sessionId: nanoid(),
     startedAt: new Date("2025-08-30T14:15:00Z"),
     completedAt: new Date("2025-08-30T14:20:45Z"),
     durationSeconds: 345,
     taskResults: [
       {
-        id: nanoid(),
         taskIndex: 0,
         successful: true,
         directPathTaken: true,
@@ -198,7 +173,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 1,
         successful: true,
         directPathTaken: true,
@@ -208,7 +182,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 2,
         successful: true,
         directPathTaken: true,
@@ -218,7 +191,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 3,
         successful: true,
         directPathTaken: true,
@@ -228,7 +200,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 4,
         successful: true,
         directPathTaken: true,
@@ -238,7 +209,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 5,
         successful: true,
         directPathTaken: true,
@@ -248,7 +218,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 6,
         successful: true,
         directPathTaken: true,
@@ -258,7 +227,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 7,
         successful: true,
         directPathTaken: true,
@@ -270,14 +238,11 @@ export const sampleParticipants = [
     ],
   },
   {
-    id: nanoid(),
-    sessionId: nanoid(),
     startedAt: new Date("2025-08-30T16:45:00Z"),
     completedAt: new Date("2025-08-30T16:52:30Z"),
     durationSeconds: 450,
     taskResults: [
       {
-        id: nanoid(),
         taskIndex: 0,
         successful: false,
         directPathTaken: false,
@@ -287,7 +252,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 1,
         successful: true,
         directPathTaken: false,
@@ -297,7 +261,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 2,
         successful: true,
         directPathTaken: false,
@@ -308,7 +271,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 3,
         successful: true,
         directPathTaken: false,
@@ -318,7 +280,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 4,
         successful: false,
         directPathTaken: false,
@@ -328,7 +289,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 5,
         successful: true,
         directPathTaken: true,
@@ -338,7 +298,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 6,
         successful: true,
         directPathTaken: false,
@@ -348,7 +307,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 7,
         successful: true,
         directPathTaken: false,
@@ -360,14 +318,11 @@ export const sampleParticipants = [
     ],
   },
   {
-    id: nanoid(),
-    sessionId: nanoid(),
     startedAt: new Date("2025-08-01T09:20:00Z"),
     completedAt: new Date("2025-08-01T09:25:30Z"),
     durationSeconds: 330,
     taskResults: [
       {
-        id: nanoid(),
         taskIndex: 0,
         successful: true,
         directPathTaken: true,
@@ -377,7 +332,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 1,
         successful: true,
         directPathTaken: true,
@@ -387,7 +341,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 2,
         successful: true,
         directPathTaken: true,
@@ -397,7 +350,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 3,
         successful: false,
         directPathTaken: false,
@@ -407,7 +359,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 4,
         successful: true,
         directPathTaken: true,
@@ -417,7 +368,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 5,
         successful: false,
         directPathTaken: true,
@@ -427,7 +377,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 6,
         successful: true,
         directPathTaken: true,
@@ -437,7 +386,6 @@ export const sampleParticipants = [
         skipped: false,
       },
       {
-        id: nanoid(),
         taskIndex: 7,
         successful: true,
         directPathTaken: false,
