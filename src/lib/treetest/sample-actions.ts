@@ -307,11 +307,13 @@ Feel free to explore more features or start creating your own study.`;
     for (const participant of sampleParticipants) {
       const { taskResults, ...participantData } = participant;
 
+      const participantId = nanoid();
+
       // Insert participant with explicit field mapping to avoid any spread operator issues
       await db.insert(participants).values({
-        id: participantData.id,
+        id: participantId,
         studyId,
-        sessionId: participantData.sessionId,
+        sessionId: nanoid(),
         startedAt: participantData.startedAt, // This should be a Date object that Drizzle converts to timestamp
         completedAt: participantData.completedAt, // This should be a Date object that Drizzle converts to timestamp
         durationSeconds: participantData.durationSeconds, // This should be an integer (seconds)
@@ -321,7 +323,7 @@ Feel free to explore more features or start creating your own study.`;
       const taskResultsWithIds = taskResults.map((result) => ({
         id: nanoid(),
         studyId,
-        participantId: participant.id,
+        participantId: participantId,
         taskId: tasksToInsert[result.taskIndex]?.id || nanoid(), // Map taskIndex to actual task ID
         successful: result.successful,
         directPathTaken: result.directPathTaken,
