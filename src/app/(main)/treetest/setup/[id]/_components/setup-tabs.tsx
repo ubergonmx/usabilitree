@@ -334,8 +334,9 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
                 <AlertDialogHeader>
                   <AlertDialogTitle>Launch Study?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will make your study live and available to participants. You won&apos;t be
-                    able to modify it after launching.
+                    This will make your study live and available to participants. You can edit it
+                    later but existing participants&apos; answers will not be affected. A link to
+                    the study will be copied to your clipboard for easy sharing.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
