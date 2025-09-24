@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Link from "next/link";
 
 export default function FAQ() {
   const faqs = [
@@ -41,10 +42,15 @@ export default function FAQ() {
       question: "Where is the demo?",
       answer: (
         <span>
-          There is no demo. However, when you sign up, you will see a sample active study in your
-          dashboard that will get you onboarded about tree testing. If you do not like something,
-          please let me know through Feedback button on the dashboard (once logged in) or DM me on{" "}
-          <Button variant="linkHover1" className="p-0 after:w-12">
+          There is no demo. However, when you sign up, you&apos;ll see a sample active study in your
+          dashboard to help you get familiar with tree testing. Please be guided by the onboarding
+          flow—it&apos;s designed to walk you through the basics. If you choose &quot;No, I&apos;ll
+          explore myself&quot;, you can still refer back to the sample study anytime.
+          <br />
+          <br />
+          If you don&apos;t like something, please let me know through the Feedback button on the
+          dashboard (once logged in) or DM me on{" "}
+          <Button variant="linkHover1" className="h-0 p-0 after:-bottom-2 after:w-[50px]">
             <a href="https://discord.com/users/263841596213035009" target="_blank">
               Discord
             </a>
@@ -57,10 +63,28 @@ export default function FAQ() {
       question: "How often is it updated?",
       answer: (
         <span>
-          I&apos;ll try to update it as often as possible, but I can&apos;t make any promises. If
-          you have any suggestions or requests, please let me know through Feedback button on the
-          dashboard (once logged in) or DM me on{" "}
-          <Button variant="linkHover1" className="p-0 after:w-12">
+          As a sole developer maintaining this
+          <Button variant="linkHover1" className="ml-1 h-0 p-0 after:-bottom-2 after:w-32">
+            <Link href="https://github.com/ubergonmx/usabilitree" target="_blank">
+              open-source project
+            </Link>
+          </Button>
+          , I update it as often as I can. Your support really helps me move faster and keep things
+          improving—if you&apos;d like to help boost development:
+          <Button variant="linkHover1" className="ml-1 h-0 p-0 after:-bottom-2 after:w-[98px]">
+            <Link href="https://www.buymeacoffee.com/aaronpal" target="_blank">
+              BuyMeACoffee
+            </Link>
+          </Button>
+          .
+          <br />
+          <br />
+          I&apos;m currently working on a major overhaul, and a roadmap will be added soon.
+          <br />
+          <br />
+          In the meantime, if you have any suggestions or requests, feel free to let me know through
+          the Feedback button on the dashboard (once logged in) or DM me on{" "}
+          <Button variant="linkHover1" className="h-0 p-0 after:-bottom-2 after:w-[50px]">
             <a href="https://discord.com/users/263841596213035009" target="_blank">
               Discord
             </a>
@@ -74,13 +98,13 @@ export default function FAQ() {
       answer: (
         <span>
           Please report the bug on{" "}
-          <Button variant="linkHover1" className="p-0 after:w-12">
-            <a href="https://github.com/ubergonmx/usabilitree-next/issues/new" target="_blank">
+          <Button variant="linkHover1" className="h-0 p-0 after:-bottom-2 after:w-12">
+            <a href="https://github.com/ubergonmx/usabilitree/issues/new" target="_blank">
               GitHub
             </a>
           </Button>{" "}
           or DM me on{" "}
-          <Button variant="linkHover1" className="p-0 after:w-[52px]">
+          <Button variant="linkHover1" className="h-0 p-0 after:-bottom-2 after:w-[50px]">
             <a href="https://discord.com/users/263841596213035009" target="_blank">
               Discord
             </a>
