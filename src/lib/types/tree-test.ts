@@ -2,6 +2,7 @@ export interface StudyFormData {
   general: {
     title: string;
     description: string;
+    status: string;
   };
   tree: {
     structure: string;
@@ -16,6 +17,21 @@ export interface StudyFormData {
   messages: {
     welcome: string;
     completion: string;
+  };
+  customText: {
+    instructions: string;
+    startTest: string;
+    findItHere: string;
+    startTask: string;
+    confidenceQuestion: string;
+    stronglyAgree: string;
+    stronglyDisagree: string;
+    taskProgress: string;
+    skipTask: string;
+    submitContinue: string;
+    completedMessage: string;
+    nextButton: string;
+    confidenceDescription: string;
   };
 }
 
@@ -45,6 +61,21 @@ export interface TreeTestConfig {
   preview: boolean;
   participantId?: string;
   studyId: string;
+  customText: {
+    instructions: string;
+    startTest: string;
+    findItHere: string;
+    startTask: string;
+    confidenceQuestion: string;
+    stronglyAgree: string;
+    stronglyDisagree: string;
+    taskProgress: string;
+    skipTask: string;
+    submitContinue: string;
+    completedMessage: string;
+    nextButton: string;
+    confidenceDescription: string;
+  };
 }
 
 export interface TreeTestOverviewStats {

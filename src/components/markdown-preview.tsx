@@ -20,8 +20,8 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
     // Parse markdown with allowed tags
     const parsedMarkdown = escapedText
       // Headers
-      .replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold mb-4">$1</h1>')
-      .replace(/^## (.*$)/gm, '<h2 class="text-xl font-bold mb-3">$1</h2>')
+      .replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold">$1</h1>')
+      .replace(/^## (.*$)/gm, '<h2 class="text-xl font-bold">$1</h2>')
       // Bullet Lists
       .replace(/^\* (.*$)/gm, '<li class="ml-4">$1</li>')
       .replace(/^- (.*$)/gm, '<li class="ml-4">$1</li>')
@@ -33,8 +33,15 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
       })
       // Images
       .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, url) => {
-        // Ensure URL is properly sanitized
-        const sanitizedUrl = url.replace(/[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]/g, "");
+        // Handle instruction-img placeholder
+        let sanitizedUrl = url;
+        if (url === "instruction-img") {
+          sanitizedUrl =
+            "https://e9o0t6wxcl.ufs.sh/f/N8tEtWy9srqHruPeXEOiWZmNoFO2y4vQ9UbTEwSCe3B8AfYJ";
+        } else {
+          // Ensure URL is properly sanitized
+          sanitizedUrl = url.replace(/[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]/g, "");
+        }
         return `<img src="${sanitizedUrl}" alt="${alt}" class="max-w-full h-auto" />`;
       })
       // Bold

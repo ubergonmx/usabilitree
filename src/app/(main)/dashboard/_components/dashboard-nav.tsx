@@ -11,7 +11,7 @@ import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
 
 // Store the latest update date in a constant at the top of the file
 // This makes it easier to update in one place when new content is added
-const LATEST_UPDATE_DATE = "2025-09-19"; // Update this when new content is added
+const LATEST_UPDATE_DATE = "2025-09-25"; // Update this when new content is added
 
 const items = [
   {

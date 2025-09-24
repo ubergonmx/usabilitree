@@ -180,7 +180,20 @@ const updates: Update[] = [
   },
   {
     id: "14",
-    date: "2025-09-19",
+    date: "2025-09-25",
+    title: "UI Text Customization & Language Presets",
+    description:
+      "Added comprehensive language presets and made all interface text customizable in tree test",
+    type: "feature",
+    details: [
+      "Made ALL interface text in tree test customizable including buttons, messages, and dialog text",
+      "Added language preset dropdown with 5 pre-translated languages: English, Spanish, French, German, and Portuguese",
+      "One-click language application - select a language and all text fields populate automatically",
+    ],
+  },
+  {
+    id: "15",
+    date: "2025-09-25",
     title: "Development Message",
     description:
       "Hi! I'm building this open-source website solo, and it's free (up to 7 tree tests). I'd love your feedback to help me improve this tool! Just click 'Give Feedback' button on the navbar. Thank you for using Usabilitree! 😊",

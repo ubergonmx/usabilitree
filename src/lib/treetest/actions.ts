@@ -7,19 +7,12 @@ import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth/session";
 import { desc, and, ne, eq, sql } from "drizzle-orm";
 import { StudyFormData, TreeNode } from "@/lib/types/tree-test";
+import { getDefaultLanguage } from "@/lib/languages";
 
-const defaultWelcomeMessage = `Welcome to this Tree Test study, and thank you for agreeing to participate!
-
-We are [insert names here].
-
-The activity shouldn't take longer than **10 to 15 minutes** to complete.
-
-Your response will **help us to organize the content of the website, [insert organization name here]**. Find out how on the next page...`;
-
-const defaultCompletionMessage = `# Thanks
-All done, awesome! Thanks again for your participation. Your feedback is incredibly useful in helping to determine how our content should be organized, so we can make our website easier to use.
-
-You may now close this window or navigate to another web page.`;
+const defaultLanguage = getDefaultLanguage();
+const defaultWelcomeMessage = defaultLanguage.messages.welcome;
+const defaultCompletionMessage = defaultLanguage.messages.completion;
+const defaultCustomText = defaultLanguage.customText;
 
 export async function createStudy(type: "tree_test" | "card_sort") {
   const user = await getCurrentUser();
@@ -46,6 +39,19 @@ export async function createStudy(type: "tree_test" | "card_sort") {
       parsedTree: JSON.stringify([]),
       welcomeMessage: defaultWelcomeMessage,
       completionMessage: defaultCompletionMessage,
+      instructionsText: defaultCustomText.instructions,
+      startTestText: defaultCustomText.startTest,
+      findItHereText: defaultCustomText.findItHere,
+      startTaskText: defaultCustomText.startTask,
+      confidenceQuestionText: defaultCustomText.confidenceQuestion,
+      stronglyAgreeText: defaultCustomText.stronglyAgree,
+      stronglyDisagreeText: defaultCustomText.stronglyDisagree,
+      taskProgressText: defaultCustomText.taskProgress,
+      skipTaskText: defaultCustomText.skipTask,
+      submitContinueText: defaultCustomText.submitContinue,
+      completedMessageText: defaultCustomText.completedMessage,
+      nextButtonText: defaultCustomText.nextButton,
+      confidenceDescriptionText: defaultCustomText.confidenceDescription,
     });
 
     revalidatePath("/dashboard");
@@ -121,6 +127,19 @@ export async function saveStudyData(id: string, data: StudyFormData) {
             parsedTree: JSON.stringify(data.tree.parsed),
             welcomeMessage: data.messages.welcome,
             completionMessage: data.messages.completion,
+            instructionsText: data.customText.instructions,
+            startTestText: data.customText.startTest,
+            findItHereText: data.customText.findItHere,
+            startTaskText: data.customText.startTask,
+            confidenceQuestionText: data.customText.confidenceQuestion,
+            stronglyAgreeText: data.customText.stronglyAgree,
+            stronglyDisagreeText: data.customText.stronglyDisagree,
+            taskProgressText: data.customText.taskProgress,
+            skipTaskText: data.customText.skipTask,
+            submitContinueText: data.customText.submitContinue,
+            completedMessageText: data.customText.completedMessage,
+            nextButtonText: data.customText.nextButton,
+            confidenceDescriptionText: data.customText.confidenceDescription,
           })
           .where(eq(treeConfigs.studyId, id));
       } else {
@@ -131,6 +150,19 @@ export async function saveStudyData(id: string, data: StudyFormData) {
           parsedTree: JSON.stringify(data.tree.parsed),
           welcomeMessage: data.messages.welcome,
           completionMessage: data.messages.completion,
+          instructionsText: data.customText.instructions,
+          startTestText: data.customText.startTest,
+          findItHereText: data.customText.findItHere,
+          startTaskText: data.customText.startTask,
+          confidenceQuestionText: data.customText.confidenceQuestion,
+          stronglyAgreeText: data.customText.stronglyAgree,
+          stronglyDisagreeText: data.customText.stronglyDisagree,
+          taskProgressText: data.customText.taskProgress,
+          skipTaskText: data.customText.skipTask,
+          submitContinueText: data.customText.submitContinue,
+          completedMessageText: data.customText.completedMessage,
+          nextButtonText: data.customText.nextButton,
+          confidenceDescriptionText: data.customText.confidenceDescription,
         });
       }
 
@@ -245,6 +277,7 @@ export async function loadStudyData(id: string) {
       general: {
         title: study.title,
         description: study.description || "",
+        status: study.status,
       },
       tree: {
         structure: config?.treeStructure || "",
@@ -260,10 +293,90 @@ export async function loadStudyData(id: string) {
         welcome: config?.welcomeMessage || "",
         completion: config?.completionMessage || "",
       },
+      customText: {
+        instructions: config?.instructionsText || defaultCustomText.instructions,
+        startTest: config?.startTestText || defaultCustomText.startTest,
+        findItHere: config?.findItHereText || defaultCustomText.findItHere,
+        startTask: ensureRequiredPlaceholders(
+          config?.startTaskText || defaultCustomText.startTask,
+          "startTask"
+        ),
+        confidenceQuestion: config?.confidenceQuestionText || defaultCustomText.confidenceQuestion,
+        stronglyAgree: config?.stronglyAgreeText || defaultCustomText.stronglyAgree,
+        stronglyDisagree: config?.stronglyDisagreeText || defaultCustomText.stronglyDisagree,
+        taskProgress: ensureRequiredPlaceholders(
+          config?.taskProgressText || defaultCustomText.taskProgress,
+          "taskProgress"
+        ),
+        skipTask: config?.skipTaskText || defaultCustomText.skipTask,
+        submitContinue: config?.submitContinueText || defaultCustomText.submitContinue,
+        completedMessage: config?.completedMessageText || defaultCustomText.completedMessage,
+        nextButton: config?.nextButtonText || defaultCustomText.nextButton,
+        confidenceDescription:
+          config?.confidenceDescriptionText || defaultCustomText.confidenceDescription,
+      },
     } satisfies StudyFormData;
   } catch (error) {
     console.error("Failed to load study data:", error);
     throw new Error("Failed to load study data");
+  }
+}
+
+const INSTRUCTION_IMAGE_URL =
+  "https://e9o0t6wxcl.ufs.sh/f/N8tEtWy9srqHruPeXEOiWZmNoFO2y4vQ9UbTEwSCe3B8AfYJ";
+
+function processInstructionsText(text: string): string {
+  return text.replace(/!\[\]\(instruction-img\)/g, `![](${INSTRUCTION_IMAGE_URL})`);
+}
+
+function ensureRequiredPlaceholders(text: string, fieldType: "startTask" | "taskProgress"): string {
+  if (fieldType === "startTask") {
+    // Ensure {0} is present for task number
+    if (!text.includes("{0}")) {
+      return text + " {0}";
+    }
+  } else if (fieldType === "taskProgress") {
+    // Ensure both {0} and {1} are present
+    if (!text.includes("{0}")) {
+      text = text + " {0}";
+    }
+    if (!text.includes("{1}")) {
+      text = text.replace("{0}", "{0} of {1}");
+    }
+  }
+  return text;
+}
+
+export async function loadTestPageData(id: string) {
+  try {
+    const [config] = await db
+      .select({
+        welcomeMessage: treeConfigs.welcomeMessage,
+        instructionsText: treeConfigs.instructionsText,
+        startTestText: treeConfigs.startTestText,
+        nextButtonText: treeConfigs.nextButtonText,
+        completedMessageText: treeConfigs.completedMessageText,
+        status: studies.status,
+      })
+      .from(treeConfigs)
+      .innerJoin(studies, eq(studies.id, treeConfigs.studyId))
+      .where(eq(treeConfigs.studyId, id));
+
+    const instructionsText = config?.instructionsText || defaultCustomText.instructions;
+
+    return {
+      welcomeMessage: config?.welcomeMessage || defaultWelcomeMessage,
+      customText: {
+        instructions: processInstructionsText(instructionsText),
+        startTest: config?.startTestText || defaultCustomText.startTest,
+        nextButton: config?.nextButtonText || defaultCustomText.nextButton,
+      },
+      completedMessage: config?.completedMessageText || defaultCustomText.completedMessage,
+      isCompleted: config?.status === "completed",
+    };
+  } catch (error) {
+    console.error("Failed to load test page data:", error);
+    throw new Error("Failed to load test page data");
   }
 }
 
@@ -280,6 +393,42 @@ export async function loadWelcomeMessage(id: string) {
   } catch (error) {
     console.error("Failed to load welcome message:", error);
     throw new Error("Failed to load welcome message");
+  }
+}
+
+export async function loadCustomText(id: string) {
+  try {
+    const [config] = await db
+      .select({
+        instructionsText: treeConfigs.instructionsText,
+        startTestText: treeConfigs.startTestText,
+      })
+      .from(treeConfigs)
+      .where(eq(treeConfigs.studyId, id));
+
+    return {
+      instructions: config?.instructionsText || defaultCustomText.instructions,
+      startTest: config?.startTestText || defaultCustomText.startTest,
+    };
+  } catch (error) {
+    console.error("Failed to load custom text:", error);
+    throw new Error("Failed to load custom text");
+  }
+}
+
+export async function loadCompletedMessage(id: string) {
+  try {
+    const [config] = await db
+      .select({
+        completedMessageText: treeConfigs.completedMessageText,
+      })
+      .from(treeConfigs)
+      .where(eq(treeConfigs.studyId, id));
+
+    return config?.completedMessageText || defaultCustomText.completedMessage;
+  } catch (error) {
+    console.error("Failed to load completed message:", error);
+    throw new Error("Failed to load completed message");
   }
 }
 
@@ -305,6 +454,18 @@ export async function loadTestConfig(id: string, preview: boolean = false, parti
       .select({
         treeStructure: treeConfigs.parsedTree,
         requireConfidenceRating: treeConfigs.requireConfidenceRating,
+        instructionsText: treeConfigs.instructionsText,
+        startTestText: treeConfigs.startTestText,
+        findItHereText: treeConfigs.findItHereText,
+        startTaskText: treeConfigs.startTaskText,
+        confidenceQuestionText: treeConfigs.confidenceQuestionText,
+        stronglyAgreeText: treeConfigs.stronglyAgreeText,
+        stronglyDisagreeText: treeConfigs.stronglyDisagreeText,
+        taskProgressText: treeConfigs.taskProgressText,
+        skipTaskText: treeConfigs.skipTaskText,
+        submitContinueText: treeConfigs.submitContinueText,
+        completedMessageText: treeConfigs.completedMessageText,
+        confidenceDescriptionText: treeConfigs.confidenceDescriptionText,
       })
       .from(treeConfigs)
       .where(eq(treeConfigs.studyId, id));
@@ -357,6 +518,28 @@ export async function loadTestConfig(id: string, preview: boolean = false, parti
       preview,
       participantId,
       studyId: id,
+      customText: {
+        instructions: config.instructionsText || defaultCustomText.instructions,
+        startTest: config.startTestText || defaultCustomText.startTest,
+        findItHere: config.findItHereText || defaultCustomText.findItHere,
+        startTask: ensureRequiredPlaceholders(
+          config.startTaskText || defaultCustomText.startTask,
+          "startTask"
+        ),
+        confidenceQuestion: config.confidenceQuestionText || defaultCustomText.confidenceQuestion,
+        stronglyAgree: config.stronglyAgreeText || defaultCustomText.stronglyAgree,
+        stronglyDisagree: config.stronglyDisagreeText || defaultCustomText.stronglyDisagree,
+        taskProgress: ensureRequiredPlaceholders(
+          config.taskProgressText || defaultCustomText.taskProgress,
+          "taskProgress"
+        ),
+        skipTask: config.skipTaskText || defaultCustomText.skipTask,
+        submitContinue: config.submitContinueText || defaultCustomText.submitContinue,
+        completedMessage: config.completedMessageText || defaultCustomText.completedMessage,
+        nextButton: defaultCustomText.nextButton,
+        confidenceDescription:
+          config.confidenceDescriptionText || defaultCustomText.confidenceDescription,
+      },
     };
   } catch (error) {
     console.error("Failed to load test configuration:", error);
