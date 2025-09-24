@@ -60,6 +60,7 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
     general: {
       title: "",
       description: "",
+      status: "draft",
     },
     tree: {
       structure: "",
@@ -71,6 +72,21 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
     messages: {
       welcome: "",
       completion: "",
+    },
+    customText: {
+      instructions: "",
+      startTest: "",
+      findItHere: "",
+      startTask: "",
+      confidenceQuestion: "",
+      stronglyAgree: "",
+      stronglyDisagree: "",
+      taskProgress: "",
+      skipTask: "",
+      submitContinue: "",
+      completedMessage: "",
+      nextButton: "",
+      confidenceDescription: "",
     },
   });
   const [isSaving, setIsSaving] = useState(false);

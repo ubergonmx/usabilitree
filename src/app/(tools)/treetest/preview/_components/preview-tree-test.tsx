@@ -7,37 +7,32 @@ import { MarkdownPreview } from "@/components/markdown-preview";
 import { Card } from "@/components/ui/card";
 import { Banner, BannerIcon, BannerTitle } from "@/components/ui/banner";
 import { CircleAlert } from "lucide-react";
-import { loadWelcomeMessage } from "@/lib/treetest/actions";
+import { loadTestPageData } from "@/lib/treetest/actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import * as Sentry from "@sentry/react";
 import { toast } from "sonner";
-
-const instructions = `# Instructions
-**Here's how it works:**
-
-1. You will be presented with an organized list of links (like a menu on a website) and an item to find within (like an article or a piece of information).
-2. Click through the list until you arrive at one that you think helps you complete the task.
-3. If you take a wrong turn, you can always go back by clicking any of the links above.
-
-![](https://***REMOVED***)
-
-_This is not a test of your ability, there are no right or wrong answers._  
-  
-**That's it, let's get started!**`;
 
 const INSTRUCTION_DELAY_MS = 5000;
 
 const TestPreviewPage = ({ params }: { params: { id: string } }) => {
   const [showInstructions, setShowInstructions] = useState(false);
   const [welcomeMessage, setWelcomeMessage] = useState<string | null>(null);
+  const [customText, setCustomText] = useState<{
+    instructions: string;
+    startTest: string;
+    nextButton: string;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [canStart, setCanStart] = useState(false);
   const [progress, setProgress] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
-    loadWelcomeMessage(params.id)
-      .then(setWelcomeMessage)
+    loadTestPageData(params.id)
+      .then((data) => {
+        setWelcomeMessage(data.welcomeMessage);
+        setCustomText(data.customText);
+      })
       .catch((error) => {
         setError("Failed to load welcome message");
         Sentry.captureException(error);
@@ -114,15 +109,23 @@ const TestPreviewPage = ({ params }: { params: { id: string } }) => {
               )}
               <div className="flex justify-end">
                 <Button onClick={handleNextClick} disabled={welcomeMessage === null}>
-                  Next
+                  {customText?.nextButton || "Next"}
                 </Button>
               </div>
             </div>
           ) : (
             <div className="space-y-6">
-              <MarkdownPreview content={instructions} />
+              {customText === null ? (
+                <div className="space-y-4">
+                  <Skeleton className="h-6 w-3/4" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-2/3" />
+                </div>
+              ) : (
+                <MarkdownPreview content={customText.instructions} />
+              )}
               <div className="flex justify-end">
-                <Button onClick={handleNextClick} disabled={!canStart}>
+                <Button onClick={handleNextClick} disabled={!canStart || !customText}>
                   {!canStart && (
                     <svg className="mr-1 h-4 w-4" viewBox="0 0 36 36" aria-hidden="true">
                       <path
@@ -141,7 +144,7 @@ const TestPreviewPage = ({ params }: { params: { id: string } }) => {
                       />
                     </svg>
                   )}
-                  Start Test
+                  {customText?.startTest || "Start Test"}
                 </Button>
               </div>
             </div>

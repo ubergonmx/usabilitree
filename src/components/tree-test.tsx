@@ -17,18 +17,18 @@ import { sanitizeTreeTestLink } from "@/lib/utils";
 import * as Sentry from "@sentry/react";
 import { ChevronDown, ChevronRight, CircleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ExclamationTriangleIcon } from "./icons";
 
-const confidenceLevels = [
-  { value: 1, label: "Strongly Disagree" },
+const confidenceLevels = (stronglyDisagree: string, stronglyAgree: string) => [
+  { value: 1, label: stronglyDisagree },
   { value: 2, label: "Moderately Disagree" },
   { value: 3, label: "Slightly Disagree" },
   { value: 4, label: "Neutral" },
   { value: 5, label: "Slightly Agree" },
   { value: 6, label: "Moderately Agree" },
-  { value: 7, label: "Strongly Agree" },
+  { value: 7, label: stronglyAgree },
 ];
 
 interface TreeTestProps {
@@ -42,9 +42,12 @@ interface NavigationProps {
   onSelect: (link: string) => void;
   resetKey: number;
   setPathTaken: Dispatch<SetStateAction<string>>;
+  customText: {
+    findItHere: string;
+  };
 }
 
-const Navigation = ({ items, onSelect, resetKey, setPathTaken }: NavigationProps) => {
+const Navigation = ({ items, onSelect, resetKey, setPathTaken, customText }: NavigationProps) => {
   const [treeState, setTreeState] = useState<ItemWithExpanded[]>([]);
   const [selectedLink, setSelectedLink] = useState<string>();
 
@@ -173,7 +176,7 @@ const Navigation = ({ items, onSelect, resetKey, setPathTaken }: NavigationProps
                     onSelect(item.link ?? "");
                   }}
                 >
-                  I&apos;d find it here
+                  {customText.findItHere}
                 </Button>
               )}
             </div>
@@ -208,6 +211,12 @@ export function TreeTestComponent({ config, initialTaskIndex = 0, onTaskChange }
   const [bannerHeight, setBannerHeight] = useState(0);
   const bannerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  // Create confidence levels with custom labels
+  const confidenceLevelsArray = useMemo(
+    () => confidenceLevels(config.customText.stronglyDisagree, config.customText.stronglyAgree),
+    [config.customText.stronglyDisagree, config.customText.stronglyAgree]
+  );
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -359,7 +368,9 @@ export function TreeTestComponent({ config, initialTaskIndex = 0, onTaskChange }
             <div className="mx-auto w-full max-w-3xl items-start justify-between px-4 sm:px-6 md:flex">
               <div className="pr-2">
                 <h2 className="text-base font-semibold sm:text-lg">
-                  Task {currentTask + 1} of {config.tasks.length}{" "}
+                  {config.customText.taskProgress
+                    .replace("{0}", (currentTask + 1).toString())
+                    .replace("{1}", config.tasks.length.toString())}{" "}
                 </h2>
                 <div className="text-mt-2 max-h-[30vh] overflow-y-auto pr-2 text-sm sm:text-base">
                   <p>
@@ -373,7 +384,7 @@ export function TreeTestComponent({ config, initialTaskIndex = 0, onTaskChange }
                   onClick={skipTask}
                   className="mt-3 shrink-0 text-sm text-blue-600 underline hover:text-blue-800 sm:text-base md:mt-1"
                 >
-                  Skip task
+                  {config.customText.skipTask}
                 </button>
               )}
             </div>
@@ -384,7 +395,7 @@ export function TreeTestComponent({ config, initialTaskIndex = 0, onTaskChange }
             {!started ? (
               <div className="flex justify-center">
                 <Button onClick={startTest} className="mb-4 text-center">
-                  Start Task {currentTask + 1}
+                  {config.customText.startTask.replace("{0}", (currentTask + 1).toString())}
                 </Button>
               </div>
             ) : (
@@ -393,6 +404,9 @@ export function TreeTestComponent({ config, initialTaskIndex = 0, onTaskChange }
                 onSelect={handleSelection}
                 resetKey={resetKey}
                 setPathTaken={setPathTaken}
+                customText={{
+                  findItHere: config.customText.findItHere,
+                }}
               />
             )}
             {!started && currentTask === config.tasks.length && (
@@ -412,15 +426,15 @@ export function TreeTestComponent({ config, initialTaskIndex = 0, onTaskChange }
           >
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>How confident are you with your answer?</DialogTitle>
-                <DialogDescription>Please select your level of confidence:</DialogDescription>
+                <DialogTitle>{config.customText.confidenceQuestion}</DialogTitle>
+                <DialogDescription>{config.customText.confidenceDescription}</DialogDescription>
               </DialogHeader>
               <RadioGroup
                 value={confidenceLevel}
                 onValueChange={setConfidenceLevel}
                 className="grid grid-cols-7 gap-2 pt-4"
               >
-                {confidenceLevels.map((level, index) => (
+                {confidenceLevelsArray.map((level, index) => (
                   <div key={level.value} className="flex flex-col items-center">
                     <RadioGroupItem
                       value={level.value.toString()}
@@ -444,15 +458,15 @@ export function TreeTestComponent({ config, initialTaskIndex = 0, onTaskChange }
                 ))}
               </RadioGroup>
               <div className="mt-2 flex justify-between text-xs">
-                <span>{confidenceLevels[0].label}</span>
-                <span>{confidenceLevels[6].label}</span>
+                <span>{confidenceLevelsArray[0].label}</span>
+                <span>{confidenceLevelsArray[6].label}</span>
               </div>
               <Button
                 onClick={handleConfidenceSubmit}
                 disabled={!confidenceLevel || isSubmitting}
                 className="mt-4"
               >
-                {isSubmitting ? "Submitting..." : "Submit and Continue"}
+                {isSubmitting ? "Submitting..." : config.customText.submitContinue}
               </Button>
             </DialogContent>
           </Dialog>

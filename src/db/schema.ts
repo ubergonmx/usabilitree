@@ -116,6 +116,20 @@ export const treeConfigs = sqliteTable("tree_configs", {
   })
     .notNull()
     .default(true),
+  // Customizable text fields
+  instructionsText: text("instructions_text"),
+  startTestText: text("start_test_text"),
+  findItHereText: text("find_it_here_text"),
+  startTaskText: text("start_task_text"),
+  confidenceQuestionText: text("confidence_question_text"),
+  stronglyAgreeText: text("strongly_agree_text"),
+  stronglyDisagreeText: text("strongly_disagree_text"),
+  taskProgressText: text("task_progress_text"),
+  skipTaskText: text("skip_task_text"),
+  submitContinueText: text("submit_continue_text"),
+  completedMessageText: text("completed_message_text"),
+  nextButtonText: text("next_button_text"),
+  confidenceDescriptionText: text("confidence_description_text"),
 });
 
 export const treeTasks = sqliteTable(
