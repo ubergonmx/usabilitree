@@ -8,6 +8,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TreeNode, StudyFormData } from "@/lib/types/tree-test";
 import { sanitizeTreeTestLink } from "@/lib/utils";
 import { InfoCircledIcon } from "@/components/icons";
+import { TreePreview } from "@/components/ui/tree-preview";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ArrowUp } from "lucide-react";
 import * as Sentry from "@sentry/react";
 import { SETUP_TOUR_STEP_IDS } from "@/lib/constants";
 
@@ -105,16 +108,6 @@ export function TreeTab({ data, onChange }: TreeTabProps) {
     return root;
   };
 
-  const renderTreeAsAscii = (nodes: TreeNode[], level = 0): string => {
-    return nodes
-      .map((node) => {
-        const indent = "  ".repeat(level);
-        const children = node.children ? renderTreeAsAscii(node.children, level + 1) : "";
-        return `${indent}- ${node.name}\n${children}`;
-      })
-      .join("");
-  };
-
   const handleParse = () => {
     try {
       setError("");
@@ -186,10 +179,26 @@ export function TreeTab({ data, onChange }: TreeTabProps) {
 
       {data.tree.parsed.length > 0 && (
         <div className="space-y-2">
-          <Label>Parsed Structure Preview</Label>
-          <pre className="overflow-scroll rounded-lg bg-muted p-4 font-mono text-sm">
-            {renderTreeAsAscii(data.tree.parsed)}
-          </pre>
+          <Label>Interactive Tree Preview</Label>
+          <TreePreview nodes={data.tree.parsed} />
+          <div className="flex justify-end">
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    size="sm"
+                    variant="outline"
+                    className="gap-1"
+                  >
+                    <ArrowUp className="h-4 w-4" />
+                    Back to top
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Scroll to top of page</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
       )}
     </div>

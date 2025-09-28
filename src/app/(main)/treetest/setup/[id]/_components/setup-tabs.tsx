@@ -162,12 +162,69 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
     []
   );
 
+  const getValidationErrors = () => {
+    const errors = [];
+
+    if (!formData.general.title?.trim()) {
+      errors.push("Title is required");
+    }
+
+    if (formData.tree.parsed.length === 0) {
+      errors.push("Tree structure is empty");
+    }
+
+    const tasksWithoutDescription = formData.tasks.items.filter(
+      (task) => !task.description?.trim()
+    ).length;
+
+    const tasksWithoutAnswer = formData.tasks.items.filter(
+      (task) => task.description?.trim() && !task.answer?.trim()
+    ).length;
+
+    const validTasks = formData.tasks.items.filter(
+      (task) => task.description?.trim() && task.answer?.trim()
+    ).length;
+
+    if (formData.tasks.items.length === 0) {
+      errors.push("At least one task is required");
+    } else if (validTasks === 0) {
+      if (tasksWithoutDescription > 0 && tasksWithoutAnswer > 0) {
+        errors.push("Tasks need descriptions and correct answers");
+      } else if (tasksWithoutDescription > 0) {
+        errors.push("Tasks need descriptions");
+      } else if (tasksWithoutAnswer > 0) {
+        errors.push("Tasks need correct answers");
+      }
+    }
+
+    return errors;
+  };
+
   const canLaunchOrPreview = () => {
-    return (
-      formData.general.title?.trim() &&
-      formData.tree.parsed.length > 0 &&
-      formData.tasks.items.some((task) => task.description?.trim() && task.answer?.trim())
-    );
+    return getValidationErrors().length === 0;
+  };
+
+  const getValidationMessage = () => {
+    const errors = getValidationErrors();
+    if (errors.length === 0) return "";
+
+    if (errors.length === 1) {
+      return errors[0];
+    }
+
+    return `Missing: ${errors.join(", ")}`;
+  };
+
+  const hasTreeErrors = () => {
+    return formData.tree.parsed.length === 0;
+  };
+
+  const hasTaskErrors = () => {
+    const validTasks = formData.tasks.items.filter(
+      (task) => task.description?.trim() && task.answer?.trim()
+    ).length;
+
+    return formData.tasks.items.length === 0 || validTasks === 0;
   };
 
   const handleSave = async () => {
@@ -186,7 +243,7 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
 
   const handleLaunch = async () => {
     if (!canLaunchOrPreview()) {
-      toast.error("Please add a title, tree structure, and at least one task before launching");
+      toast.error(getValidationMessage());
       return;
     }
 
@@ -221,7 +278,7 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
 
   const handlePreview = async () => {
     if (!canLaunchOrPreview()) {
-      toast.error("Please add a title, tree structure, and at least one task before previewing");
+      toast.error(getValidationMessage());
       return;
     }
 
@@ -342,7 +399,7 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
                     </span>
                   </TooltipTrigger>
                   {!canLaunchOrPreview() && (
-                    <TooltipContent>Setup your tree and tasks with answers first!</TooltipContent>
+                    <TooltipContent>{getValidationMessage()}</TooltipContent>
                   )}
                 </Tooltip>
               </TooltipProvider>
@@ -401,7 +458,7 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
                     size="sm"
                     className="gap-2"
                     onClick={handlePreview}
-                    disabled={!canLaunchOrPreview() || isSaving}
+                    disabled={isSaving}
                   >
                     <EyeOpenIcon className="h-4 w-4" />
                     Preview
@@ -409,7 +466,9 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
                 </span>
               </TooltipTrigger>
               {(!canLaunchOrPreview() || isSaving) && (
-                <TooltipContent>Setup your tree and tasks with answers first!</TooltipContent>
+                <TooltipContent>
+                  {isSaving ? "Saving changes..." : getValidationMessage()}
+                </TooltipContent>
               )}
             </Tooltip>
           </TooltipProvider>
@@ -457,13 +516,19 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
             <GearIcon className="h-4 w-4" />
             General
           </TabsTrigger>
-          <TabsTrigger value="tree" className="gap-2">
+          <TabsTrigger value="tree" className="relative gap-2">
             <FileTextIcon className="h-4 w-4" />
             Tree
+            {hasTreeErrors() && (
+              <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-red-500"></span>
+            )}
           </TabsTrigger>
-          <TabsTrigger value="tasks" className="gap-2">
+          <TabsTrigger value="tasks" className="relative gap-2">
             <ChecklistIcon className="h-4 w-4" />
             Tasks
+            {hasTaskErrors() && (
+              <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-red-500"></span>
+            )}
           </TabsTrigger>
           <TabsTrigger value="messages" className="gap-2">
             <MessageSquareCodeIcon className="h-4 w-4" />

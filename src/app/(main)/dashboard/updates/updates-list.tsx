@@ -200,6 +200,21 @@ const updates: Update[] = [
     type: "message",
     details: [],
   },
+  {
+    id: "16",
+    date: "2025-09-28",
+    title: "Setup page UI Improvement",
+    description: "Improved study card navigation and tree test setup page",
+    type: "improvement",
+    details: [
+      "Study cards now show both 'Edit' and 'Results' actions for active/completed studies",
+      "Removed onboarding in results page for sample study",
+      "Removed sample study option in new study dialog",
+      "Improved tree and tasks setup page for better usability",
+      "Add interactive preview of tree structure in tree setup page",
+      "Added note for branding in messages setup",
+    ],
+  },
 ];
 
 export function UpdatesList() {

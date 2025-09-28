@@ -140,7 +140,7 @@ const Navigation = ({ items, onSelect, resetKey, setPathTaken, customText }: Nav
             <div>
               <button
                 onClick={() => toggleExpand(currentPath)}
-                className="flex w-full items-center justify-between bg-gray-200 px-3 py-2 text-sm transition-colors duration-200 hover:bg-gray-300"
+                className="flex w-full items-center justify-between rounded bg-gray-200 px-3 py-2 text-sm transition-colors duration-200 hover:bg-gray-300"
                 aria-expanded={item.isExpanded}
               >
                 <span>{item.name}</span>
@@ -160,8 +160,10 @@ const Navigation = ({ items, onSelect, resetKey, setPathTaken, customText }: Nav
             </div>
           ) : (
             <div
-              className={`my-1 flex items-center justify-between p-2 transition-colors duration-200 ${
-                item.link === selectedLink ? "bg-[#e6f3d8]" : "bg-gray-200 hover:bg-gray-300"
+              className={`my-1 flex items-center justify-between rounded p-2 transition-colors duration-200 ${
+                item.link === selectedLink
+                  ? "border border-green-700 bg-[#e6f3d8]"
+                  : "bg-gray-200 hover:bg-gray-300"
               }`}
               onClick={() => handleLinkClick(item.link ?? "", item.name)}
             >

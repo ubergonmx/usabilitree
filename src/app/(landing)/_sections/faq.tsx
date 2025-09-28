@@ -14,9 +14,10 @@ export default function FAQ() {
       question: "What is this website for?",
       answer: (
         <span>
-          I made this website as a free alternative to UXTweak and Optimal Workshop (which can be
-          costly) to help students, UX designers, and researchers create tree tests. Card sorting is
-          planned to be added in the future.
+          This is a free, lightweight tool for creating tree tests. It&apos;s a simpler alternative
+          to UXTweak and Optimal Workshop, built by a solo developer. Not every feature is here yet,
+          but I&apos;m actively improving it. A future overhaul will add more capabilities like card
+          sorting, first-click testing, and more.
         </span>
       ),
     },

@@ -10,8 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -98,36 +98,65 @@ function StudyTypeDialog({ open, onOpenChange, onSelect }: StudyTypeDialogProps)
     "tree_test" | "card_sort" | "sample_tree_test"
   >("tree_test");
 
+  const studyTypes = [
+    {
+      id: "tree_test",
+      title: "Tree Test",
+      description: "Evaluate the information architecture and findability of your website or app",
+      available: true,
+    },
+    {
+      id: "card_sort",
+      title: "Card Sort",
+      description: "Understand how users categorize and organize information",
+      available: false,
+    },
+  ];
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Choose Study Type</DialogTitle>
           <DialogDescription>Select the type of study you want to create.</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <RadioGroup
-            className="space-y-2"
-            defaultValue="tree_test"
-            onValueChange={(value) =>
-              setSelectedType(value as "tree_test" | "card_sort" | "sample_tree_test")
-            }
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="tree_test" id="tree_test" />
-              <Label htmlFor="tree_test">Tree Test</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="sample_tree_test" id="sample_tree_test" />
-              <Label htmlFor="sample_tree_test">Sample Tree Test (demo)</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="card_sort" id="card_sort" disabled />
-              <Label htmlFor="card_sort" className="text-muted-foreground">
-                Card Sort (coming soon)
-              </Label>
-            </div>
-          </RadioGroup>
+        <div className="grid gap-3 py-4">
+          {studyTypes.map((study) => (
+            <Card
+              key={study.id}
+              className={`cursor-pointer transition-all duration-150 ease-out ${
+                selectedType === study.id
+                  ? "border-primary/60 bg-primary/5"
+                  : study.available
+                    ? "border-black/10 bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.1),0_1px_2px_-1px_rgba(0,0,0,0.1)] hover:border-black/20"
+                    : "cursor-not-allowed border-black/5 bg-gray-50/50 opacity-60"
+              }`}
+              onClick={() =>
+                study.available && setSelectedType(study.id as "tree_test" | "card_sort")
+              }
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex-1">
+                    <div className="mb-1 flex items-center gap-2">
+                      <h3 className="font-medium">{study.title}</h3>
+                      {!study.available && (
+                        <Badge variant="secondary" className="text-xs">
+                          Not Available
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground">{study.description}</p>
+                  </div>
+                  {selectedType === study.id && (
+                    <div className="flex h-4 w-4 items-center justify-center rounded-full bg-primary">
+                      <div className="h-2 w-2 rounded-full bg-white"></div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
         <DialogFooter>
           <Button onClick={() => onSelect(selectedType)}>Create Study</Button>

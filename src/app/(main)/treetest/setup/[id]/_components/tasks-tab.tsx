@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { StudyFormData, TreeNode } from "@/lib/types/tree-test";
 import { PlusIcon, TrashIcon, CheckIcon } from "@/components/icons";
 import { ArrowUp } from "lucide-react";
-import { toast } from "sonner";
 import {
   Command,
   CommandEmpty,
@@ -29,6 +29,9 @@ interface TasksTabProps {
 
 export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
   const [openPopover, setOpenPopover] = useState<number | null>(null);
+  const [validationResults, setValidationResults] = useState<
+    Record<number, { valid: string[]; invalid: string[]; missing: boolean } | null>
+  >({});
 
   // Recursive function to get all available paths from the tree
   const getAllPaths = (nodes: TreeNode[], parentPath = ""): string[] => {
@@ -71,6 +74,15 @@ export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
       ...data,
       tasks: { items: newTasks },
     });
+
+    // Clear validation results when answer changes
+    if (field === "answer" && validationResults[index]) {
+      setValidationResults((prev) => {
+        const newResults = { ...prev };
+        delete newResults[index];
+        return newResults;
+      });
+    }
   };
 
   // Recursive function to check if a path exists in the tree
@@ -87,21 +99,33 @@ export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
   const validateAnswer = (index: number) => {
     const task = data.tasks.items[index];
     if (!task.answer) {
-      toast.error("Please enter an answer path");
+      setValidationResults((prev) => ({
+        ...prev,
+        [index]: { valid: [], invalid: [], missing: true },
+      }));
       return;
     }
 
-    const answerPaths = task.answer.split(",").map((path) => path.trim());
-    const validPaths = answerPaths.filter((path) => {
+    const answerPaths = task.answer
+      .split(",")
+      .map((path) => path.trim())
+      .filter(Boolean);
+    const validPaths: string[] = [];
+    const invalidPaths: string[] = [];
+
+    answerPaths.forEach((path) => {
       const answerPath = path.startsWith("/") ? path : `/${path}`;
-      return checkPathInTree(data.tree.parsed, answerPath);
+      if (checkPathInTree(data.tree.parsed, answerPath)) {
+        validPaths.push(path);
+      } else {
+        invalidPaths.push(path);
+      }
     });
 
-    if (validPaths.length > 0) {
-      toast.success("Answer path(s) are valid!");
-    } else {
-      toast.error("No valid paths found in tree structure");
-    }
+    setValidationResults((prev) => ({
+      ...prev,
+      [index]: { valid: validPaths, invalid: invalidPaths, missing: false },
+    }));
   };
 
   const toggleTaskAnswer = (index: number, path: string) => {
@@ -155,73 +179,160 @@ export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`answer-${index}`} className="text-sm text-muted-foreground">
-              Correct Answer(s)
-            </Label>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor={`answer-${index}`} className="text-sm text-muted-foreground">
+                Correct Answer(s)
+              </Label>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1 px-2 py-1 text-xs"
+                onClick={() => validateAnswer(index)}
+              >
+                <CheckIcon className="h-3 w-3" /> Check
+              </Button>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
               <Popover
                 open={openPopover === index}
                 onOpenChange={(open) => setOpenPopover(open ? index : null)}
               >
                 <PopoverTrigger asChild>
                   <div className="flex-1">
-                    <Input
+                    <Textarea
                       id={`answer-${index}`}
                       value={task.answer}
                       onChange={(e) => updateTask(index, "answer", e.target.value)}
                       placeholder="Enter paths (e.g., /home/products, /products)"
+                      rows={2}
                       className={cn(
-                        "w-full",
-                        !task.answer
-                          .split(",")
-                          .some((path) => availablePaths.includes(path.trim())) &&
-                          task.answer &&
-                          "border-yellow-500"
+                        "w-full resize-none",
+                        !task.answer && task.description?.trim()
+                          ? "border-red-500 bg-red-50"
+                          : !task.answer
+                                .split(",")
+                                .some((path) => availablePaths.includes(path.trim())) && task.answer
+                            ? "border-yellow-500"
+                            : ""
                       )}
                     />
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="p-0" align="start">
+                <PopoverContent className="w-[400px] p-0" align="start">
                   <Command>
-                    <CommandInput placeholder="Search paths..." />
-                    <CommandList>
-                      <CommandEmpty>No paths found.</CommandEmpty>
-                      <CommandGroup>
-                        {availablePaths.map((path) => {
-                          const isSelected = task.answer
-                            .split(",")
-                            .map((p) => p.trim())
-                            .includes(path);
+                    <CommandInput
+                      placeholder="Search paths... (try typing page or section names)"
+                      className="h-9"
+                    />
+                    <CommandList className="max-h-[300px]">
+                      <CommandEmpty>
+                        <div className="flex flex-col items-center gap-2 p-4 text-center">
+                          <span className="text-muted-foreground">
+                            No paths found matching your search
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            Try searching for specific page or section names
+                          </span>
+                        </div>
+                      </CommandEmpty>
+                      <CommandGroup heading={`Available Paths (${availablePaths.length})`}>
+                        {availablePaths
+                          .sort((a, b) => {
+                            // Sort by depth first (fewer slashes = higher priority)
+                            const depthA = (a.match(/\//g) || []).length;
+                            const depthB = (b.match(/\//g) || []).length;
+                            if (depthA !== depthB) return depthA - depthB;
+                            // Then alphabetically
+                            return a.localeCompare(b);
+                          })
+                          .map((path) => {
+                            const isSelected = task.answer
+                              .split(",")
+                              .map((p) => p.trim())
+                              .includes(path);
 
-                          return (
-                            <CommandItem
-                              key={path}
-                              value={path}
-                              onSelect={() => {
-                                toggleTaskAnswer(index, path);
-                              }}
-                            >
-                              <div className="flex items-center gap-2">
-                                {isSelected && <CheckIcon className="h-4 w-4" />}
-                                <span className={cn(isSelected && "font-medium")}>{path}</span>
-                              </div>
-                            </CommandItem>
-                          );
-                        })}
+                            return (
+                              <CommandItem
+                                key={path}
+                                value={path}
+                                className="flex items-center justify-between p-3 hover:bg-accent/50"
+                                onSelect={() => {
+                                  toggleTaskAnswer(index, path);
+                                }}
+                              >
+                                <div className="flex min-w-0 flex-1 items-center gap-2">
+                                  {isSelected && (
+                                    <CheckIcon className="h-4 w-4 flex-shrink-0 text-green-600" />
+                                  )}
+                                  <span
+                                    className={cn(
+                                      "break-all font-mono text-xs sm:text-sm",
+                                      isSelected && "font-semibold text-green-700"
+                                    )}
+                                  >
+                                    {path}
+                                  </span>
+                                </div>
+                              </CommandItem>
+                            );
+                          })}
                       </CommandGroup>
                     </CommandList>
                   </Command>
                 </PopoverContent>
               </Popover>
-              <Button
-                variant="outline"
-                size="default"
-                className="gap-2 whitespace-nowrap"
-                onClick={() => validateAnswer(index)}
-              >
-                <CheckIcon className="h-4 w-4" /> Check Answer
-              </Button>
             </div>
+
+            {/* Validation Results */}
+            {validationResults[index] && (
+              <div className="rounded-lg border bg-gray-50 p-3 text-sm">
+                {validationResults[index]?.missing ? (
+                  <div className="text-red-600">Please enter at least one answer path</div>
+                ) : (
+                  <div className="space-y-2">
+                    {validationResults[index]?.valid &&
+                      validationResults[index].valid.length > 0 && (
+                        <div>
+                          <div className="font-medium text-green-700">Valid paths:</div>
+                          <ul className="ml-4 list-disc space-y-1">
+                            {validationResults[index].valid.map((path, i) => (
+                              <li key={i} className="font-mono text-green-600">
+                                {path}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    {validationResults[index]?.invalid &&
+                      validationResults[index].invalid.length > 0 && (
+                        <div>
+                          <div className="font-medium text-red-700">
+                            Invalid paths (not found in tree):
+                          </div>
+                          <ul className="ml-4 list-disc space-y-1">
+                            {validationResults[index].invalid.map((path, i) => (
+                              <li key={i} className="font-mono text-red-600">
+                                {path}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    {validationResults[index]?.valid &&
+                      validationResults[index].valid.length > 0 &&
+                      validationResults[index]?.invalid &&
+                      validationResults[index].invalid.length === 0 && (
+                        <div className="font-medium text-green-700">All paths are valid!</div>
+                      )}
+                  </div>
+                )}
+              </div>
+            )}
+            {!task.answer && task.description?.trim() && (
+              <p className="text-sm text-red-600">
+                This task needs a correct answer to be saved properly
+              </p>
+            )}
             {task.answer &&
               !task.answer.split(",").some((path) => availablePaths.includes(path.trim())) && (
                 <p className="text-sm text-yellow-500">
