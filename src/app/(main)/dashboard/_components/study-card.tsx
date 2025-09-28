@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/card";
 import { Studies } from "@/db/schema";
 import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
-import Link from "next/link";
 import * as React from "react";
 
 interface StudyCardProps {
@@ -23,12 +22,20 @@ interface StudyCardProps {
 }
 
 export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
-  const getMainActionUrl = () => {
-    if (study.status === "draft") {
-      return `/treetest/setup/${study.id}`;
-    }
-    if (isSampleStudy) return `/treetest/results/${study.id}?onboarding=1`;
+  const isSampleStudy =
+    study.title === "Sample tree test" &&
+    study.description === "Government website example" &&
+    study.status === "active" &&
+    isOwner;
+
+  const getResultsUrl = () => {
+    if (isSampleStudy) return `/treetest/results/${study.id}?edit=1`;
     return `/treetest/results/${study.id}`;
+  };
+
+  const getEditUrl = () => {
+    if (isSampleStudy) return `/treetest/setup/${study.id}?onboarding=1`;
+    return `/treetest/setup/${study.id}`;
   };
 
   const handleLinkClick = (e: React.MouseEvent) => {
@@ -37,19 +44,35 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
     window.open(`/treetest/${study.id}`, "_blank");
   };
 
-  const isSampleStudy =
-    study.title === "Sample tree test" &&
-    study.description === "Government website example" &&
-    study.status === "active" &&
-    isOwner;
+  const handleCardClick = () => {
+    if (study.status === "draft") {
+      window.location.href = getEditUrl();
+    } else {
+      window.location.href = getResultsUrl();
+    }
+  };
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = getEditUrl();
+  };
+
+  const handleResultsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = getResultsUrl();
+  };
 
   return (
-    <Link
-      href={getMainActionUrl()}
+    <div
       className="block h-full"
       id={isSampleStudy ? DASHBOARD_TOUR_STEP_IDS.SAMPLE_STUDY : undefined}
     >
-      <Card className="flex h-full cursor-pointer flex-col transition-all duration-200 hover:-translate-y-1 hover:bg-accent/20 hover:shadow-lg">
+      <Card
+        className="flex h-full cursor-pointer flex-col transition-all duration-200 hover:-translate-y-1 hover:bg-accent/20 hover:shadow-lg"
+        onClick={handleCardClick}
+      >
         <CardHeader className="flex-shrink-0">
           <CardTitle className="flex items-center justify-between text-base">
             <div className="line-clamp-2 flex items-center gap-2">
@@ -81,16 +104,31 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
           <p className="line-clamp-3 text-sm text-muted-foreground">{study.description}</p>
         </CardContent>
         <CardFooter className="mt-auto flex-shrink-0 flex-row-reverse gap-2">
-          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
             {study.status === "draft" ? (
-              <>
+              <button
+                className="flex items-center gap-1 transition-colors hover:text-foreground"
+                onClick={handleEditClick}
+              >
                 <Pencil2Icon className="h-4 w-4" />
                 <span>Edit</span>
-              </>
+              </button>
             ) : (
               <>
-                <BarChartIcon className="h-4 w-4" />
-                <span>Results</span>
+                <button
+                  className="flex items-center gap-1 transition-colors hover:text-foreground"
+                  onClick={handleResultsClick}
+                >
+                  <BarChartIcon className="h-4 w-4" />
+                  <span>Results</span>
+                </button>
+                <button
+                  className="flex items-center gap-1 transition-colors hover:text-foreground"
+                  onClick={handleEditClick}
+                >
+                  <Pencil2Icon className="h-4 w-4" />
+                  <span>Edit</span>
+                </button>
               </>
             )}
           </div>
@@ -104,6 +142,6 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
           </Badge>
         </CardFooter>
       </Card>
-    </Link>
+    </div>
   );
 };

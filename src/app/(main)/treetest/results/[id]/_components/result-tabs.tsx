@@ -48,9 +48,16 @@ interface ResultTabsProps {
   userEmail: string;
   isOwner: boolean;
   showTour: boolean;
+  highlightEdit: boolean;
 }
 
-export default function ResultTabs({ params, userEmail, isOwner, showTour }: ResultTabsProps) {
+export default function ResultTabs({
+  params,
+  userEmail,
+  isOwner,
+  showTour,
+  highlightEdit,
+}: ResultTabsProps) {
   const router = useRouter();
   const [title, setTitle] = useState("Study Results");
   const [activeTab, setActiveTab] = useState("overview");
@@ -99,12 +106,6 @@ export default function ResultTabs({ params, userEmail, isOwner, showTour }: Res
     localStorage.setItem("results-tour-completed", "true");
     setIsTourCompletedInStorage(true);
   };
-
-  // For development/testing - reset tour completion status
-  // const resetTourCompletion = () => {
-  //   localStorage.removeItem("results-tour-completed");
-  //   setIsTourCompletedInStorage(false);
-  // };
 
   // Memoize the tour actions to prevent infinite update loops
   const tourActions = useMemo(
@@ -219,8 +220,13 @@ export default function ResultTabs({ params, userEmail, isOwner, showTour }: Res
             <Link
               href={`/treetest/setup/${params.id}` + (showTour ? "?onboarding=1" : "")}
               id={RESULTS_TOUR_STEP_IDS.EDIT}
+              className={highlightEdit ? "relative" : ""}
             >
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className={`gap-2 ${highlightEdit ? "border-blue-400/60 shadow-md shadow-blue-400/20" : ""}`}
+              >
                 <PencilIcon className="h-4 w-4" /> Edit
               </Button>
             </Link>

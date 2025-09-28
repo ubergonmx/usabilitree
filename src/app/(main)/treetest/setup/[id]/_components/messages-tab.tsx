@@ -14,8 +14,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { LANGUAGE_PRESETS, TreeTestTranslation } from "@/lib/languages";
-import { ChevronDown, Languages } from "lucide-react";
+import { ChevronDown, Languages, HelpCircle } from "lucide-react";
 
 interface MessagesTabProps {
   data: StudyFormData;
@@ -42,35 +50,95 @@ export function MessagesTab({ data, onChange }: MessagesTabProps) {
   return (
     <div id={SETUP_TOUR_STEP_IDS.MESSAGES} className="space-y-6">
       <div className="rounded-lg border bg-muted/50 p-4">
-        <div className="flex items-center gap-3">
-          <Languages className="h-5 w-5 text-muted-foreground" />
-          <div className="flex-1">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Languages className="h-5 w-5 text-muted-foreground sm:flex-shrink-0" />
+          <div className="min-w-0 flex-1">
             <Label className="text-base font-medium">Language Presets</Label>
             <p className="text-sm text-muted-foreground">
               Apply pre-translated text for different languages. This will replace all current text.
             </p>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-48 justify-between">
-                <span className="flex items-center">
-                  {selectedLanguage || "Select a language..."}
-                </span>
-                <ChevronDown className="h-4 w-4 opacity-50" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48">
-              {LANGUAGE_PRESETS.map((preset) => (
-                <DropdownMenuItem key={preset.code} onClick={() => applyLanguagePreset(preset)}>
-                  {preset.name}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center gap-2 sm:flex-shrink-0">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-full justify-between sm:w-48">
+                  <span className="flex items-center truncate">
+                    {selectedLanguage || "Select a language..."}
+                  </span>
+                  <ChevronDown className="ml-1 h-4 w-4 flex-shrink-0 opacity-50" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48">
+                {LANGUAGE_PRESETS.map((preset) => (
+                  <DropdownMenuItem key={preset.code} onClick={() => applyLanguagePreset(preset)}>
+                    {preset.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
       <div className="space-y-4">
-        <Label>Welcome Message</Label>
+        <div className="flex items-center gap-2">
+          <Label>Welcome Message</Label>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-1">
+                <HelpCircle className="h-3 w-3" />
+                Branding Help
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[525px]">
+              <DialogHeader>
+                <DialogTitle>Branding Your Tree Test</DialogTitle>
+                <DialogDescription>
+                  Learn how to add your brand and customize the appearance of your tree test.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  To add images and branding, you&apos;ll need to host them externally using
+                  services like Imgur, Cloudinary, or your company&apos;s CDN, then reference them
+                  using markdown syntax.
+                </p>
+                <div>
+                  <h4 className="mb-2 text-sm font-medium">Adding Your Logo</h4>
+                  <p className="mb-2 text-sm text-muted-foreground">
+                    You can add your company logo using markdown image syntax in any of the message
+                    fields:
+                  </p>
+                  <code className="rounded bg-muted p-2 font-mono text-xs">
+                    ![Your Logo](https://your-domain.com/logo.png)
+                  </code>
+                </div>
+                <div>
+                  <h4 className="mb-2 text-sm font-medium">Recommended Dimensions</h4>
+                  <ul className="space-y-1 text-sm text-muted-foreground">
+                    <li>
+                      • <strong>Logo:</strong> 200x60px or similar aspect ratio
+                    </li>
+                    <li>
+                      • <strong>Images:</strong> Max width 600px for optimal display
+                    </li>
+                    <li>
+                      • <strong>Format:</strong> PNG, JPG, or SVG
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="mb-2 text-sm font-medium">Best Practices</h4>
+                  <ul className="space-y-1 text-sm text-muted-foreground">
+                    <li>• Use high-quality images hosted on reliable services</li>
+                    <li>• Ensure images are accessible (good alt text)</li>
+                    <li>• Test on mobile devices for responsive display</li>
+                    <li>• Keep file sizes reasonable for faster loading</li>
+                  </ul>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
         <Tabs defaultValue="edit" className="w-full">
           <TabsList>
             <TabsTrigger value="edit">Edit</TabsTrigger>

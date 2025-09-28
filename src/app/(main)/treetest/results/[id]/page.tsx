@@ -37,12 +37,19 @@ export default async function Page({
 
   const hasAccess = isOwner || !!collaborator; //|| user.id === "UI9uuzgSHHs0Xa46KZCHB";
   const showTour = searchParams.onboarding === "1" && hasAccess;
+  const highlightEdit = searchParams.edit === "1" && hasAccess;
 
   if (!hasAccess) {
     notFound();
   }
 
   return (
-    <ResultTabs params={params} userEmail={user.email} isOwner={isOwner} showTour={showTour} />
+    <ResultTabs
+      params={params}
+      userEmail={user.email}
+      isOwner={isOwner}
+      showTour={showTour}
+      highlightEdit={highlightEdit}
+    />
   );
 }
