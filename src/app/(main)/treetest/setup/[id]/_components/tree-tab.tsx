@@ -8,7 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TreeNode, StudyFormData } from "@/lib/types/tree-test";
 import { sanitizeTreeTestLink } from "@/lib/utils";
 import { InfoCircledIcon } from "@/components/icons";
-import { TreePreview } from "@/components/ui/tree-preview";
+import { TreePreview } from "@/components/tree-preview";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ArrowUp } from "lucide-react";
 import * as Sentry from "@sentry/react";

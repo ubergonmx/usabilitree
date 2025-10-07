@@ -207,7 +207,7 @@ export function TreePreview({ nodes, className }: TreePreviewProps) {
                 }`}
                 aria-expanded={node.isExpanded}
               >
-                <span className="text-left">{node.name}</span>
+                <span className="text-left text-gray-900">{node.name}</span>
                 {node.isExpanded ? (
                   <ChevronDown className="h-4 w-4 text-gray-600" />
                 ) : (
@@ -236,7 +236,7 @@ export function TreePreview({ nodes, className }: TreePreviewProps) {
               }`}
               onClick={() => handleLinkClick(node.link || "")}
             >
-              <span>{node.name}</span>
+              <span className="text-gray-900">{node.name}</span>
               {showParticipantView && selectedLink === node.link ? (
                 <button className="rounded bg-[#72FFA4] px-2 py-1 text-xs text-black hover:bg-[#00D9C2]">
                   I&apos;d find it here

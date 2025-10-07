@@ -178,6 +178,20 @@ export interface TaskStats {
       value: number;
       count: number;
       percentage: number;
+      breakdown: {
+        directSuccess: number;
+        directSuccessPercentage: number;
+        indirectSuccess: number;
+        indirectSuccessPercentage: number;
+        directFail: number;
+        directFailPercentage: number;
+        indirectFail: number;
+        indirectFailPercentage: number;
+        directSkip: number;
+        directSkipPercentage: number;
+        indirectSkip: number;
+        indirectSkipPercentage: number;
+      };
     }[];
   };
 }
@@ -440,25 +454,97 @@ export async function getTasksStats(studyId: string): Promise<TaskStats[]> {
         })
       );
 
-      // Get confidence ratings distribution
-      const confidenceValuesMap = new Map<number, number>();
+      // Get confidence ratings distribution with outcome breakdown
+      const confidenceValuesMap = new Map<
+        number,
+        {
+          count: number;
+          directSuccess: number;
+          indirectSuccess: number;
+          directFail: number;
+          indirectFail: number;
+          directSkip: number;
+          indirectSkip: number;
+        }
+      >();
 
       taskResults.forEach((result) => {
         if (result.confidenceRating !== null) {
           const value = Number(result.confidenceRating);
-          confidenceValuesMap.set(value, (confidenceValuesMap.get(value) || 0) + 1);
+
+          if (!confidenceValuesMap.has(value)) {
+            confidenceValuesMap.set(value, {
+              count: 0,
+              directSuccess: 0,
+              indirectSuccess: 0,
+              directFail: 0,
+              indirectFail: 0,
+              directSkip: 0,
+              indirectSkip: 0,
+            });
+          }
+
+          const stats = confidenceValuesMap.get(value)!;
+          stats.count++;
+
+          // Categorize the result
+          if (result.skipped) {
+            if (result.directPathTaken) {
+              stats.directSkip++;
+            } else {
+              stats.indirectSkip++;
+            }
+          } else if (result.successful) {
+            if (result.directPathTaken) {
+              stats.directSuccess++;
+            } else {
+              stats.indirectSuccess++;
+            }
+          } else {
+            if (result.directPathTaken) {
+              stats.directFail++;
+            } else {
+              stats.indirectFail++;
+            }
+          }
         }
       });
 
       const totalRatings = Array.from(confidenceValuesMap.values()).reduce(
-        (sum, count) => sum + count,
+        (sum, stats) => sum + stats.count,
         0
       );
 
-      const confidenceRatings = Array.from(confidenceValuesMap.entries()).map(([value, count]) => ({
+      const confidenceRatings = Array.from(confidenceValuesMap.entries()).map(([value, stats]) => ({
         value,
-        count,
-        percentage: totalRatings ? Math.round((count / totalRatings) * 100) : 0,
+        count: stats.count,
+        percentage: totalRatings ? Math.round((stats.count / totalRatings) * 100) : 0,
+        breakdown: {
+          directSuccess: stats.directSuccess,
+          directSuccessPercentage: stats.count
+            ? Math.round((stats.directSuccess / stats.count) * 100)
+            : 0,
+          indirectSuccess: stats.indirectSuccess,
+          indirectSuccessPercentage: stats.count
+            ? Math.round((stats.indirectSuccess / stats.count) * 100)
+            : 0,
+          directFail: stats.directFail,
+          directFailPercentage: stats.count
+            ? Math.round((stats.directFail / stats.count) * 100)
+            : 0,
+          indirectFail: stats.indirectFail,
+          indirectFailPercentage: stats.count
+            ? Math.round((stats.indirectFail / stats.count) * 100)
+            : 0,
+          directSkip: stats.directSkip,
+          directSkipPercentage: stats.count
+            ? Math.round((stats.directSkip / stats.count) * 100)
+            : 0,
+          indirectSkip: stats.indirectSkip,
+          indirectSkipPercentage: stats.count
+            ? Math.round((stats.indirectSkip / stats.count) * 100)
+            : 0,
+        },
       }));
 
       return {

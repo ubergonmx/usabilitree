@@ -411,38 +411,183 @@ function ConfidenceRatingsTable({ ratings }: { ratings: TaskStats["stats"]["conf
         <TableHeader>
           <TableRow>
             <TableHead>Answer</TableHead>
-            <TableHead>Percentage</TableHead>
+            <TableHead>Outcome Breakdown</TableHead>
             <TableHead className="text-right">Frequency</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {confidenceLevels.map((level) => {
-            const rating = ratings.find((r) => r.value === level.value) || {
-              value: level.value,
-              count: 0,
-              percentage: 0,
+            const ratingData = ratings.find((r) => r.value === level.value);
+            const count = ratingData?.count || 0;
+            const breakdown = ratingData?.breakdown || {
+              directSuccess: 0,
+              directSuccessPercentage: 0,
+              indirectSuccess: 0,
+              indirectSuccessPercentage: 0,
+              directFail: 0,
+              directFailPercentage: 0,
+              indirectFail: 0,
+              indirectFailPercentage: 0,
+              directSkip: 0,
+              directSkipPercentage: 0,
+              indirectSkip: 0,
+              indirectSkipPercentage: 0,
             };
+
+            const hasData = count > 0;
 
             return (
               <TableRow key={level.value}>
-                <TableCell>{level.label}</TableCell>
-                <TableCell className="w-[300px]">
-                  <div className="relative h-4 w-full rounded-full bg-secondary">
-                    <div
-                      className="absolute left-0 top-0 h-full rounded-full bg-blue-bar"
-                      style={{ width: `${rating.percentage}%` }}
-                    />
-                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs font-medium text-foreground">
-                      {rating.percentage}%
-                    </span>
-                  </div>
+                <TableCell className="align-middle">{level.label}</TableCell>
+                <TableCell className="w-[400px] align-middle">
+                  {hasData ? (
+                    <div className="relative h-8 w-full overflow-hidden rounded-full bg-secondary">
+                      {/* Stacked bar segments - order matters for proper stacking */}
+                      <div
+                        className="absolute left-0 top-0 h-full bg-green-500"
+                        style={{ width: `${breakdown.directSuccessPercentage}%` }}
+                      />
+                      <div
+                        className="absolute top-0 h-full bg-green-300"
+                        style={{
+                          left: `${breakdown.directSuccessPercentage}%`,
+                          width: `${breakdown.indirectSuccessPercentage}%`,
+                        }}
+                      />
+                      <div
+                        className="absolute top-0 h-full bg-red-500"
+                        style={{
+                          left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage}%`,
+                          width: `${breakdown.directFailPercentage}%`,
+                        }}
+                      />
+                      <div
+                        className="absolute top-0 h-full bg-red-300"
+                        style={{
+                          left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage}%`,
+                          width: `${breakdown.indirectFailPercentage}%`,
+                        }}
+                      />
+                      <div
+                        className="absolute top-0 h-full bg-gray-500"
+                        style={{
+                          left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage}%`,
+                          width: `${breakdown.directSkipPercentage}%`,
+                        }}
+                      />
+                      <div
+                        className="absolute top-0 h-full bg-gray-300"
+                        style={{
+                          left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage + breakdown.directSkipPercentage}%`,
+                          width: `${breakdown.indirectSkipPercentage}%`,
+                        }}
+                      />
+                      {/* Percentage labels - only show if segment is large enough */}
+                      {breakdown.directSuccessPercentage >= 8 && (
+                        <span
+                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-white"
+                          style={{
+                            left: `${breakdown.directSuccessPercentage / 2}%`,
+                            transform: "translate(-50%, -50%)",
+                          }}
+                        >
+                          {breakdown.directSuccessPercentage}%
+                        </span>
+                      )}
+                      {breakdown.indirectSuccessPercentage >= 8 && (
+                        <span
+                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-foreground"
+                          style={{
+                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage / 2}%`,
+                            transform: "translate(-50%, -50%)",
+                          }}
+                        >
+                          {breakdown.indirectSuccessPercentage}%
+                        </span>
+                      )}
+                      {breakdown.directFailPercentage >= 8 && (
+                        <span
+                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-white"
+                          style={{
+                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage / 2}%`,
+                            transform: "translate(-50%, -50%)",
+                          }}
+                        >
+                          {breakdown.directFailPercentage}%
+                        </span>
+                      )}
+                      {breakdown.indirectFailPercentage >= 8 && (
+                        <span
+                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-foreground"
+                          style={{
+                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage / 2}%`,
+                            transform: "translate(-50%, -50%)",
+                          }}
+                        >
+                          {breakdown.indirectFailPercentage}%
+                        </span>
+                      )}
+                      {breakdown.directSkipPercentage >= 8 && (
+                        <span
+                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-white"
+                          style={{
+                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage + breakdown.directSkipPercentage / 2}%`,
+                            transform: "translate(-50%, -50%)",
+                          }}
+                        >
+                          {breakdown.directSkipPercentage}%
+                        </span>
+                      )}
+                      {breakdown.indirectSkipPercentage >= 8 && (
+                        <span
+                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-foreground"
+                          style={{
+                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage + breakdown.directSkipPercentage + breakdown.indirectSkipPercentage / 2}%`,
+                            transform: "translate(-50%, -50%)",
+                          }}
+                        >
+                          {breakdown.indirectSkipPercentage}%
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">No data</span>
+                  )}
                 </TableCell>
-                <TableCell className="text-right">{rating.count}</TableCell>
+                <TableCell className="text-right align-middle">{count}</TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
+
+      {/* Legend */}
+      <div className="flex flex-wrap items-center justify-center gap-4 rounded-lg border bg-muted/50 p-4">
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-sm bg-green-500" />
+          <span className="text-xs text-muted-foreground">Direct Success</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-sm bg-green-300" />
+          <span className="text-xs text-muted-foreground">Indirect Success</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-sm bg-red-500" />
+          <span className="text-xs text-muted-foreground">Direct Fail</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-sm bg-red-300" />
+          <span className="text-xs text-muted-foreground">Indirect Fail</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-sm bg-gray-500" />
+          <span className="text-xs text-muted-foreground">Direct Skip</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-sm bg-gray-300" />
+          <span className="text-xs text-muted-foreground">Indirect Skip</span>
+        </div>
+      </div>
     </div>
   );
 }
