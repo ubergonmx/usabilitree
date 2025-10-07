@@ -213,6 +213,7 @@ const updates: Update[] = [
     description: "Fixed bugs and improved UI in tree test results",
     type: "fix",
     details: [
+      "Fixed study card overflow issue on smaller screens",
       "Fixed visibility issue in tree setup where tree preview text was not visible in dark mode",
       "Improved confidence ratings graph in task analysis tab",
     ],

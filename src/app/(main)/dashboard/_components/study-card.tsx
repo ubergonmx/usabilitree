@@ -70,7 +70,7 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
       id={isSampleStudy ? DASHBOARD_TOUR_STEP_IDS.SAMPLE_STUDY : undefined}
     >
       <Card
-        className="flex h-full cursor-pointer flex-col transition-all duration-200 hover:-translate-y-1 hover:bg-accent/20 hover:shadow-lg"
+        className="@container flex h-full cursor-pointer flex-col transition-all duration-200 hover:-translate-y-1 hover:bg-accent/20 hover:shadow-lg"
         onClick={handleCardClick}
       >
         <CardHeader className="flex-shrink-0">
@@ -103,7 +103,15 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
         <CardContent className="flex-grow">
           <p className="line-clamp-3 text-sm text-muted-foreground">{study.description}</p>
         </CardContent>
-        <CardFooter className="mt-auto flex-shrink-0 flex-row-reverse gap-2">
+        <CardFooter className="mt-auto flex-shrink-0 items-center justify-between gap-2">
+          <Badge
+            variant="outline"
+            className={`flex-shrink-0 rounded-lg capitalize ${
+              study.status === "active" ? "bg-green-50 text-green-700" : ""
+            }`}
+          >
+            {study.status}
+          </Badge>
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             {study.status === "draft" ? (
               <button
@@ -111,7 +119,7 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
                 onClick={handleEditClick}
               >
                 <Pencil2Icon className="h-4 w-4" />
-                <span>Edit</span>
+                <span className="@[275px]:inline hidden">Edit</span>
               </button>
             ) : (
               <>
@@ -120,26 +128,18 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
                   onClick={handleResultsClick}
                 >
                   <BarChartIcon className="h-4 w-4" />
-                  <span>Results</span>
+                  <span className="@[275px]:inline hidden">Results</span>
                 </button>
                 <button
                   className="flex items-center gap-1 transition-colors hover:text-foreground"
                   onClick={handleEditClick}
                 >
                   <Pencil2Icon className="h-4 w-4" />
-                  <span>Edit</span>
+                  <span className="@[275px]:inline hidden">Edit</span>
                 </button>
               </>
             )}
           </div>
-          <Badge
-            variant="outline"
-            className={`mr-auto rounded-lg capitalize ${
-              study.status === "active" ? "bg-green-50 text-green-700" : ""
-            }`}
-          >
-            {study.status}
-          </Badge>
         </CardFooter>
       </Card>
     </div>
