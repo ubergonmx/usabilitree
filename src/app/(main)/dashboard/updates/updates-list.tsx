@@ -193,15 +193,6 @@ const updates: Update[] = [
   },
   {
     id: "15",
-    date: "2025-09-25",
-    title: "Development Message",
-    description:
-      "Hi! I'm building this open-source website solo, and it's free (up to 7 tree tests). I'd love your feedback to help me improve this tool! Just click 'Give Feedback' button on the navbar. Thank you for using Usabilitree! 😊",
-    type: "message",
-    details: [],
-  },
-  {
-    id: "16",
     date: "2025-09-28",
     title: "Setup page UI Improvement",
     description: "Improved study card navigation and tree test setup page",
@@ -214,6 +205,26 @@ const updates: Update[] = [
       "Add interactive preview of tree structure in tree setup page",
       "Added note for branding in messages setup",
     ],
+  },
+  {
+    id: "16",
+    date: "2025-10-08",
+    title: "Fixes and Improvements",
+    description: "Fixed bugs and improved UI in tree test results",
+    type: "fix",
+    details: [
+      "Fixed visibility issue in tree setup where tree preview text was not visible in dark mode",
+      "Improved confidence ratings graph in task analysis tab",
+    ],
+  },
+  {
+    id: "17",
+    date: "2025-10-08",
+    title: "Development Message",
+    description:
+      "Hi! I'm building this open-source website solo, and it's free! Please send your feedback to help me improve this tool! Feel free to email me at aaron@usabilitree.com or DM me on Discord @pseudo1337. Thanks for using Usabilitree!",
+    type: "message",
+    details: [],
   },
 ];
 
