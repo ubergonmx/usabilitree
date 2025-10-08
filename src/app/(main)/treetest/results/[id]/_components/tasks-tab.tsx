@@ -436,118 +436,154 @@ function ConfidenceRatingsTable({ ratings }: { ratings: TaskStats["stats"]["conf
 
             const hasData = count > 0;
 
+            // Determine which segments exist to find the last one
+            const segments = [
+              breakdown.directSuccess > 0 ? "directSuccess" : null,
+              breakdown.indirectSuccess > 0 ? "indirectSuccess" : null,
+              breakdown.directFail > 0 ? "directFail" : null,
+              breakdown.indirectFail > 0 ? "indirectFail" : null,
+              breakdown.directSkip > 0 ? "directSkip" : null,
+              breakdown.indirectSkip > 0 ? "indirectSkip" : null,
+            ].filter(Boolean);
+            const lastSegment = segments[segments.length - 1];
+
             return (
               <TableRow key={level.value}>
                 <TableCell className="align-middle">{level.label}</TableCell>
                 <TableCell className="w-[400px] align-middle">
                   {hasData ? (
-                    <div className="relative h-8 w-full overflow-hidden rounded-full bg-secondary">
+                    <div className="relative h-5 w-full overflow-hidden rounded-full bg-secondary">
                       {/* Stacked bar segments - order matters for proper stacking */}
-                      <div
-                        className="absolute left-0 top-0 h-full bg-green-500"
-                        style={{ width: `${breakdown.directSuccessPercentage}%` }}
-                      />
-                      <div
-                        className="absolute top-0 h-full bg-green-300"
-                        style={{
-                          left: `${breakdown.directSuccessPercentage}%`,
-                          width: `${breakdown.indirectSuccessPercentage}%`,
-                        }}
-                      />
-                      <div
-                        className="absolute top-0 h-full bg-red-500"
-                        style={{
-                          left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage}%`,
-                          width: `${breakdown.directFailPercentage}%`,
-                        }}
-                      />
-                      <div
-                        className="absolute top-0 h-full bg-red-300"
-                        style={{
-                          left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage}%`,
-                          width: `${breakdown.indirectFailPercentage}%`,
-                        }}
-                      />
-                      <div
-                        className="absolute top-0 h-full bg-gray-500"
-                        style={{
-                          left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage}%`,
-                          width: `${breakdown.directSkipPercentage}%`,
-                        }}
-                      />
-                      <div
-                        className="absolute top-0 h-full bg-gray-300"
-                        style={{
-                          left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage + breakdown.directSkipPercentage}%`,
-                          width: `${breakdown.indirectSkipPercentage}%`,
-                        }}
-                      />
-                      {/* Percentage labels - only show if segment is large enough */}
-                      {breakdown.directSuccessPercentage >= 8 && (
-                        <span
-                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-white"
+                      {breakdown.directSuccess > 0 && (
+                        <div
+                          className="absolute left-0 top-0 h-full bg-green-500 @container/directSuccess"
                           style={{
-                            left: `${breakdown.directSuccessPercentage / 2}%`,
-                            transform: "translate(-50%, -50%)",
+                            ...(lastSegment === "directSuccess"
+                              ? { right: 0 }
+                              : { width: `${breakdown.directSuccessPercentage}%` }),
                           }}
                         >
-                          {breakdown.directSuccessPercentage}%
-                        </span>
+                          {breakdown.directSuccessPercentage >= 1 && (
+                            <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-medium text-white">
+                              <span className="@[97px]/directSuccess:hidden">
+                                {breakdown.directSuccess}
+                              </span>
+                              <span className="hidden @[97px]/directSuccess:inline">
+                                {breakdown.directSuccess} ({breakdown.directSuccessPercentage}%)
+                              </span>
+                            </span>
+                          )}
+                        </div>
                       )}
-                      {breakdown.indirectSuccessPercentage >= 8 && (
-                        <span
-                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-foreground"
+                      {breakdown.indirectSuccess > 0 && (
+                        <div
+                          className="absolute top-0 h-full bg-green-300 @container/indirectSuccess"
                           style={{
-                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage / 2}%`,
-                            transform: "translate(-50%, -50%)",
+                            left: `${breakdown.directSuccessPercentage}%`,
+                            ...(lastSegment === "indirectSuccess"
+                              ? { right: 0 }
+                              : { width: `${breakdown.indirectSuccessPercentage}%` }),
                           }}
                         >
-                          {breakdown.indirectSuccessPercentage}%
-                        </span>
+                          {breakdown.indirectSuccessPercentage >= 1 && (
+                            <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-medium text-foreground">
+                              <span className="@[97px]/indirectSuccess:hidden">
+                                {breakdown.indirectSuccess}
+                              </span>
+                              <span className="hidden @[97px]/indirectSuccess:inline">
+                                {breakdown.indirectSuccess} ({breakdown.indirectSuccessPercentage}%)
+                              </span>
+                            </span>
+                          )}
+                        </div>
                       )}
-                      {breakdown.directFailPercentage >= 8 && (
-                        <span
-                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-white"
+                      {breakdown.directFail > 0 && (
+                        <div
+                          className="absolute top-0 h-full bg-red-500 @container/directFail"
                           style={{
-                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage / 2}%`,
-                            transform: "translate(-50%, -50%)",
+                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage}%`,
+                            ...(lastSegment === "directFail"
+                              ? { right: 0 }
+                              : { width: `${breakdown.directFailPercentage}%` }),
                           }}
                         >
-                          {breakdown.directFailPercentage}%
-                        </span>
+                          {breakdown.directFailPercentage >= 1 && (
+                            <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-medium text-white">
+                              <span className="@[97px]/directFail:hidden">
+                                {breakdown.directFail}
+                              </span>
+                              <span className="hidden @[97px]/directFail:inline">
+                                {breakdown.directFail} ({breakdown.directFailPercentage}%)
+                              </span>
+                            </span>
+                          )}
+                        </div>
                       )}
-                      {breakdown.indirectFailPercentage >= 8 && (
-                        <span
-                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-foreground"
+                      {breakdown.indirectFail > 0 && (
+                        <div
+                          className="absolute top-0 h-full bg-red-300 @container/indirectFail"
                           style={{
-                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage / 2}%`,
-                            transform: "translate(-50%, -50%)",
+                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage}%`,
+                            ...(lastSegment === "indirectFail"
+                              ? { right: 0 }
+                              : { width: `${breakdown.indirectFailPercentage}%` }),
                           }}
                         >
-                          {breakdown.indirectFailPercentage}%
-                        </span>
+                          {breakdown.indirectFailPercentage >= 1 && (
+                            <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-medium text-foreground">
+                              <span className="@[97px]/indirectFail:hidden">
+                                {breakdown.indirectFail}
+                              </span>
+                              <span className="hidden @[97px]/indirectFail:inline">
+                                {breakdown.indirectFail} ({breakdown.indirectFailPercentage}%)
+                              </span>
+                            </span>
+                          )}
+                        </div>
                       )}
-                      {breakdown.directSkipPercentage >= 8 && (
-                        <span
-                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-white"
+                      {breakdown.directSkip > 0 && (
+                        <div
+                          className="absolute top-0 h-full bg-gray-500 @container/directSkip"
                           style={{
-                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage + breakdown.directSkipPercentage / 2}%`,
-                            transform: "translate(-50%, -50%)",
+                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage}%`,
+                            ...(lastSegment === "directSkip"
+                              ? { right: 0 }
+                              : { width: `${breakdown.directSkipPercentage}%` }),
                           }}
                         >
-                          {breakdown.directSkipPercentage}%
-                        </span>
+                          {breakdown.directSkipPercentage >= 1 && (
+                            <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-medium text-white">
+                              <span className="@[97px]/directSkip:hidden">
+                                {breakdown.directSkip}
+                              </span>
+                              <span className="hidden @[97px]/directSkip:inline">
+                                {breakdown.directSkip} ({breakdown.directSkipPercentage}%)
+                              </span>
+                            </span>
+                          )}
+                        </div>
                       )}
-                      {breakdown.indirectSkipPercentage >= 8 && (
-                        <span
-                          className="absolute top-1/2 -translate-y-1/2 text-xs font-medium text-foreground"
+                      {breakdown.indirectSkip > 0 && (
+                        <div
+                          className="absolute top-0 h-full bg-gray-300 @container/indirectSkip"
                           style={{
-                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage + breakdown.directSkipPercentage + breakdown.indirectSkipPercentage / 2}%`,
-                            transform: "translate(-50%, -50%)",
+                            left: `${breakdown.directSuccessPercentage + breakdown.indirectSuccessPercentage + breakdown.directFailPercentage + breakdown.indirectFailPercentage + breakdown.directSkipPercentage}%`,
+                            ...(lastSegment === "indirectSkip"
+                              ? { right: 0 }
+                              : { width: `${breakdown.indirectSkipPercentage}%` }),
                           }}
                         >
-                          {breakdown.indirectSkipPercentage}%
-                        </span>
+                          {breakdown.indirectSkipPercentage >= 1 && (
+                            <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-medium text-foreground">
+                              <span className="@[97px]/indirectSkip:hidden">
+                                {breakdown.indirectSkip}
+                              </span>
+                              <span className="hidden @[97px]/indirectSkip:inline">
+                                {breakdown.indirectSkip} ({breakdown.indirectSkipPercentage}%)
+                              </span>
+                            </span>
+                          )}
+                        </div>
                       )}
                     </div>
                   ) : (
@@ -579,14 +615,6 @@ function ConfidenceRatingsTable({ ratings }: { ratings: TaskStats["stats"]["conf
           <div className="h-3 w-3 rounded-sm bg-red-300" />
           <span className="text-xs text-muted-foreground">Indirect Fail</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-sm bg-gray-500" />
-          <span className="text-xs text-muted-foreground">Direct Skip</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-sm bg-gray-300" />
-          <span className="text-xs text-muted-foreground">Indirect Skip</span>
-        </div>
       </div>
     </div>
   );
@@ -609,6 +637,11 @@ export function TasksTab({
       try {
         const data = await getTasksStats(studyId);
         setTasks(data);
+
+        // Open the first task by default
+        if (data.length > 0) {
+          setOpenItem(data[0]?.id || null);
+        }
 
         // Set up the opener function for the tour
         if (onSetOpener && data.length > 0) {
@@ -681,6 +714,11 @@ export function TasksTab({
 
   return (
     <div className="space-y-4">
+      <div className="rounded-lg border bg-muted p-2.5 text-sm text-muted-foreground">
+        <p>
+          <strong>Note:</strong> Click to expand/collapse task details.
+        </p>
+      </div>
       <div className="relative max-w-sm">
         <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
           <SearchIcon className="h-4 w-4 text-muted-foreground" />
@@ -713,15 +751,17 @@ export function TasksTab({
             {...(index === 0 ? { id: RESULTS_TOUR_STEP_IDS.TASKS_EXPAND } : {})}
             key={task.id}
             value={task.id}
-            className="rounded-lg border px-6"
+            className="group rounded-lg border transition-all duration-200 @container data-[state=closed]:hover:border-primary/50 data-[state=closed]:hover:bg-accent/30 data-[state=closed]:hover:shadow-md"
           >
-            <AccordionTrigger className="hover:no-underline">
-              <div className="flex flex-col items-start gap-4">
-                <div className="flex items-center gap-4">
-                  <span className="text-sm font-medium text-muted-foreground">
-                    Task {task.index + 1}
-                  </span>
-                  <h3 className="font-semibold">{task.description}</h3>
+            <AccordionTrigger className="px-6 hover:no-underline [&[data-state=closed]]:pb-4">
+              <div className="flex w-full flex-col items-start gap-4">
+                <div className="flex w-full flex-col items-start gap-2 @sm:flex-row @sm:items-center @sm:justify-between">
+                  <div className="flex flex-wrap items-center gap-2 @sm:gap-4">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Task {task.index + 1}
+                    </span>
+                    <h3 className="font-semibold">{task.description}</h3>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   {task.expectedAnswer.split(",").map((answer, answerIndex) => (
@@ -745,7 +785,7 @@ export function TasksTab({
                 </div>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="pt-4">
+            <AccordionContent className="px-6 pt-4">
               <div className="space-y-6">
                 <TaskBreakdownPie breakdown={task.stats.breakdown} score={task.stats.score} />
                 <div className="space-y-2">
