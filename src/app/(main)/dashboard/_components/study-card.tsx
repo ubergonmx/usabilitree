@@ -70,7 +70,7 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
       id={isSampleStudy ? DASHBOARD_TOUR_STEP_IDS.SAMPLE_STUDY : undefined}
     >
       <Card
-        className="@container flex h-full cursor-pointer flex-col transition-all duration-200 hover:-translate-y-1 hover:bg-accent/20 hover:shadow-lg"
+        className="flex h-full cursor-pointer flex-col transition-all duration-200 @container hover:-translate-y-1 hover:bg-accent/20 hover:shadow-lg"
         onClick={handleCardClick}
       >
         <CardHeader className="flex-shrink-0">
@@ -119,7 +119,7 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
                 onClick={handleEditClick}
               >
                 <Pencil2Icon className="h-4 w-4" />
-                <span className="@[275px]:inline hidden">Edit</span>
+                <span className="hidden @[275px]:inline">Edit</span>
               </button>
             ) : (
               <>
@@ -128,14 +128,14 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
                   onClick={handleResultsClick}
                 >
                   <BarChartIcon className="h-4 w-4" />
-                  <span className="@[275px]:inline hidden">Results</span>
+                  <span className="hidden @[275px]:inline">Results</span>
                 </button>
                 <button
                   className="flex items-center gap-1 transition-colors hover:text-foreground"
                   onClick={handleEditClick}
                 >
                   <Pencil2Icon className="h-4 w-4" />
-                  <span className="@[275px]:inline hidden">Edit</span>
+                  <span className="hidden @[275px]:inline">Edit</span>
                 </button>
               </>
             )}
