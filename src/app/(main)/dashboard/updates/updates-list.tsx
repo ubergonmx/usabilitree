@@ -227,6 +227,18 @@ const updates: Update[] = [
     type: "message",
     details: [],
   },
+  {
+    id: "18",
+    date: "2025-11-07",
+    title: "Fix answer path validation and UI hint",
+    description:
+      "Require leading '/' for task answer paths and add UI hint to clarify this requirement.",
+    type: "fix",
+    details: [
+      'Now, task answer paths must start with a "/" (e.g., /home/products) to be considered valid.',
+      "Added a small helper text above the answers textarea to clarify this requirement for users.",
+    ],
+  },
 ];
 
 export function UpdatesList() {
