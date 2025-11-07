@@ -114,8 +114,13 @@ export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
     const invalidPaths: string[] = [];
 
     answerPaths.forEach((path) => {
-      const answerPath = path.startsWith("/") ? path : `/${path}`;
-      if (checkPathInTree(data.tree.parsed, answerPath)) {
+      // Invalidate paths that don't start with /
+      if (!path.startsWith("/")) {
+        invalidPaths.push(path);
+        return;
+      }
+
+      if (checkPathInTree(data.tree.parsed, path)) {
         validPaths.push(path);
       } else {
         invalidPaths.push(path);
@@ -192,6 +197,10 @@ export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
                 <CheckIcon className="h-3 w-3" /> Check
               </Button>
             </div>
+            <p className="text-xs text-muted-foreground">
+              All paths must start with <code className="rounded bg-muted px-1 py-0.5">/</code> and
+              must be a leaf (final destination) in the tree (e.g., /home/products)
+            </p>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
               <Popover
                 open={openPopover === index}
