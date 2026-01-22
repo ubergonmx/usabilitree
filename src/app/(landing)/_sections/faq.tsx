@@ -72,9 +72,9 @@ export default function FAQ() {
           </Button>
           , I update it as often as I can. Your support really helps me move faster and keep things
           improving—if you&apos;d like to help boost development:
-          <Button variant="linkHover1" className="ml-1 h-0 p-0 after:-bottom-2 after:w-[98px]">
-            <Link href="https://www.buymeacoffee.com/aaronpal" target="_blank">
-              BuyMeACoffee
+          <Button variant="linkHover1" className="ml-1 h-0 p-0 after:-bottom-2 after:w-[110px]">
+            <Link href="https://github.com/sponsors/ubergonmx" target="_blank">
+              GitHub Sponsors
             </Link>
           </Button>
           .
