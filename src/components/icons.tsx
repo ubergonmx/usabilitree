@@ -129,4 +129,5 @@ export {
   CrossCircledIcon,
   InfoCircledIcon,
   BellIcon,
+  DrawingPinIcon as MapIcon,
 } from "@radix-ui/react-icons";

@@ -47,7 +47,7 @@ export function SponsorButton({ className, variant = "nav" }: SponsorButtonProps
       id={DASHBOARD_TOUR_STEP_IDS.SUPPORT}
       onClick={handleSponsorClick}
       className={cn(
-        "group hidden items-center whitespace-nowrap rounded-md px-3 py-2 text-left text-sm font-medium hover:bg-accent hover:text-accent-foreground md:flex",
+        "hidden items-center whitespace-nowrap rounded-md px-3 py-2 text-left text-sm font-medium hover:bg-accent hover:text-accent-foreground md:flex",
         className
       )}
       title="Sponsor me on GitHub"
