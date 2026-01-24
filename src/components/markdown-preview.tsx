@@ -25,13 +25,7 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
       // Bullet Lists
       .replace(/^\* (.*$)/gm, '<li class="ml-4">$1</li>')
       .replace(/^- (.*$)/gm, '<li class="ml-4">$1</li>')
-      // Links
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => {
-        // Ensure URL is properly sanitized
-        const sanitizedUrl = url.replace(/[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]/g, "");
-        return `<a href="${sanitizedUrl}" class="text-primary hover:underline" rel="noopener noreferrer">${text}</a>`;
-      })
-      // Images
+      // Images (must be before links to avoid conflict)
       .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, url) => {
         // Handle instruction-img placeholder
         let sanitizedUrl = url;
@@ -43,6 +37,12 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
           sanitizedUrl = url.replace(/[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]/g, "");
         }
         return `<img src="${sanitizedUrl}" alt="${alt}" class="max-w-full h-auto" />`;
+      })
+      // Links
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => {
+        // Ensure URL is properly sanitized
+        const sanitizedUrl = url.replace(/[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]/g, "");
+        return `<a href="${sanitizedUrl}" class="text-primary hover:underline" rel="noopener noreferrer">${text}</a>`;
       })
       // Bold
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
