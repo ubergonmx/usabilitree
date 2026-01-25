@@ -16,6 +16,7 @@ export const DASHBOARD_TOUR_STEP_IDS = {
   UPDATES: "updates",
   FEEDBACK: "feedback",
   SUPPORT: "support",
+  ROADMAP: "roadmap",
 } as const;
 
 export const RESULTS_TOUR_STEP_IDS = {

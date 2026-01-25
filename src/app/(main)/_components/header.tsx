@@ -3,7 +3,8 @@ import { UserDropdown } from "@/app/(main)/_components/user-dropdown";
 import { getCurrentUser } from "@/lib/auth/session";
 import Logo from "@/components/logo";
 import { FeedbackButton } from "@/components/feedback-button";
-import { CoffeeButton } from "@/components/coffee-button";
+import { SponsorButton } from "@/components/sponsor-button";
+import { RoadmapButton } from "@/components/roadmap-button";
 
 export const Header = async () => {
   const user = await getCurrentUser();
@@ -16,7 +17,8 @@ export const Header = async () => {
         </Link>
         {user ? (
           <div className="ml-auto flex items-center gap-2">
-            <CoffeeButton variant="header" />
+            <RoadmapButton variant="header" />
+            <SponsorButton variant="header" />
             <FeedbackButton variant="header" />
             <UserDropdown email={user.email} avatar={user.avatar} />
           </div>

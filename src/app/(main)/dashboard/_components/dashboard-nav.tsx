@@ -6,12 +6,13 @@ import { FileTextIcon, GearIcon, BellIcon } from "@/components/icons";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { FeedbackButton } from "@/components/feedback-button";
-import { CoffeeButton } from "@/components/coffee-button";
+import { SponsorButton } from "@/components/sponsor-button";
+import { RoadmapButton } from "@/components/roadmap-button";
 import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
 
 // Store the latest update date in a constant at the top of the file
 // This makes it easier to update in one place when new content is added
-const LATEST_UPDATE_DATE = "2025-11-07"; // Update this when new content is added
+const LATEST_UPDATE_DATE = "2026-01-24"; // Update this when new content is added
 
 const items = [
   {
@@ -83,7 +84,8 @@ export function DashboardNav({ className }: Props) {
       ))}
 
       <FeedbackButton />
-      <CoffeeButton />
+      <RoadmapButton />
+      <SponsorButton />
     </nav>
   );
 }
