@@ -1,7 +1,6 @@
 "use client";
 
 import { MessageSquareCodeIcon } from "@/components/icons";
-import { useSurveyTriggers } from "@/lib/hooks/use-survey-triggers";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
@@ -12,10 +11,9 @@ interface FeedbackButtonProps {
 }
 
 export function FeedbackButton({ className, variant = "nav" }: FeedbackButtonProps) {
-  const { triggerFeedbackRequest } = useSurveyTriggers();
-
   const handleFeedbackClick = (): void => {
-    triggerFeedbackRequest(variant === "header" ? "header" : "dashboard_nav");
+    // Open UserJot feedback board
+    window.open("https://usabilitree.userjot.com/", "_blank", "noopener,noreferrer");
   };
 
   if (variant === "header") {
@@ -40,7 +38,7 @@ export function FeedbackButton({ className, variant = "nav" }: FeedbackButtonPro
       id={DASHBOARD_TOUR_STEP_IDS.FEEDBACK}
       onClick={handleFeedbackClick}
       className={cn(
-        "group hidden items-center whitespace-nowrap rounded-md px-3 py-2 text-left text-sm font-medium hover:bg-accent hover:text-accent-foreground md:flex",
+        "hidden items-center whitespace-nowrap rounded-md px-3 py-2 text-left text-sm font-medium hover:bg-accent hover:text-accent-foreground md:flex",
         className
       )}
     >
