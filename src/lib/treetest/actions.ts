@@ -248,6 +248,7 @@ export async function saveStudyData(id: string, data: StudyFormData) {
     });
 
     revalidatePath(`/treetest/setup/${id}`);
+    revalidatePath(`/treetest/results/${id}`);
     return { success: true };
   } catch (error) {
     console.error("Failed to save study data:", error);
