@@ -80,7 +80,13 @@ export default function FAQ() {
           .
           <br />
           <br />
-          I&apos;m currently working on a major overhaul, and a roadmap will be added soon.
+          You can view the project roadmap and upcoming features at{" "}
+          <Button variant="linkHover1" className="h-0 p-0 after:-bottom-2 after:w-[55px]">
+            <Link href="https://usabilitree.userjot.com/roadmap" target="_blank">
+              Roadmap
+            </Link>
+          </Button>
+          .
           <br />
           <br />
           In the meantime, if you have any suggestions or requests, feel free to let me know through
