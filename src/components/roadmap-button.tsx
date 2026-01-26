@@ -11,7 +11,10 @@ interface RoadmapButtonProps {
 
 export function RoadmapButton({ className, variant = "nav" }: RoadmapButtonProps) {
   const handleRoadmapClick = () => {
-    window.open("https://usabilitree.userjot.com/roadmap", "_blank", "noopener,noreferrer");
+    // Open UserJot widget with roadmap section
+    if (typeof window !== "undefined" && window.uj) {
+      window.uj.showWidget({ section: "roadmap" });
+    }
   };
 
   if (variant === "header") {
