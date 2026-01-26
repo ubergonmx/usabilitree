@@ -12,14 +12,18 @@ interface UserJotWidgetOptions {
 
 interface UserJot {
   init: (projectId: string, config?: UserJotConfig) => void;
-  showWidget: (options?: UserJotWidgetOptions) => void;
-  identify: (user: {
-    id: string;
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-    avatar?: string;
-  }) => void;
+  showWidget: (options?: { section?: "roadmap" | "feedback" | "updates" }) => void;
+  hideWidget: () => void;
+  // Allow null for logging out users
+  identify: (
+    user: {
+      id: string;
+      email?: string;
+      firstName?: string;
+      lastName?: string;
+      avatar?: string;
+    } | null
+  ) => void;
 }
 
 declare global {
