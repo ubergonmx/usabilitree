@@ -239,6 +239,34 @@ const updates: Update[] = [
       "Added a small helper text above the answers textarea to clarify this requirement for users.",
     ],
   },
+  {
+    id: "19",
+    date: "2026-01-26",
+    title: "Platform Updates",
+    description: "Various improvements and updates to the platform",
+    type: "improvement",
+    details: [
+      "Fixed image rendering with alt text in markdown preview.",
+      "Switched from BuyMeACoffee to GitHub Sponsors for supporting the project.",
+      "Added Roadmap button to easily view upcoming features and planned improvements.",
+      "Fixed minor display errors for smoother user experience.",
+    ],
+  },
+  {
+    id: "20",
+    date: "2026-01-27",
+    title: "Thank You for 1,000 Users! 🎉",
+    description: "A personal message from me as we approach this milestone.",
+    type: "message",
+    details: [
+      "First and foremost, thank you! We're approaching 1,000 users, and I'm genuinely grateful for every single one of you.",
+      "It's been amazing to see how UsabiliTree has supported so many teams with their UX research, even with just tree testing available so far.",
+      "I know I've mentioned working on Version 2 with card sorting and other features in previous updates. I'll be honest - progress has been slower than I hoped due to some personal circumstances.",
+      "But I want you to know: this project matters to me, and your continued use motivates me to keep improving it.",
+      "The roadmap is now live, so you can see what's planned. Your feedback (quick or detailed) genuinely shapes where this tool goes next.",
+      "Thank you for sticking with UsabiliTree. Here's to many more improvements ahead! 🚀",
+    ],
+  },
 ];
 
 export function UpdatesList() {
