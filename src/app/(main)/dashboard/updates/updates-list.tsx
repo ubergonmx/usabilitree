@@ -255,6 +255,13 @@ const updates: Update[] = [
   {
     id: "20",
     date: "2026-01-27",
+    title: "Results Cache Fix",
+    description: "Fixed stats not updating after modifying correct answers for tasks.",
+    type: "fix",
+  },
+  {
+    id: "21",
+    date: "2026-01-27",
     title: "Thank You for 1,000 Users! 🎉",
     description: "A personal message from me as we approach this milestone.",
     type: "message",
