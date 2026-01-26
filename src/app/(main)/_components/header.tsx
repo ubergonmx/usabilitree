@@ -6,6 +6,7 @@ import { FeedbackButton } from "@/components/feedback-button";
 import { SponsorButton } from "@/components/sponsor-button";
 import { RoadmapButton } from "@/components/roadmap-button";
 import UserJotWidget from "../dashboard/_components/userjot-widget";
+// import { UserJotIdentifier } from "./userjot-identifier";
 
 export const Header = async () => {
   const user = await getCurrentUser();
@@ -27,6 +28,7 @@ export const Header = async () => {
       </div>
 
       <UserJotWidget />
+      {/* <UserJotIdentifier user={user} /> */}
     </header>
   );
 };
