@@ -4,7 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { TreeNode, StudyFormData } from "@/lib/types/tree-test";
 import { sanitizeTreeTestLink } from "@/lib/utils";
 import { InfoCircledIcon } from "@/components/icons";
@@ -145,16 +151,30 @@ export function TreeTab({ data, onChange }: TreeTabProps) {
     <div id={SETUP_TOUR_STEP_IDS.TREE} className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="tree-structure">Tree Structure</Label>
-        <Alert>
-          <InfoCircledIcon className="h-4 w-4" />
-          <AlertTitle>Important Note</AlertTitle>
-          <AlertDescription>
-            If you want this tree test to behave like Optimal Workshop with automatic expansion of
-            the root level, create exactly one top-level item. When a single top-level item is
-            present, it will automatically expand when participants start the test. This behavior is
-            optional - multiple root items will simply start in the collapsed state.
-          </AlertDescription>
-        </Alert>
+        <Accordion type="single" collapsible className="rounded-lg border bg-background px-4">
+          <AccordionItem value="notes" className="border-b-0">
+            <AccordionTrigger className="py-3 hover:no-underline">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <InfoCircledIcon className="h-4 w-4" />
+                Important Notes
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="text-sm text-muted-foreground">
+              <ul className="list-disc space-y-2 pl-4">
+                <li>
+                  <strong>Single root behavior:</strong> If you want automatic expansion of the root
+                  level (like Optimal Workshop), create exactly one top-level item. Multiple root
+                  items will start collapsed.
+                </li>
+                <li>
+                  <strong>Unique leaf names:</strong> Each final item (leaf node) should have a
+                  unique name. Duplicate names may cause incorrect results when updating correct
+                  answers.
+                </li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
         <Textarea
           id="tree-structure"
           value={data.tree.structure}
