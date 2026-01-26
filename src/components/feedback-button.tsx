@@ -12,8 +12,10 @@ interface FeedbackButtonProps {
 
 export function FeedbackButton({ className, variant = "nav" }: FeedbackButtonProps) {
   const handleFeedbackClick = (): void => {
-    // Open UserJot feedback board
-    window.open("https://usabilitree.userjot.com/", "_blank", "noopener,noreferrer");
+    // Open UserJot widget for feedback
+    if (typeof window !== "undefined" && window.uj) {
+      window.uj.showWidget();
+    }
   };
 
   if (variant === "header") {
