@@ -34,6 +34,7 @@ import { toast } from "sonner";
 import { User } from "@/db/schema";
 import { deleteUserAccount, updateUserSettings } from "@/lib/settings/actions";
 import * as Sentry from "@sentry/react";
+import { useSurveyTriggers } from "@/lib/hooks/use-survey-triggers";
 
 const settingsFormSchema = z.object({
   email: z.string().email(),
@@ -71,6 +72,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [deleteConfirmEmail, setDeleteConfirmEmail] = useState("");
+  const { triggerFeedbackRequest } = useSurveyTriggers();
 
   const form = useForm({
     resolver: zodResolver(settingsFormSchema),
@@ -302,6 +304,32 @@ export function SettingsForm({ user }: SettingsFormProps) {
             </CardContent>
           </Card>
         )}
+
+        <Card className="border-primary/20">
+          <CardHeader>
+            <CardTitle>Help Shape the Future</CardTitle>
+            <CardDescription>
+              Share your detailed feedback to help improve UsabiliTree. Your insights are invaluable
+              for the upcoming overhaul!
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="rounded-lg bg-muted p-4">
+              <p className="text-sm text-muted-foreground">
+                🎁 <strong>Special Thank You:</strong> Users who complete the detailed feedback
+                survey will receive a secret discount code for future paid plans (when available).
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => triggerFeedbackRequest("settings_page")}
+              className="w-full"
+            >
+              Share Detailed Feedback
+            </Button>
+          </CardContent>
+        </Card>
 
         <div className="flex items-center justify-between">
           <Button type="submit" disabled={isLoading}>
