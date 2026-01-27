@@ -693,9 +693,6 @@ export async function getStudyTasks(studyId: string) {
 }
 
 function findLastValidPath(tree: TreeNode[], pathTaken: string): string | null {
-  // Split path into segments
-  const segments = pathTaken.split("/").filter(Boolean);
-
   // Function to collect all valid links from tree
   const collectLinks = (nodes: TreeNode[], validLinks: string[]) => {
     for (const node of nodes) {
@@ -711,7 +708,31 @@ function findLastValidPath(tree: TreeNode[], pathTaken: string): string | null {
   const validLinks: string[] = [];
   collectLinks(tree, validLinks);
 
-  // Go through segments in reverse to find last valid path
+  // First: check if pathTaken ends with a valid link (uses full path context to
+  // avoid mismatches when different branches have nodes with the same name).
+  // Sort by length descending so the longest (most specific) match wins.
+  const sortedLinks = [...validLinks].sort((a, b) => b.length - a.length);
+  for (const link of sortedLinks) {
+    if (pathTaken.endsWith(link)) {
+      return link;
+    }
+  }
+
+  // Second: handle truncated paths from the updatePathTaken bug where parent
+  // and child share the same sanitized name (e.g., pathTaken = "a/b" when the
+  // actual selection was "a/b/b"). Check if repeating the last segment matches.
+  const lastSegment = pathTaken.split("/").filter(Boolean).pop();
+  if (lastSegment) {
+    const withRepeated = `${pathTaken}/${lastSegment}`;
+    for (const link of sortedLinks) {
+      if (withRepeated.endsWith(link)) {
+        return link;
+      }
+    }
+  }
+
+  // Fallback: segment-based matching for edge cases where no suffix match is found
+  const segments = pathTaken.split("/").filter(Boolean);
   for (let i = segments.length - 1; i >= 0; i--) {
     const targetNode = segments[i];
     const validLink = validLinks.find((link) => link.endsWith(`/${targetNode}`));
@@ -721,4 +742,59 @@ function findLastValidPath(tree: TreeNode[], pathTaken: string): string | null {
   }
 
   return null;
+}
+
+export async function recalculateStudyResults(studyId: string) {
+  const user = await getCurrentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const [config] = await db
+      .select()
+      .from(treeConfigs)
+      .where(eq(treeConfigs.studyId, studyId));
+    if (!config?.parsedTree) throw new Error("No tree config found");
+
+    const parsedTree = JSON.parse(config.parsedTree) as TreeNode[];
+
+    const tasks = await db
+      .select()
+      .from(treeTasks)
+      .where(eq(treeTasks.studyId, studyId));
+
+    let updated = 0;
+
+    for (const task of tasks) {
+      const correctAnswers = task.expectedAnswer.split(",").map((a) => a.trim());
+
+      const results = await db
+        .select()
+        .from(treeTaskResults)
+        .where(eq(treeTaskResults.taskId, task.id));
+
+      for (const result of results) {
+        if (result.skipped) continue;
+
+        const actualPath = findLastValidPath(parsedTree, result.pathTaken);
+        const successful = actualPath ? correctAnswers.includes(actualPath) : false;
+
+        if (result.successful !== successful) {
+          await db
+            .update(treeTaskResults)
+            .set({ successful })
+            .where(eq(treeTaskResults.id, result.id));
+          updated++;
+        }
+      }
+    }
+
+    revalidatePath(`/treetest/setup/${studyId}`);
+    revalidatePath(`/treetest/results/${studyId}`);
+    return { success: true, updated };
+  } catch (error) {
+    console.error("Failed to recalculate study results:", error);
+    throw new Error("Failed to recalculate study results");
+  }
 }

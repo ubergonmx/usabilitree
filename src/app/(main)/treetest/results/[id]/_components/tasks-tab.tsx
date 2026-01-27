@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -18,7 +18,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getTasksStats, type TaskStats } from "@/lib/treetest/results-actions";
+import { recalculateStudyResults } from "@/lib/treetest/actions";
 import { ChevronRightIcon, CheckCircledIcon, XIcon, SearchIcon } from "@/components/icons";
+import { RefreshCwIcon } from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { PieChart } from "@/components/ui/pie-chart";
 import { BoxPlot } from "@/components/ui/box-plot";
 import { Button } from "@/components/ui/button";
@@ -270,20 +274,44 @@ function IncorrectDestinationsTable({
     return null;
   }
 
-  const validLinks = new Map<string, string>();
+  const validLinks: string[] = [];
 
-  function collectLinks(nodes: Item[], currentPath: string = "") {
+  function collectLinks(nodes: Item[]) {
     nodes.forEach((node) => {
       if (node.link) {
-        const finalSegment = node.link.split("/").pop()!;
-        validLinks.set(finalSegment, node.link);
+        validLinks.push(node.link);
       }
       if (node.children?.length) {
-        collectLinks(node.children, currentPath);
+        collectLinks(node.children);
       }
     });
   }
   collectLinks(tree);
+
+  // Sort by length descending so longest (most specific) match wins
+  const sortedLinks = [...validLinks].sort((a, b) => b.length - a.length);
+
+  function findConfiguredPath(path: string): string | undefined {
+    // Suffix match: find the valid link that matches the end of the path
+    for (const link of sortedLinks) {
+      if (path.endsWith(link)) {
+        return link;
+      }
+    }
+    // Handle truncated paths (parent/child same name): try repeating last segment
+    const lastSeg = path.split("/").filter(Boolean).pop();
+    if (lastSeg) {
+      const withRepeated = `${path}/${lastSeg}`;
+      for (const link of sortedLinks) {
+        if (withRepeated.endsWith(link)) {
+          return link;
+        }
+      }
+    }
+    // Fallback: last segment match
+    const finalSegment = path.split("/").pop()!;
+    return validLinks.find((link) => link.endsWith(`/${finalSegment}`));
+  }
 
   const totalParticipants = destinations.reduce((sum, d) => sum + d.count, 0);
 
@@ -291,8 +319,7 @@ function IncorrectDestinationsTable({
     ? Array.from(
         destinations
           .reduce((acc, dest) => {
-            const finalSegment = dest.path.split("/").pop()!;
-            const configuredPath = validLinks.get(finalSegment);
+            const configuredPath = findConfiguredPath(dest.path);
 
             if (configuredPath) {
               if (!acc.has(configuredPath)) {
@@ -622,15 +649,49 @@ function ConfidenceRatingsTable({ ratings }: { ratings: TaskStats["stats"]["conf
 
 export function TasksTab({
   studyId,
+  isOwner,
   onSetOpener,
 }: {
   studyId: string;
+  isOwner?: boolean;
   onSetOpener?: (opener: () => void) => void;
 }) {
+  const router = useRouter();
   const [tasks, setTasks] = useState<TaskStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [openItem, setOpenItem] = useState<string | null>(null);
+  const [isRecalculating, setIsRecalculating] = useState(false);
+  const [cooldownRemaining, setCooldownRemaining] = useState(0);
+
+  const handleRecalculate = useCallback(async () => {
+    if (isRecalculating || cooldownRemaining > 0) return;
+    setIsRecalculating(true);
+    try {
+      const result = await recalculateStudyResults(studyId);
+      toast.success(`Stats recalculated (${result.updated} results updated)`);
+      // Reload task data
+      const data = await getTasksStats(studyId);
+      setTasks(data);
+      router.refresh();
+      // Start 30s cooldown
+      setCooldownRemaining(30);
+    } catch (error) {
+      toast.error("Failed to recalculate stats");
+      Sentry.captureException(error);
+    } finally {
+      setIsRecalculating(false);
+    }
+  }, [studyId, isRecalculating, cooldownRemaining, router]);
+
+  // Cooldown timer
+  useEffect(() => {
+    if (cooldownRemaining <= 0) return;
+    const timer = setInterval(() => {
+      setCooldownRemaining((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [cooldownRemaining]);
 
   useEffect(() => {
     const loadTasks = async () => {
@@ -719,23 +780,41 @@ export function TasksTab({
           <strong>Note:</strong> Click to expand/collapse task details.
         </p>
       </div>
-      <div className="relative max-w-sm">
-        <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-          <SearchIcon className="h-4 w-4 text-muted-foreground" />
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative max-w-sm flex-1">
+          <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
+            <SearchIcon className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <Input
+            placeholder="Search by Task Number, Description, or Expected Answer..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9 pr-9"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground"
+            >
+              <XIcon className="h-4 w-4" />
+            </button>
+          )}
         </div>
-        <Input
-          placeholder="Search by Task Number, Description, or Expected Answer..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-9 pr-9"
-        />
-        {search && (
-          <button
-            onClick={() => setSearch("")}
-            className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground"
+        {isOwner && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2 self-start"
+            onClick={handleRecalculate}
+            disabled={isRecalculating || cooldownRemaining > 0}
           >
-            <XIcon className="h-4 w-4" />
-          </button>
+            <RefreshCwIcon className={`h-4 w-4 ${isRecalculating ? "animate-spin" : ""}`} />
+            {isRecalculating
+              ? "Recalculating..."
+              : cooldownRemaining > 0
+                ? `Recalculate (${cooldownRemaining}s)`
+                : "Recalculate Stats"}
+          </Button>
         )}
       </div>
       <Accordion
