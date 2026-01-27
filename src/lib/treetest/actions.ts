@@ -751,18 +751,12 @@ export async function recalculateStudyResults(studyId: string) {
   }
 
   try {
-    const [config] = await db
-      .select()
-      .from(treeConfigs)
-      .where(eq(treeConfigs.studyId, studyId));
+    const [config] = await db.select().from(treeConfigs).where(eq(treeConfigs.studyId, studyId));
     if (!config?.parsedTree) throw new Error("No tree config found");
 
     const parsedTree = JSON.parse(config.parsedTree) as TreeNode[];
 
-    const tasks = await db
-      .select()
-      .from(treeTasks)
-      .where(eq(treeTasks.studyId, studyId));
+    const tasks = await db.select().from(treeTasks).where(eq(treeTasks.studyId, studyId));
 
     let updated = 0;
 
