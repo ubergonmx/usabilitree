@@ -71,9 +71,10 @@ const Navigation = ({ items, onSelect, resetKey, setPathTaken, customText }: Nav
     setPathTaken(initialRootLink);
   }, [resetKey, items, setPathTaken]);
 
-  const updatePathTaken = (prev: string, name: string) => {
+  const appendPath = (prev: string, name: string) => {
     const sanitizedPath = sanitizeTreeTestLink(name);
     const newPath = `${prev}/${sanitizedPath}`;
+    // Prevent duplicate when toggling the same folder repeatedly
     return prev.endsWith(`/${sanitizedPath}`) ? prev : newPath;
   };
 
@@ -122,12 +123,13 @@ const Navigation = ({ items, onSelect, resetKey, setPathTaken, customText }: Nav
       return updateExpansion(newState, path);
     });
 
-    setPathTaken((prev) => updatePathTaken(prev, path[path.length - 1]));
+    setPathTaken((prev) => appendPath(prev, path[path.length - 1]));
   };
 
   const handleLinkClick = (link: string, name: string) => {
     setSelectedLink(link);
-    setPathTaken((prev) => updatePathTaken(prev, name));
+    // Always append for leaf clicks - a leaf can share a name with its parent folder
+    setPathTaken((prev) => `${prev}/${sanitizeTreeTestLink(name)}`);
   };
 
   const renderItems = (items: ItemWithExpanded[], parentPath: string[] = []) => {

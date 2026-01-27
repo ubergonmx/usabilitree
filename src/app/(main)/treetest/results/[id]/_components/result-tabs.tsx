@@ -306,6 +306,7 @@ export default function ResultTabs({
         <TabsContent value="tasks">
           <TasksTab
             studyId={params.id}
+            isOwner={isOwner}
             onSetOpener={(opener) => {
               tasksTabOpenerRef.current = opener;
             }}

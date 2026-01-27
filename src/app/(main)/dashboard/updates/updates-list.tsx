@@ -255,9 +255,15 @@ const updates: Update[] = [
   {
     id: "20",
     date: "2026-01-27",
-    title: "Results Cache Fix",
-    description: "Fixed stats not updating after modifying correct answers for tasks.",
+    title: "Results & Path Matching Fixes",
+    description:
+      "Fixed stats not updating after modifying correct answers and improved path matching accuracy.",
     type: "fix",
+    details: [
+      "Results now properly refresh when you edit correct answer paths for tasks.",
+      "Improved path matching to handle truncated paths - fixes cases where participant paths were incorrectly marked as wrong.",
+      "Fixed 'Incorrect Destinations' table to use full-path matching instead of last-segment-only comparison.",
+    ],
   },
   {
     id: "21",
