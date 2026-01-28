@@ -30,7 +30,22 @@ export default function UserJotWidget() {
     }
   }, []);
 
+  const handleLoad = () => {
+    window.__ujLoaded = true;
+  };
+
+  const handleError = () => {
+    window.__ujLoaded = false;
+    console.warn("UserJot SDK failed to load - buttons will fallback to direct links");
+  };
+
   return (
-    <Script src="https://cdn.userjot.com/sdk/v2/uj.js" type="module" strategy="afterInteractive" />
+    <Script
+      src="https://cdn.userjot.com/sdk/v2/uj.js"
+      type="module"
+      strategy="afterInteractive"
+      onLoad={handleLoad}
+      onError={handleError}
+    />
   );
 }

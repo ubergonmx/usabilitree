@@ -11,9 +11,13 @@ interface FeedbackButtonProps {
 
 export function FeedbackButton({ className, variant = "nav" }: FeedbackButtonProps) {
   const handleFeedbackClick = (): void => {
-    // Open UserJot widget for feedback, fallback to URL if SDK not loaded
-    if (typeof window !== "undefined" && window.uj?.showWidget) {
-      window.uj.showWidget();
+    // Open UserJot widget for feedback, fallback to URL if SDK failed to load
+    if (typeof window !== "undefined" && window.__ujLoaded && window.uj?.showWidget) {
+      try {
+        window.uj.showWidget();
+      } catch {
+        window.open("https://usabilitree.userjot.com/", "_blank", "noopener,noreferrer");
+      }
     } else {
       window.open("https://usabilitree.userjot.com/", "_blank", "noopener,noreferrer");
     }
