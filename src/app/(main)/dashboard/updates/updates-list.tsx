@@ -267,7 +267,18 @@ const updates: Update[] = [
   },
   {
     id: "21",
-    date: "2026-01-27",
+    date: "2026-01-28",
+    title: "Clipboard & Feedback Fixes",
+    description: "Fixed clipboard permission errors and improved feedback button reliability.",
+    type: "fix",
+    details: [
+      "Fixed clipboard errors that occurred when browser denied permission - now shows appropriate fallback message.",
+      "Added failsafe for Feedback and Roadmap buttons - opens in new tab if widget fails to load.",
+    ],
+  },
+  {
+    id: "22",
+    date: "2026-01-28",
     title: "Thank You for 1,000 Users! 🎉",
     description: "A personal message from me as we approach this milestone.",
     type: "message",
