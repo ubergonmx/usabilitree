@@ -2,7 +2,6 @@
 
 import { MessageSquareCodeIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
 import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
 
 interface FeedbackButtonProps {
@@ -12,26 +11,27 @@ interface FeedbackButtonProps {
 
 export function FeedbackButton({ className, variant = "nav" }: FeedbackButtonProps) {
   const handleFeedbackClick = (): void => {
-    // Open UserJot widget for feedback
-    if (typeof window !== "undefined" && window.uj) {
+    // Open UserJot widget for feedback, fallback to URL if SDK not loaded
+    if (typeof window !== "undefined" && window.uj?.showWidget) {
       window.uj.showWidget();
+    } else {
+      window.open("https://usabilitree.userjot.com/", "_blank", "noopener,noreferrer");
     }
   };
 
   if (variant === "header") {
     return (
-      <Button
+      <button
         id={DASHBOARD_TOUR_STEP_IDS.FEEDBACK + "-mob"}
         onClick={handleFeedbackClick}
         className={cn(
-          "items-center justify-center rounded-md p-2 hover:bg-accent hover:text-accent-foreground md:hidden",
+          "flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground md:hidden",
           className
         )}
-        variant={"outline"}
+        title="Give Feedback"
       >
         <MessageSquareCodeIcon className="h-4 w-4" />
-        Feedback
-      </Button>
+      </button>
     );
   }
 
