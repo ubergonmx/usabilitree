@@ -30,6 +30,7 @@ declare global {
   interface Window {
     uj?: UserJot;
     $ujq?: unknown[];
+    __ujLoaded?: boolean;
   }
 }
 

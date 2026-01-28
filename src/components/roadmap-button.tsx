@@ -11,9 +11,13 @@ interface RoadmapButtonProps {
 
 export function RoadmapButton({ className, variant = "nav" }: RoadmapButtonProps) {
   const handleRoadmapClick = () => {
-    // Open UserJot widget with roadmap section, fallback to URL if SDK not loaded
-    if (typeof window !== "undefined" && window.uj?.showWidget) {
-      window.uj.showWidget({ section: "roadmap" });
+    // Open UserJot widget with roadmap section, fallback to URL if SDK failed to load
+    if (typeof window !== "undefined" && window.__ujLoaded && window.uj?.showWidget) {
+      try {
+        window.uj.showWidget({ section: "roadmap" });
+      } catch {
+        window.open("https://usabilitree.userjot.com/roadmap", "_blank", "noopener,noreferrer");
+      }
     } else {
       window.open("https://usabilitree.userjot.com/roadmap", "_blank", "noopener,noreferrer");
     }
