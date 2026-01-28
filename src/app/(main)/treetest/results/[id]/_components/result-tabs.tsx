@@ -81,10 +81,34 @@ export default function ResultTabs({
     setIsTourCompletedInStorage(tourCompleted === "true");
   }, []);
 
-  const handleCopyLink = () => {
+  const handleCopyLink = async () => {
     const link = `${window.location.origin}/treetest/${params.id}`;
-    navigator.clipboard.writeText(link);
-    toast.success("Link copied to clipboard");
+
+    if (!navigator.clipboard) {
+      toast.error("Clipboard not available in this browser");
+      return;
+    }
+
+    if (navigator.permissions) {
+      try {
+        const result = await navigator.permissions.query({
+          name: "clipboard-write" as PermissionName,
+        });
+        if (result.state === "denied") {
+          toast.error("Clipboard access denied by browser settings");
+          return;
+        }
+      } catch {
+        // Permission query not supported, proceed anyway
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(link);
+      toast.success("Link copied to clipboard");
+    } catch {
+      toast.error("Failed to copy link");
+    }
   };
 
   const handleFinish = async () => {
