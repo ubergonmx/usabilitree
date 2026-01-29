@@ -41,7 +41,7 @@ export default function UserJotWidget() {
 
   return (
     <Script
-      src="https://cdn.userjot.com/sdk/v2/uj.js"
+      src="/api/widget"
       type="module"
       strategy="afterInteractive"
       onLoad={handleLoad}

@@ -278,12 +278,19 @@ const updates: Update[] = [
   },
   {
     id: "22",
-    date: "2026-01-28",
-    title: "Thank You for 1,000 Users! 🎉",
-    description: "A personal message from me as we approach this milestone.",
+    date: "2026-01-29",
+    title: "Widget Proxy Fix",
+    description: "Fixed CORS errors preventing Feedback and Roadmap widgets from loading.",
+    type: "fix",
+  },
+  {
+    id: "23",
+    date: "2026-01-29",
+    title: "Thank You for Reaching 1,000 Users! 🎉",
+    description: "A personal message from me as we've reached this incredible milestone.",
     type: "message",
     details: [
-      "First and foremost, thank you! We're approaching 1,000 users, and I'm genuinely grateful for every single one of you.",
+      "We've officially reached 1,000 users! I'm genuinely grateful for every single one of you.",
       "It's been amazing to see how UsabiliTree has supported so many teams with their UX research, even with just tree testing available so far.",
       "I know I've mentioned working on Version 2 with card sorting and other features in previous updates. I'll be honest - progress has been slower than I hoped due to some personal circumstances.",
       "But I want you to know: this project matters to me, and your continued use motivates me to keep improving it.",
