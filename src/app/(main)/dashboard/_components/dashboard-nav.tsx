@@ -9,6 +9,7 @@ import { FeedbackButton } from "@/components/feedback-button";
 import { SponsorButton } from "@/components/sponsor-button";
 import { RoadmapButton } from "@/components/roadmap-button";
 import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
+import { usePostHog } from "posthog-js/react";
 
 // Store the latest update date in a constant at the top of the file
 // This makes it easier to update in one place when new content is added
@@ -45,6 +46,7 @@ interface Props {
 
 export function DashboardNav({ className }: Props) {
   const path = usePathname();
+  const posthog = usePostHog();
   const [hasUnreadUpdates, setHasUnreadUpdates] = useState(false);
 
   useEffect(() => {
@@ -61,10 +63,18 @@ export function DashboardNav({ className }: Props) {
     }
   }, [path]);
 
+  const handleNavClick = (item: (typeof items)[0]) => {
+    if (item.title === "Updates") {
+      posthog?.capture("updates_page_clicked", {
+        has_unread: hasUnreadUpdates,
+      });
+    }
+  };
+
   return (
     <nav className={cn(className)}>
       {items.map((item) => (
-        <Link id={item.id} href={item.href} key={item.href}>
+        <Link id={item.id} href={item.href} key={item.href} onClick={() => handleNavClick(item)}>
           <span
             className={cn(
               "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",

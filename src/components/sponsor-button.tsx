@@ -3,6 +3,7 @@
 import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { SVGProps } from "react";
+import { usePostHog } from "posthog-js/react";
 
 const GitHub = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} viewBox="0 0 1024 1024" fill="none">
@@ -22,7 +23,14 @@ interface SponsorButtonProps {
 }
 
 export function SponsorButton({ className, variant = "nav" }: SponsorButtonProps) {
+  const posthog = usePostHog();
+
   const handleSponsorClick = () => {
+    // Track PostHog event
+    posthog?.capture("sponsor_button_clicked", {
+      variant,
+    });
+
     window.open("https://github.com/sponsors/ubergonmx", "_blank", "noopener,noreferrer");
   };
 

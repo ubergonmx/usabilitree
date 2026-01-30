@@ -3,6 +3,7 @@
 import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { RocketIcon } from "@/components/icons";
+import { usePostHog } from "posthog-js/react";
 
 interface RoadmapButtonProps {
   className?: string;
@@ -10,7 +11,14 @@ interface RoadmapButtonProps {
 }
 
 export function RoadmapButton({ className, variant = "nav" }: RoadmapButtonProps) {
+  const posthog = usePostHog();
+
   const handleRoadmapClick = () => {
+    // Track PostHog event
+    posthog?.capture("roadmap_button_clicked", {
+      variant,
+      widget_loaded: typeof window !== "undefined" && window.__ujLoaded,
+    });
     // Open UserJot widget with roadmap section, fallback to URL if SDK failed to load
     if (typeof window !== "undefined" && window.__ujLoaded && window.uj?.showWidget) {
       try {
