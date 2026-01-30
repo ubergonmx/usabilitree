@@ -3,6 +3,7 @@
 import { MessageSquareCodeIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { DASHBOARD_TOUR_STEP_IDS } from "@/lib/constants";
+import { usePostHog } from "posthog-js/react";
 
 interface FeedbackButtonProps {
   className?: string;
@@ -10,7 +11,14 @@ interface FeedbackButtonProps {
 }
 
 export function FeedbackButton({ className, variant = "nav" }: FeedbackButtonProps) {
+  const posthog = usePostHog();
+
   const handleFeedbackClick = (): void => {
+    // Track PostHog event
+    posthog?.capture("feedback_button_clicked", {
+      variant,
+      widget_loaded: typeof window !== "undefined" && window.__ujLoaded,
+    });
     // Open UserJot widget for feedback, fallback to URL if SDK failed to load
     if (typeof window !== "undefined" && window.__ujLoaded && window.uj?.showWidget) {
       try {
