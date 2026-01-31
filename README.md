@@ -1,10 +1,9 @@
-> [!NOTE]
-> **This is an older version of Usabilitree.** A complete overhaul and redesign is currently in progress. Stay tuned for major updates!
+> [!NOTE] > **This is an older version of UsabiliTree.** A complete overhaul and redesign is currently in progress. Stay tuned for major updates!
 
 <div align="center">
-  <img src="src/assets/icons/icon-transparent.svg" alt="Usabilitree Logo" width="120" height="120">
+  <img src="src/assets/icons/icon-transparent.svg" alt="UsabiliTree Logo" width="120" height="120">
   
-  # Usabilitree
+  # UsabiliTree
   
   **Optimize UX with Tree Testing**
   
@@ -15,7 +14,7 @@
 
 ## 📋 About
 
-Usabilitree is a comprehensive tree testing platform that helps UX researchers and designers optimize their information architecture. Tree testing is a usability technique used to evaluate the findability of topics in a website's navigation structure.
+UsabiliTree is a comprehensive tree testing platform that helps UX researchers and designers optimize their information architecture. Tree testing is a usability technique used to evaluate the findability of topics in a website's navigation structure.
 
 ### ✨ Features
 
@@ -206,4 +205,4 @@ Built by [aaronpal](https://github.com/ubergonmx)
 
 ---
 
-_Optimize your information architecture with Usabilitree - Free tree testing for better UX._
+_Optimize your information architecture with UsabiliTree - Free tree testing for better UX._
