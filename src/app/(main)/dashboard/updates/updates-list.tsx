@@ -279,8 +279,8 @@ const updates: Update[] = [
   {
     id: "22",
     date: "2026-01-29",
-    title: "Widget Proxy Fix",
-    description: "Fixed CORS errors preventing Feedback and Roadmap widgets from loading.",
+    title: "Feedback & Roadmap Button Fix",
+    description: "Fixed loading issues with Feedback and Roadmap buttons.",
     type: "fix",
   },
   {
@@ -297,6 +297,21 @@ const updates: Update[] = [
       "The roadmap is now live! Check it out to see what's planned, upvote features you'd like to see prioritized, and share your ideas in the comments.",
       "Your feedback genuinely shapes where this tool goes next - whether it's a quick note via the Feedback button or detailed thoughts on the roadmap.",
       "Thank you for sticking with UsabiliTree. Here's to many more improvements ahead! 🚀",
+    ],
+  },
+  {
+    id: "24",
+    date: "2026-01-31",
+    title: "Participants Tab Improvements",
+    description:
+      "Added pagination, keyboard navigation, and improved status tracking for participant results.",
+    type: "improvement",
+    details: [
+      "Added pagination to participants table - choose between 10, 25, 50, 100, or 200 per page for better performance with large studies.",
+      "Added keyboard shortcuts (← →) to navigate between participants in the details modal.",
+      "Page automatically updates when navigating to a participant on a different page.",
+      "Added 'In Progress' status for participants active within the last 4 minutes (previously only showed Completed/Abandoned).",
+      "Updated status tooltip to explain the three status types.",
     ],
   },
 ];

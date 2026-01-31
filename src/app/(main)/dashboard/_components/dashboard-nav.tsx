@@ -13,7 +13,7 @@ import { usePostHog } from "posthog-js/react";
 
 // Store the latest update date in a constant at the top of the file
 // This makes it easier to update in one place when new content is added
-const LATEST_UPDATE_DATE = "2026-01-29"; // Update this when new content is added
+const LATEST_UPDATE_DATE = "2026-01-31"; // Update this when new content is added
 
 const items = [
   {
