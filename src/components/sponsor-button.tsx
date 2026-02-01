@@ -27,11 +27,11 @@ export function SponsorButton({ className, variant = "nav" }: SponsorButtonProps
 
   const handleSponsorClick = () => {
     // Track PostHog event
-    posthog?.capture("sponsor_button_clicked", {
+    posthog?.capture("donate_button_clicked", {
       variant,
     });
 
-    window.open("https://github.com/sponsors/ubergonmx", "_blank", "noopener,noreferrer");
+    window.open("https://github.com/sponsors/ubergonmx?frequency=one-time", "_blank", "noopener,noreferrer");
   };
 
   if (variant === "header") {
@@ -43,7 +43,7 @@ export function SponsorButton({ className, variant = "nav" }: SponsorButtonProps
           "flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground md:hidden",
           className
         )}
-        title="Sponsor me on GitHub"
+        title="Support with a donation"
       >
         <GitHub className="h-4 w-4" />
       </button>
@@ -58,10 +58,10 @@ export function SponsorButton({ className, variant = "nav" }: SponsorButtonProps
         "hidden items-center whitespace-nowrap rounded-md px-3 py-2 text-left text-sm font-medium hover:bg-accent hover:text-accent-foreground md:flex",
         className
       )}
-      title="Sponsor me on GitHub"
+      title="Support with a donation"
     >
       <GitHub className="mr-2 h-4 w-4 flex-shrink-0" />
-      <span>Sponsor on GitHub</span>
+      <span>Donate</span>
     </button>
   );
 }
