@@ -1,4 +1,5 @@
-> [!NOTE] > **This is an older version of UsabiliTree.** A complete overhaul and redesign is currently in progress. Stay tuned for major updates!
+> [!NOTE]
+> **This is an older version of UsabiliTree.** A complete overhaul and redesign is currently in progress. Stay tuned for major updates!
 
 <div align="center">
   <img src="src/assets/icons/icon-transparent.svg" alt="UsabiliTree Logo" width="120" height="120">
