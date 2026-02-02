@@ -31,7 +31,11 @@ export function SponsorButton({ className, variant = "nav" }: SponsorButtonProps
       variant,
     });
 
-    window.open("https://github.com/sponsors/ubergonmx?frequency=one-time", "_blank", "noopener,noreferrer");
+    window.open(
+      "https://github.com/sponsors/ubergonmx?frequency=one-time",
+      "_blank",
+      "noopener,noreferrer"
+    );
   };
 
   if (variant === "header") {
