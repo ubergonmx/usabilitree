@@ -116,6 +116,7 @@ export const treeConfigs = sqliteTable("tree_configs", {
   })
     .notNull()
     .default(true),
+  randomizeTasks: integer("randomize_tasks", { mode: "boolean" }).notNull().default(false),
   // Customizable text fields
   instructionsText: text("instructions_text"),
   startTestText: text("start_test_text"),
