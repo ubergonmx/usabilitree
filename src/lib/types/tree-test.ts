@@ -13,6 +13,7 @@ export interface StudyFormData {
       description: string;
       answer: string;
     }>;
+    randomizeTasks?: boolean;
   };
   messages: {
     welcome: string;
@@ -58,6 +59,7 @@ export interface TreeTestConfig {
     link: string;
   }[];
   requireConfidenceRating: boolean;
+  randomizeTasks: boolean;
   preview: boolean;
   participantId?: string;
   studyId: string;

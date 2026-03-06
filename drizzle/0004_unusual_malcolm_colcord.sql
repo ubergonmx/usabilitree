@@ -1,0 +1,1 @@
+ALTER TABLE `tree_configs` ADD `randomize_tasks` integer DEFAULT false NOT NULL;
