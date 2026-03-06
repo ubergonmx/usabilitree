@@ -101,14 +101,16 @@ export default function TreeTestPage({ params }: { params: { id: string } }) {
         } else {
           // If the participantId doesn't match, set the new one
           localStorage.setItem("participantId", config.participantId!);
-          storeTaskIndex(0); // Reset task index
+          localStorage.removeItem(currentTaskKey); // Clear stale index so fresh start is detected
+          localStorage.removeItem(orderKey); // Clear any stale order from the previous session
+          setInitialTaskIndex(0);
         }
       } else {
         config = await loadTestConfig(params.id);
         localStorage.setItem("participantId", config.participantId!);
       }
       const storedOrder = localStorage.getItem(orderKey);
-      // Read before any modifications — used to detect in-progress participants
+      // Detect in-progress participants — null means fresh start
       const priorTaskIndex = localStorage.getItem(currentTaskKey);
       let hasProgress = priorTaskIndex !== null;
       let restored = false;
