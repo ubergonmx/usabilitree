@@ -70,7 +70,11 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
       id={isSampleStudy ? DASHBOARD_TOUR_STEP_IDS.SAMPLE_STUDY : undefined}
     >
       <Card
-        className="flex h-full cursor-pointer flex-col transition-all duration-200 @container hover:-translate-y-1 hover:bg-accent/20 hover:shadow-lg"
+        className={`flex h-full flex-col transition-all duration-200 @container ${
+          study.status === "draft" && !isOwner
+            ? ""
+            : "cursor-pointer hover:-translate-y-1 hover:bg-accent/20 hover:shadow-lg"
+        }`}
         onClick={handleCardClick}
       >
         <CardHeader className="flex-shrink-0">

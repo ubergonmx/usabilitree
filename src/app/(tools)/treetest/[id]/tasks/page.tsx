@@ -63,6 +63,8 @@ export default function TreeTestPage({ params }: { params: { id: string } }) {
     const fetchConfig = async () => {
       configFetchedRef.current = true; // Mark as fetched immediately
       const participantId = localStorage.getItem("participantId");
+      const orderKey = `treeTest_${params.id}_taskOrder`;
+      const currentTaskKey = `treeTest_${params.id}_currentTask`;
       let config: TreeTestConfig;
 
       if (participantId) {
@@ -70,7 +72,6 @@ export default function TreeTestPage({ params }: { params: { id: string } }) {
         if (config.participantId === participantId) {
           // Retrieve the stored task index and active time from localStorage
           const activeTimeKey = `treeTest_${params.id}_activeTime`;
-          const currentTaskKey = `treeTest_${params.id}_currentTask`;
           const storedActiveTime = localStorage.getItem(activeTimeKey);
           const storedCurrentTask = localStorage.getItem(currentTaskKey);
           if (storedActiveTime) {
@@ -85,6 +86,9 @@ export default function TreeTestPage({ params }: { params: { id: string } }) {
             // Check if the stored task index is valid
             if (parsedCurrentTask >= 0 && config.tasks) {
               if (parsedCurrentTask < config.tasks.length) {
+                // Set before order restoration — if restoration succeeds, this value
+                // is correct (index maps to stored order). If it fails, the restoration
+                // block calls setInitialTaskIndex(0) which overwrites this (React batching).
                 setInitialTaskIndex(parsedCurrentTask);
               } else {
                 // If the stored task index is out of bounds, reset to 0
@@ -102,12 +106,10 @@ export default function TreeTestPage({ params }: { params: { id: string } }) {
         config = await loadTestConfig(params.id);
         localStorage.setItem("participantId", config.participantId!);
       }
-      const orderKey = `treeTest_${params.id}_taskOrder`;
-      const currentTaskKey = `treeTest_${params.id}_currentTask`;
       const storedOrder = localStorage.getItem(orderKey);
       // Read before any modifications — used to detect in-progress participants
       const priorTaskIndex = localStorage.getItem(currentTaskKey);
-      let hasProgress = priorTaskIndex !== null && parseInt(priorTaskIndex, 10) > 0;
+      let hasProgress = priorTaskIndex !== null;
       let restored = false;
 
       if (storedOrder) {
