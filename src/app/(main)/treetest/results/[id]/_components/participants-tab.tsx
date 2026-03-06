@@ -296,11 +296,13 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
                     </TooltipTrigger>
                     <TooltipContent side="top" className="max-w-xs">
                       <p>
-                        <strong>Completed</strong>: Finished all tasks.
+                        <strong>Completed</strong>: Reached the completion page.
                         <br />
                         <strong>In Progress</strong>: Active within the last 4 minutes.
                         <br />
-                        <strong>Abandoned</strong>: No activity for 4+ minutes and not completed.
+                        <strong>Abandoned</strong>: No activity for 4+ minutes and did not reach
+                        completion message (e.g, answered all but never reached final page, or
+                        dropped off mid-study).
                       </p>
                     </TooltipContent>
                   </Tooltip>
