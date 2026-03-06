@@ -314,6 +314,20 @@ const updates: Update[] = [
       "Updated status tooltip to explain the three status types.",
     ],
   },
+  {
+    id: "25",
+    date: "2026-03-06",
+    title: "Randomize Tasks & Fixes",
+    description: "Added task randomization for tree tests and fixed several UI and access issues.",
+    type: "improvement",
+    details: [
+      "Added 'Randomize task order' option in study setup — each participant sees tasks in a unique shuffled order. Preview mode also randomizes on each load.",
+      "Fixed logo in the app header incorrectly linking to the landing page instead of the dashboard.",
+      "Fixed collaborators being able to access the Edit page via study cards on the dashboard.",
+      "Improved loading UI in the tree test page.",
+      "Improved clarity of the participant status tooltip.",
+    ],
+  },
 ];
 
 export function UpdatesList() {
