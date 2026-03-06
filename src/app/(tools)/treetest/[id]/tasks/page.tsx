@@ -5,6 +5,7 @@ import { useIdleTimer } from "react-idle-timer";
 import { TreeTestComponent } from "@/components/tree-test";
 import { loadTestConfig } from "@/lib/treetest/actions";
 import { TreeTestConfig } from "@/lib/types/tree-test";
+import { shuffle } from "@/lib/utils";
 import { LoadingSkeleton } from "@/components/tree-test-loading-skeleton";
 
 export default function TreeTestPage({ params }: { params: { id: string } }) {
@@ -141,11 +142,7 @@ export default function TreeTestPage({ params }: { params: { id: string } }) {
       if (!restored && config.randomizeTasks && !hasProgress) {
         // Only shuffle for fresh starts — don't reshuffle mid-study if owner
         // enabled randomization after the participant already began
-        const shuffled = [...config.tasks];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
+        const shuffled = shuffle(config.tasks);
         localStorage.setItem(orderKey, JSON.stringify(shuffled.map((t) => t.id)));
         config = { ...config, tasks: shuffled };
       }
