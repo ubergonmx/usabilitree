@@ -498,7 +498,6 @@ export async function loadTestConfig(id: string, preview: boolean = false, parti
         existingParticipantId = result[0].id;
       }
     }
-    console.log("Existing participant ID:", existingParticipantId);
     if (!preview && !existingParticipantId) {
       const [participant] = await db
         .insert(participants)
