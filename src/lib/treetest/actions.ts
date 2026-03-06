@@ -470,6 +470,7 @@ export async function loadTestConfig(id: string, preview: boolean = false, parti
         skipTaskText: treeConfigs.skipTaskText,
         submitContinueText: treeConfigs.submitContinueText,
         completedMessageText: treeConfigs.completedMessageText,
+        nextButtonText: treeConfigs.nextButtonText,
         confidenceDescriptionText: treeConfigs.confidenceDescriptionText,
       })
       .from(treeConfigs)
@@ -541,7 +542,7 @@ export async function loadTestConfig(id: string, preview: boolean = false, parti
         skipTask: config.skipTaskText || defaultCustomText.skipTask,
         submitContinue: config.submitContinueText || defaultCustomText.submitContinue,
         completedMessage: config.completedMessageText || defaultCustomText.completedMessage,
-        nextButton: defaultCustomText.nextButton,
+        nextButton: config.nextButtonText || defaultCustomText.nextButton,
         confidenceDescription:
           config.confidenceDescriptionText || defaultCustomText.confidenceDescription,
       },
