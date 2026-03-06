@@ -68,6 +68,7 @@ export default function SetupTabs({ params, showTour = false }: SetupTabsProps) 
     },
     tasks: {
       items: [],
+      randomizeTasks: false,
     },
     messages: {
       welcome: "",

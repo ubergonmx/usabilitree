@@ -63,7 +63,7 @@ export default function TreeTestPage({ params }: { params: { id: string } }) {
     const fetchConfig = async () => {
       configFetchedRef.current = true; // Mark as fetched immediately
       const participantId = localStorage.getItem("participantId");
-      let config;
+      let config: TreeTestConfig;
 
       if (participantId) {
         config = await loadTestConfig(params.id, false, participantId);
@@ -103,6 +103,50 @@ export default function TreeTestPage({ params }: { params: { id: string } }) {
         config = await loadTestConfig(params.id);
         localStorage.setItem("participantId", config.participantId!);
       }
+      const orderKey = `treeTest_${params.id}_taskOrder`;
+      const currentTaskKey = `treeTest_${params.id}_currentTask`;
+      const storedOrder = localStorage.getItem(orderKey);
+      // Read before any modifications — used to detect in-progress participants
+      const priorTaskIndex = localStorage.getItem(currentTaskKey);
+      const hasProgress = priorTaskIndex !== null && parseInt(priorTaskIndex, 10) > 0;
+      let restored = false;
+
+      if (storedOrder) {
+        try {
+          const order: string[] = JSON.parse(storedOrder);
+          const reordered = order
+            .map((id) => config.tasks.find((t) => t.id === id))
+            .filter(Boolean) as typeof config.tasks;
+          if (reordered.length === config.tasks.length) {
+            // Restore stored order regardless of whether randomizeTasks is still on
+            config = { ...config, tasks: reordered };
+            restored = true;
+          } else {
+            // Task count changed — clear stale order and reset progress
+            localStorage.removeItem(orderKey);
+            localStorage.removeItem(currentTaskKey);
+            setInitialTaskIndex(0);
+          }
+        } catch {
+          // Corrupted value — clear and reset progress
+          localStorage.removeItem(orderKey);
+          localStorage.removeItem(currentTaskKey);
+          setInitialTaskIndex(0);
+        }
+      }
+
+      if (!restored && config.randomizeTasks && !hasProgress) {
+        // Only shuffle for fresh starts — don't reshuffle mid-study if owner
+        // enabled randomization after the participant already began
+        const shuffled = [...config.tasks];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        localStorage.setItem(orderKey, JSON.stringify(shuffled.map((t) => t.id)));
+        config = { ...config, tasks: shuffled };
+      }
+
       setConfig(config);
       setIsInitialized(true);
     };

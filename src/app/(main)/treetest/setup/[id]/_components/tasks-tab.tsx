@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { StudyFormData, TreeNode } from "@/lib/types/tree-test";
 import { PlusIcon, TrashIcon, CheckIcon } from "@/components/icons";
 import { ArrowUp } from "lucide-react";
@@ -155,6 +156,18 @@ export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
 
   return (
     <div id={SETUP_TOUR_STEP_IDS.TASKS} className="space-y-6">
+      <div className="flex items-center gap-3 rounded-lg border p-4">
+        <Switch
+          id="randomize-tasks"
+          checked={data.tasks.randomizeTasks ?? false}
+          onCheckedChange={(checked) =>
+            onChange({ ...data, tasks: { ...data.tasks, randomizeTasks: checked } })
+          }
+        />
+        <Label htmlFor="randomize-tasks" className="cursor-pointer">
+          Randomize task order for each participant
+        </Label>
+      </div>
       {data.tasks.items.map((task, index) => (
         <div key={index} className="relative space-y-4 rounded-lg border p-4">
           <div className="flex items-center justify-between">
