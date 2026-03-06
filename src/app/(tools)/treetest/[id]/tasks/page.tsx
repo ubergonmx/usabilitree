@@ -90,7 +90,6 @@ export default function TreeTestPage({ params }: { params: { id: string } }) {
                 // If the stored task index is out of bounds, reset to 0
                 setInitialTaskIndex(0);
                 storeTaskIndex(0); // Reset task index in localStorage
-                localStorage.setItem(currentTaskKey, "0");
               }
             }
           }
@@ -108,7 +107,7 @@ export default function TreeTestPage({ params }: { params: { id: string } }) {
       const storedOrder = localStorage.getItem(orderKey);
       // Read before any modifications — used to detect in-progress participants
       const priorTaskIndex = localStorage.getItem(currentTaskKey);
-      const hasProgress = priorTaskIndex !== null && parseInt(priorTaskIndex, 10) > 0;
+      let hasProgress = priorTaskIndex !== null && parseInt(priorTaskIndex, 10) > 0;
       let restored = false;
 
       if (storedOrder) {
@@ -126,12 +125,14 @@ export default function TreeTestPage({ params }: { params: { id: string } }) {
             localStorage.removeItem(orderKey);
             localStorage.removeItem(currentTaskKey);
             setInitialTaskIndex(0);
+            hasProgress = false;
           }
         } catch {
           // Corrupted value — clear and reset progress
           localStorage.removeItem(orderKey);
           localStorage.removeItem(currentTaskKey);
           setInitialTaskIndex(0);
+          hasProgress = false;
         }
       }
 

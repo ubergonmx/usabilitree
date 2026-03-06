@@ -55,6 +55,7 @@ export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
     onChange({
       ...data,
       tasks: {
+        ...data.tasks,
         items: [...data.tasks.items, { description: "", answer: "" }],
       },
     });
@@ -64,7 +65,7 @@ export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
     const newTasks = data.tasks.items.filter((_, i) => i !== index);
     onChange({
       ...data,
-      tasks: { items: newTasks },
+      tasks: { ...data.tasks, items: newTasks },
     });
   };
 
@@ -73,7 +74,7 @@ export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
     newTasks[index] = { ...newTasks[index], [field]: value };
     onChange({
       ...data,
-      tasks: { items: newTasks },
+      tasks: { ...data.tasks, items: newTasks },
     });
 
     // Clear validation results when answer changes
@@ -376,6 +377,7 @@ export function TasksTab({ data, studyId, status, onChange }: TasksTabProps) {
               onChange({
                 ...data,
                 tasks: {
+                  ...data.tasks,
                   items: [...data.tasks.items, ...tasks],
                 },
               });
