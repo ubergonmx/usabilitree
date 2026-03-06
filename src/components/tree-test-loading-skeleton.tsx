@@ -22,15 +22,6 @@ export function LoadingSkeleton() {
         <div className="mb-8 flex justify-center">
           <Skeleton className="h-9 w-28" />
         </div>
-
-        {/* Navigation tree items */}
-        {/* <div className="mt-4 space-y-2">
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className={`${i > 0 ? "ml-4" : ""} mb-2`}>
-              <Skeleton className="h-10 w-full" />
-            </div>
-          ))}
-        </div> */}
       </div>
     </div>
   );

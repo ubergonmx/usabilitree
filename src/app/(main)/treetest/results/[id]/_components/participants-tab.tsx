@@ -301,7 +301,7 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
                         <strong>In Progress</strong>: Active within the last 4 minutes.
                         <br />
                         <strong>Abandoned</strong>: No activity for 4+ minutes and did not reach
-                        completion message (e.g, answered all but never reached final page, or
+                        completion message (e.g., answered all but never reached final page, or
                         dropped off mid-study).
                       </p>
                     </TooltipContent>
