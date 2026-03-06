@@ -46,7 +46,7 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
 
   const handleCardClick = () => {
     if (study.status === "draft") {
-      window.location.href = getEditUrl();
+      if (isOwner) window.location.href = getEditUrl();
     } else {
       window.location.href = getResultsUrl();
     }
@@ -114,13 +114,15 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
           </Badge>
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             {study.status === "draft" ? (
-              <button
-                className="flex items-center gap-1 transition-colors hover:text-foreground"
-                onClick={handleEditClick}
-              >
-                <Pencil2Icon className="h-4 w-4" />
-                <span className="hidden @[275px]:inline">Edit</span>
-              </button>
+              isOwner && (
+                <button
+                  className="flex items-center gap-1 transition-colors hover:text-foreground"
+                  onClick={handleEditClick}
+                >
+                  <Pencil2Icon className="h-4 w-4" />
+                  <span className="hidden @[275px]:inline">Edit</span>
+                </button>
+              )
             ) : (
               <>
                 <button
@@ -130,13 +132,15 @@ export const StudyCard = ({ study, userName, isOwner }: StudyCardProps) => {
                   <BarChartIcon className="h-4 w-4" />
                   <span className="hidden @[275px]:inline">Results</span>
                 </button>
-                <button
-                  className="flex items-center gap-1 transition-colors hover:text-foreground"
-                  onClick={handleEditClick}
-                >
-                  <Pencil2Icon className="h-4 w-4" />
-                  <span className="hidden @[275px]:inline">Edit</span>
-                </button>
+                {isOwner && (
+                  <button
+                    className="flex items-center gap-1 transition-colors hover:text-foreground"
+                    onClick={handleEditClick}
+                  >
+                    <Pencil2Icon className="h-4 w-4" />
+                    <span className="hidden @[275px]:inline">Edit</span>
+                  </button>
+                )}
               </>
             )}
           </div>
