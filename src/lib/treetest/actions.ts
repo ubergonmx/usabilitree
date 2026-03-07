@@ -70,13 +70,15 @@ export async function updateStudyStatus(id: string, status: "draft" | "active" |
   }
 
   try {
-    await db
+    const result = await db
       .update(studies)
       .set({ status, updatedAt: new Date() })
       .where(and(eq(studies.id, id), eq(studies.userId, user.id)));
+    if (result.rowsAffected === 0) throw new Error("Forbidden");
 
     revalidatePath(`/treetest/setup/${id}`);
   } catch (error) {
+    if (error instanceof Error && error.message === "Forbidden") throw error;
     console.error("Failed to update study status:", error);
     throw new Error("Failed to update study status");
   }
@@ -89,9 +91,13 @@ export async function deleteStudy(id: string) {
   }
 
   try {
-    await db.delete(studies).where(and(eq(studies.id, id), eq(studies.userId, user.id)));
+    const result = await db
+      .delete(studies)
+      .where(and(eq(studies.id, id), eq(studies.userId, user.id)));
+    if (result.rowsAffected === 0) throw new Error("Forbidden");
     revalidatePath("/dashboard");
   } catch (error) {
+    if (error instanceof Error && error.message === "Forbidden") throw error;
     console.error("Failed to delete study:", error);
     throw new Error("Failed to delete study");
   }
@@ -258,6 +264,7 @@ export async function saveStudyData(id: string, data: StudyFormData) {
     revalidatePath(`/treetest/results/${id}`);
     return { success: true };
   } catch (error) {
+    if (error instanceof Error && error.message === "Forbidden") throw error;
     console.error("Failed to save study data:", error);
     throw new Error("Failed to save study data");
   }
