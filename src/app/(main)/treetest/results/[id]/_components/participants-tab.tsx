@@ -328,8 +328,14 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
                 { total: 0, successful: 0, direct: 0 }
               );
 
-              const successRate = Math.round((taskStats.successful / taskStats.total) * 100);
-              const directnessRate = Math.round((taskStats.direct / taskStats.total) * 100);
+              const successRate =
+                taskStats.total === 0
+                  ? 0
+                  : Math.round((taskStats.successful / taskStats.total) * 100);
+              const directnessRate =
+                taskStats.total === 0
+                  ? 0
+                  : Math.round((taskStats.direct / taskStats.total) * 100);
 
               return (
                 <TableRow

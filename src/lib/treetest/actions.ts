@@ -70,7 +70,10 @@ export async function updateStudyStatus(id: string, status: "draft" | "active" |
   }
 
   try {
-    await db.update(studies).set({ status, updatedAt: new Date() }).where(eq(studies.id, id));
+    await db
+      .update(studies)
+      .set({ status, updatedAt: new Date() })
+      .where(and(eq(studies.id, id), eq(studies.userId, user.id)));
 
     revalidatePath(`/treetest/setup/${id}`);
   } catch (error) {
@@ -86,7 +89,7 @@ export async function deleteStudy(id: string) {
   }
 
   try {
-    await db.delete(studies).where(eq(studies.id, id));
+    await db.delete(studies).where(and(eq(studies.id, id), eq(studies.userId, user.id)));
     revalidatePath("/dashboard");
   } catch (error) {
     console.error("Failed to delete study:", error);
@@ -101,9 +104,11 @@ export async function saveStudyData(id: string, data: StudyFormData) {
   try {
     await db.transaction(async (tx) => {
       const [study] = await tx
-        .select({ status: studies.status })
+        .select({ status: studies.status, userId: studies.userId })
         .from(studies)
         .where(eq(studies.id, id));
+
+      if (!study || study.userId !== user.id) throw new Error("Forbidden");
 
       await tx
         .update(studies)
@@ -265,7 +270,10 @@ export async function loadStudyData(id: string) {
   }
 
   try {
-    const [study] = await db.select().from(studies).where(eq(studies.id, id));
+    const [study] = await db
+      .select()
+      .from(studies)
+      .where(and(eq(studies.id, id), eq(studies.userId, user.id)));
     if (!study) throw new Error("Study not found");
 
     const [config] = await db.select().from(treeConfigs).where(eq(treeConfigs.studyId, id));
@@ -756,10 +764,14 @@ export async function recalculateStudyResults(studyId: string) {
   }
 
   try {
-    const [config] = await db.select().from(treeConfigs).where(eq(treeConfigs.studyId, studyId));
-    if (!config?.parsedTree) throw new Error("No tree config found");
+    const [result] = await db
+      .select({ parsedTree: treeConfigs.parsedTree })
+      .from(treeConfigs)
+      .innerJoin(studies, eq(studies.id, treeConfigs.studyId))
+      .where(and(eq(treeConfigs.studyId, studyId), eq(studies.userId, user.id)));
+    if (!result?.parsedTree) throw new Error("No tree config found");
 
-    const parsedTree = JSON.parse(config.parsedTree) as TreeNode[];
+    const parsedTree = JSON.parse(result.parsedTree) as TreeNode[];
 
     const tasks = await db.select().from(treeTasks).where(eq(treeTasks.studyId, studyId));
 
