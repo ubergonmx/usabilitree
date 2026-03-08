@@ -330,10 +330,12 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
 
               const successRate =
                 taskStats.total === 0
-                  ? 0
+                  ? null
                   : Math.round((taskStats.successful / taskStats.total) * 100);
               const directnessRate =
-                taskStats.total === 0 ? 0 : Math.round((taskStats.direct / taskStats.total) * 100);
+                taskStats.total === 0
+                  ? null
+                  : Math.round((taskStats.direct / taskStats.total) * 100);
 
               return (
                 <TableRow
@@ -407,8 +409,8 @@ export function ParticipantsTab({ studyId, isOwner }: ParticipantsTabProps) {
                       "-"
                     )}
                   </TableCell>
-                  <TableCell>{successRate}%</TableCell>
-                  <TableCell>{directnessRate}%</TableCell>
+                  <TableCell>{successRate !== null ? `${successRate}%` : "-"}</TableCell>
+                  <TableCell>{directnessRate !== null ? `${directnessRate}%` : "-"}</TableCell>
                 </TableRow>
               );
             })}
