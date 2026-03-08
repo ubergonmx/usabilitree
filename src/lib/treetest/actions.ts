@@ -290,7 +290,7 @@ export async function loadStudyData(id: string) {
       .select()
       .from(studies)
       .where(and(eq(studies.id, id), eq(studies.userId, user.id)));
-    if (!study) throw new Error("Study not found");
+    if (!study) throw new ForbiddenError();
 
     const [config] = await db.select().from(treeConfigs).where(eq(treeConfigs.studyId, id));
 
@@ -345,7 +345,7 @@ export async function loadStudyData(id: string) {
       },
     } satisfies StudyFormData;
   } catch (error) {
-    if (error instanceof Error && error.message === "Study not found") throw error;
+    if (error instanceof ForbiddenError) throw error;
     console.error("Failed to load study data:", error);
     throw new Error("Failed to load study data");
   }
@@ -781,6 +781,10 @@ export async function recalculateStudyResults(studyId: string) {
   }
 
   try {
+    // Ownership + config fetched in a single query to avoid an extra Turso read.
+    // This conflates "not owner" with "no treeConfig row", but treeConfigs is
+    // always created atomically with the study in createStudy(), so the latter
+    // case cannot occur in practice. Will be revisited in a future overhaul.
     const [configRow] = await db
       .select({ parsedTree: treeConfigs.parsedTree })
       .from(treeConfigs)
