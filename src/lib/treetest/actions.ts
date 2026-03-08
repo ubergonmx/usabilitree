@@ -336,6 +336,7 @@ export async function loadStudyData(id: string) {
       },
     } satisfies StudyFormData;
   } catch (error) {
+    if (error instanceof Error && error.message === "Study not found") throw error;
     console.error("Failed to load study data:", error);
     throw new Error("Failed to load study data");
   }
@@ -771,14 +772,15 @@ export async function recalculateStudyResults(studyId: string) {
   }
 
   try {
-    const [result] = await db
+    const [configRow] = await db
       .select({ parsedTree: treeConfigs.parsedTree })
       .from(treeConfigs)
       .innerJoin(studies, eq(studies.id, treeConfigs.studyId))
       .where(and(eq(treeConfigs.studyId, studyId), eq(studies.userId, user.id)));
-    if (!result?.parsedTree) throw new Error("No tree config found");
+    if (configRow === undefined) throw new Error("Forbidden");
+    if (!configRow.parsedTree) throw new Error("No tree config found");
 
-    const parsedTree = JSON.parse(result.parsedTree) as TreeNode[];
+    const parsedTree = JSON.parse(configRow.parsedTree) as TreeNode[];
 
     const tasks = await db.select().from(treeTasks).where(eq(treeTasks.studyId, studyId));
 
@@ -812,6 +814,11 @@ export async function recalculateStudyResults(studyId: string) {
     revalidatePath(`/treetest/results/${studyId}`);
     return { success: true, updated };
   } catch (error) {
+    if (
+      error instanceof Error &&
+      (error.message === "Forbidden" || error.message === "No tree config found")
+    )
+      throw error;
     console.error("Failed to recalculate study results:", error);
     throw new Error("Failed to recalculate study results");
   }
