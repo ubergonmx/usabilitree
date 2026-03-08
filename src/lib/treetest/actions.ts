@@ -9,6 +9,13 @@ import { desc, and, ne, eq, sql } from "drizzle-orm";
 import { StudyFormData, TreeNode } from "@/lib/types/tree-test";
 import { getDefaultLanguage } from "@/lib/languages";
 
+class ForbiddenError extends Error {
+  constructor(message = "Forbidden") {
+    super(message);
+    this.name = "ForbiddenError";
+  }
+}
+
 const defaultLanguage = getDefaultLanguage();
 const defaultWelcomeMessage = defaultLanguage.messages.welcome;
 const defaultCompletionMessage = defaultLanguage.messages.completion;
@@ -74,11 +81,12 @@ export async function updateStudyStatus(id: string, status: "draft" | "active" |
       .update(studies)
       .set({ status, updatedAt: new Date() })
       .where(and(eq(studies.id, id), eq(studies.userId, user.id)));
-    if (result.rowsAffected === 0) throw new Error("Forbidden");
+    // rowsAffected === 0 means study not found or not owned — intentionally ambiguous
+    if (result.rowsAffected === 0) throw new ForbiddenError();
 
     revalidatePath(`/treetest/setup/${id}`);
   } catch (error) {
-    if (error instanceof Error && error.message === "Forbidden") throw error;
+    if (error instanceof ForbiddenError) throw error;
     console.error("Failed to update study status:", error);
     throw new Error("Failed to update study status");
   }
@@ -94,10 +102,11 @@ export async function deleteStudy(id: string) {
     const result = await db
       .delete(studies)
       .where(and(eq(studies.id, id), eq(studies.userId, user.id)));
-    if (result.rowsAffected === 0) throw new Error("Forbidden");
+    // rowsAffected === 0 means study not found or not owned — intentionally ambiguous
+    if (result.rowsAffected === 0) throw new ForbiddenError();
     revalidatePath("/dashboard");
   } catch (error) {
-    if (error instanceof Error && error.message === "Forbidden") throw error;
+    if (error instanceof ForbiddenError) throw error;
     console.error("Failed to delete study:", error);
     throw new Error("Failed to delete study");
   }
@@ -114,7 +123,7 @@ export async function saveStudyData(id: string, data: StudyFormData) {
         .from(studies)
         .where(eq(studies.id, id));
 
-      if (!study || study.userId !== user.id) throw new Error("Forbidden");
+      if (!study || study.userId !== user.id) throw new ForbiddenError();
 
       await tx
         .update(studies)
@@ -264,7 +273,7 @@ export async function saveStudyData(id: string, data: StudyFormData) {
     revalidatePath(`/treetest/results/${id}`);
     return { success: true };
   } catch (error) {
-    if (error instanceof Error && error.message === "Forbidden") throw error;
+    if (error instanceof ForbiddenError) throw error;
     console.error("Failed to save study data:", error);
     throw new Error("Failed to save study data");
   }
@@ -777,7 +786,7 @@ export async function recalculateStudyResults(studyId: string) {
       .from(treeConfigs)
       .innerJoin(studies, eq(studies.id, treeConfigs.studyId))
       .where(and(eq(treeConfigs.studyId, studyId), eq(studies.userId, user.id)));
-    if (configRow === undefined) throw new Error("Forbidden");
+    if (configRow === undefined) throw new ForbiddenError();
     if (!configRow.parsedTree) throw new Error("No tree config found");
 
     const parsedTree = JSON.parse(configRow.parsedTree) as TreeNode[];
@@ -814,11 +823,8 @@ export async function recalculateStudyResults(studyId: string) {
     revalidatePath(`/treetest/results/${studyId}`);
     return { success: true, updated };
   } catch (error) {
-    if (
-      error instanceof Error &&
-      (error.message === "Forbidden" || error.message === "No tree config found")
-    )
-      throw error;
+    if (error instanceof ForbiddenError) throw error;
+    if (error instanceof Error && error.message === "No tree config found") throw error;
     console.error("Failed to recalculate study results:", error);
     throw new Error("Failed to recalculate study results");
   }
