@@ -5,15 +5,9 @@ import { cn } from "@/lib/utils";
 import type { SVGProps } from "react";
 import { usePostHog } from "posthog-js/react";
 
-const GitHub = (props: SVGProps<SVGSVGElement>) => (
-  <svg {...props} viewBox="0 0 1024 1024" fill="none">
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"
-      transform="scale(64)"
-      fill="currentColor"
-    />
+const KoFi = (props: SVGProps<SVGSVGElement>) => (
+  <svg {...props} viewBox="0 0 640 640" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M313.8 139c89.8 0 113 1.1 146.3 4.4c78.1 7.8 123.6 56 123.6 125.2v8.9c0 64.3-47.1 116.9-110.8 122.4c-5 16.6-12.8 33.2-23.3 49.9c-24.4 37.7-73.1 85.3-162.9 85.3H269c-73.1 0-129.7-31.6-163.5-89.2c-29.9-50.4-33.8-106.4-33.8-181.2c0-73.7 44.4-113.6 96.4-120.2c39.3-5 88.1-5.5 145.7-5.5m0 41.6c-60.4 0-103.6.5-136.3 5.5c-46 6.7-64.3 32.7-64.3 79.2l.2 25.7c1.2 57.3 7.1 97.1 27.5 134.5c26.6 49.3 74.8 68.2 129.7 68.2h17.2c72 0 107-34.9 126.3-65.4c9.4-15.5 17.7-32.7 22.2-54.3l3.3-13.8h19.9c44.3 0 82.6-36 82.6-82v-8.3c0-51.5-32.2-78.7-88.1-85.3c-31.6-2.8-50.4-3.9-140.2-3.9zm17.2 52.6c38.2 0 64.8 31.6 64.8 67c0 32.7-18.3 61-42.1 83.1c-15 15-39.3 30.5-55.9 40.5c-4.4 2.8-10 4.4-16.7 4.4c-5.5 0-10.5-1.7-15.5-4.4c-16.6-10-41-25.5-56.5-40.5c-21.8-20.8-39.2-46.9-41.3-77l-.2-6.1c0-35.5 25.5-67 64.3-67c22.7 0 38.8 11.6 49.3 27.7c11.6-16.1 27.2-27.7 49.9-27.7zm122.5-3.9c28.3 0 43.8 16.6 43.8 43.2s-15.5 42.7-43.8 42.7c-8.9 0-13.8-5-13.8-11.7v-62.6c0-6.7 5-11.6 13.8-11.6" />
   </svg>
 );
 
@@ -31,7 +25,7 @@ export function SponsorButton({ className, variant = "nav" }: SponsorButtonProps
       variant,
     });
 
-    window.open("https://github.com/sponsors/ubergonmx", "_blank", "noopener,noreferrer");
+    window.open("https://ko-fi.com/aaronpal", "_blank", "noopener,noreferrer");
   };
 
   if (variant === "header") {
@@ -45,7 +39,7 @@ export function SponsorButton({ className, variant = "nav" }: SponsorButtonProps
         )}
         title="Sponsor me on GitHub"
       >
-        <GitHub className="h-4 w-4" />
+        <KoFi className="h-4 w-4" />
       </button>
     );
   }
@@ -60,8 +54,8 @@ export function SponsorButton({ className, variant = "nav" }: SponsorButtonProps
       )}
       title="Sponsor me on GitHub"
     >
-      <GitHub className="mr-2 h-4 w-4 flex-shrink-0" />
-      <span>Sponsor on GitHub</span>
+      <KoFi className="mr-2 h-4 w-4 flex-shrink-0" />
+      <span>Donate</span>
     </button>
   );
 }
